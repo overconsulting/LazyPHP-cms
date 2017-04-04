@@ -11,9 +11,9 @@
     "require": {},
     "autoload": {
         "psr-0": {
-            "CMS": "/",
-            "CMS\\controllers": "/controllers/",
-            "CMS\\models": "/models/"
+            "Cms": "/",
+            "Cms\\controllers": "/controllers/",
+            "Cms\\models": "/models/"
         }
     }
 }
