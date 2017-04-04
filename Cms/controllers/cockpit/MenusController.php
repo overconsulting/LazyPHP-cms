@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\controllers\cockpit;
+namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
 use app\models\Menu;
