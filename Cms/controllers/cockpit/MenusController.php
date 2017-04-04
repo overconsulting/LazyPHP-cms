@@ -3,7 +3,7 @@
 namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
-use app\models\Menu;
+use Cms\models\Menu;
 use system\Router;
 use system\Session;
 

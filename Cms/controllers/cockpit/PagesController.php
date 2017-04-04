@@ -3,7 +3,7 @@
 namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
-use app\models\Page;
+use Cms\models\Page;
 
 class PagesController extends CockpitController
 {

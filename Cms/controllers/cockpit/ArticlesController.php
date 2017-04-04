@@ -4,7 +4,7 @@ namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
 
-use app\models\Article;
+use Cms\models\Article;
 use app\models\User;
 
 use System\Router;
