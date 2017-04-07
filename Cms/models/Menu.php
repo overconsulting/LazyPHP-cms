@@ -17,20 +17,24 @@ class Menu extends Model
         'active'
     );
 
-    public static function getTableName()
+    public static function getOptions()
     {
-        return 'menus';
-    }
+        $options = array(
+            0 => array(
+                'value' => '',
+                'label' => '---'
+            )
+        );
 
-    /**
-     * Set default properties values
-     */
-    public function setDefaultProperties()
-    {
-        parent::setDefaultProperties();
+        $menus = self::getFlat();
 
-        $this->parent = null;
-        $this->position = 0;
-        $this->active = 1;
+        foreach ($menus as $menu) {
+            $options[$menu->id] = array(
+                'value' => $menu->id,
+                'label' => str_repeat('&nbsp;', $menu->level * 8).$menu->label
+            );
+        }
+
+        return $options;
     }
 }
