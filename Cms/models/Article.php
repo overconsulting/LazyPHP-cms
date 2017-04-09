@@ -18,7 +18,7 @@ class Article extends Model
         return array(
             'user' => array(
                 'type' => '1',
-                'model' => 'app\\models\\User',
+                'model' => 'Auth\\models\\User',
                 'key' => 'user_id'
             )
         );

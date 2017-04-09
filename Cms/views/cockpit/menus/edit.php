@@ -5,7 +5,7 @@
         <h3 class="box-title">Gestion du Menu</h3>
 
         <div class="box-tools pull-right">
-            <a href="<?php echo system\Router::url('cockpit_menus_new'); ?>" class="btn btn-success btn-xs"><i class="fa fa-plus"></i></a>
+            <a href="<?php echo system\Router::url('cockpit_cms_menus_index'); ?>" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
         </div>
     </div>
     <div class="box-body">

@@ -32,7 +32,7 @@ class PagesController extends CockpitController
 
         $post = $this->request->post;
         $errors = array();
-        $this->render('new', array(
+        $this->render('edit', array(
             'formAction'    => 'cockpit_cms_pages_create',
             'page'          => $this->page
         ));

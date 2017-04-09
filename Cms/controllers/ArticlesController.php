@@ -3,7 +3,7 @@
 namespace Cms\controllers;
 
 use app\controllers\FrontController;
-use app\models\Article;
+use Cms\models\Article;
 
 class ArticlesController extends FrontController
 {

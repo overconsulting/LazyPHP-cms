@@ -5,7 +5,7 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 
 use Cms\models\Article;
-use app\models\User;
+use Auth\models\User;
 
 use System\Router;
 use System\Session;
@@ -37,7 +37,7 @@ class ArticlesController extends CockpitController
             'id'         => 0,
             'article'    => $this->article,
             'pageTitle'  => 'Nouvel article',
-            'formAction' => Router::url('cockpit_articles_create'),
+            'formAction' => Router::url('cockpit_cms_articles_create'),
             'authorOptions' => User::getOptions()
         ));
     }
@@ -52,7 +52,7 @@ class ArticlesController extends CockpitController
             'id'         => $id,
             'article'    => $this->article,
             'pageTitle'  => 'Editer l\'article n°'.$id,
-            'formAction' => Router::url('cockpit_articles_update', array('id' => $id)),
+            'formAction' => Router::url('cockpit_cms_articles_update', array('id' => $id)),
             'authorOptions' => User::getOptions()
         ));
     }
@@ -65,7 +65,7 @@ class ArticlesController extends CockpitController
         if ($this->article->valid()) {
             if ($this->article->create((array)$this->article)) {
                 Session::addFlash('Article ajouté', 'success');
-                $this->redirect('cockpit_articles');
+                $this->redirect('cockpit_cms_articles');
             } else {
                 Session::addFlash('Erreur insertion base de données', 'danger');
             };
@@ -84,7 +84,7 @@ class ArticlesController extends CockpitController
         if ($this->article->valid()) {
             if ($this->article->update((array)$this->article)) {
                 Session::addFlash('Utilisateur modifié', 'success');
-                $this->redirect('cockpit_articles');
+                $this->redirect('cockpit_cms_articles');
             } else {
                 Session::addFlash('Erreur mise à jour base de données', 'danger');
             }
@@ -100,6 +100,6 @@ class ArticlesController extends CockpitController
         $article = Article::findById($id);
         $article->delete();
         Session::addFlash('Article supprimé', 'success');
-        $this->redirect('cockpit_articles');
+        $this->redirect('cockpit_cms_articles');
     }
 }

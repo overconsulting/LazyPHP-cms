@@ -29,7 +29,7 @@ class MenusController extends CockpitController
         $this->render('edit', array(
             'pageTitle'     => 'Nouveau menu',
             'menusOptions'  => $menusOptions,
-            'formAction'    => Router::url('cockpit_menus_create')
+            'formAction'    => Router::url('cockpit_cms_menus_create')
         ));
     }
 
@@ -45,7 +45,7 @@ class MenusController extends CockpitController
         // if ($this->menu->valid()) {
         if ($this->menu->create((array)$this->menu)) {
             Session::addFlash('Menu ajouté', 'success');
-            $this->redirect('cockpit_menus');
+            $this->redirect('cockpit_cms_menus');
         } else {
             Session::addFlash('Erreur insertion base de données', 'danger');
         };
@@ -68,7 +68,7 @@ class MenusController extends CockpitController
             'pageTitle'         => 'Nouveau menu',
             'menu'              => $this->menu,
             'menusOptions'      => $menusOptions,
-            'formAction'        => Router::url('cockpit_menus_update_'.$id)
+            'formAction'        => Router::url('cockpit_cms_menus_update_'.$id)
         ));
     }
 
@@ -84,7 +84,7 @@ class MenusController extends CockpitController
         // if ($this->category->valid()) {
         if ($this->menu->update((array)$this->menu)) {
             Session::addFlash('Catégorie modifiée', 'success');
-            $this->redirect('cockpit_menus');
+            $this->redirect('cockpit_cms_menus');
         } else {
             Session::addFlash('Erreur mise à jour base de données', 'danger');
         }
