@@ -175,29 +175,14 @@
 
                         <div id="colPanel" class="panel">
                             <!-- Nav tabs -->
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#sectionPanelStyle" aria-controls="home" role="tab" data-toggle="tab">Style</a></li>
-                                <li role="widget"><a href="#sectionPanelWidget" aria-controls="widget" role="tab" data-toggle="tab">Widget</a></li>
-                            </ul>
+                              <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#style" aria-controls="style" role="tab" data-toggle="tab">Style</a></li>
+                                <li role="presentation"><a href="#widget" aria-controls="widget" role="tab" data-toggle="tab">Widget</a></li>
+                              </ul>
 
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane" id="sectionPanelWidget">
-                                    <br />
-                                    <p align="center"><b>Choisissez votre widget</b></p>
-                                    <div class="choix_widget">
-                                        <a href="" class="widget_text btn btn-default"><i class="fa fa-pencil"></i></a>
-                                    </div>
-
-                                    <div class="admin_widget">
-                                        <div class="form-group">
-                                            <label>Votre text : </label>
-                                            <br />
-                                            <textarea name="widget_text_content" class="form-control updated_widget" value="" /></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div role="tabpanel" class="tab-pane active" id="sectionPanelStyle">
+                              <!-- Tab panes -->
+                              <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="style">
                                     <br />
                                     <p align="center"><b>Configuration de la colonne</b></p>
                                     <div class="form-group">
@@ -210,13 +195,25 @@
                                         <input type="text" name="background" class="form-control updated background" value="" />
                                     </div>
 
+                                    <hr />
+
+                                    <div class="form-group">
+                                        <label>Taille de la police : </label>
+                                        <input type="text" name="font-size" class="form-control updated font-size" value="" />
+                                    </div>
+
                                     <div class="form-group">
                                         <label>Text align : </label>
-                                       <select class="form-control updated text-align" name="text-align">
+                                        <select class="form-control updated text-align" name="text-align">
                                             <option value="left">Gauche</option>
                                             <option value="center">Centré</option>
                                             <option value="right">Droite</option>
                                         </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Hauteur de la ligne : </label>
+                                        <input type="text" name="line-height" class="form-control updated line-height" value="" />
                                     </div>
 
                                     <hr />
@@ -224,6 +221,21 @@
                                     <div class="form-group">
                                         <label>Class : </label>
                                         <input type="text" name="class" class="form-control updated class" value="" />
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="widget">
+                                    <br />
+                                    <p align="center"><b>Choisissez votre widget</b></p>
+                                    <div class="choix_widget">
+                                        <a href="" class="widget_text btn btn-default"><i class="fa fa-pencil"></i></a>
+                                    </div>
+
+                                    <div class="admin_widget">
+                                        <div class="form-group">
+                                            <label>Votre text : </label>
+                                            <br />
+                                            <textarea name="widget_text_content" class="form-control updated_widget" value="" /></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -451,6 +463,7 @@ foreach ($ligne->cols as $col) {
         col_id = ligne_id+"_col_1";
 
         section.find('.row').attr('id', ligne_id);
+        section.find('.row').find('.col').attr('id', col_id);
         
         // On ajout la section à la config
         config['section_'+sections] = {
@@ -567,7 +580,7 @@ foreach ($ligne->cols as $col) {
         return hasBorderConfig;
     }
 
-    $(document).on('mouseenter', '.rendrecontent .section', function() {
+    /*$(document).on('mouseenter', '.rendrecontent .section', function() {
         $(this).css('border', '1px dashed #000');
     });
 
@@ -595,7 +608,7 @@ foreach ($ligne->cols as $col) {
     $(document).on('mouseleave', '.rendrecontent .col', function() {
         $(this).css('border', '1px dashed #C0C0C0');
         $(this).parent().css('border', '1px dashed #000');
-    });
+    });*/
 
     
     // Partie pour les clicks sur les boutons d'ajout
@@ -691,6 +704,17 @@ foreach ($ligne->cols as $col) {
             });
             $('.boxConfig .class').val(config[section_id]['lignes'][id]['class']);
         }
+        
+        if (className == "col") {
+            splitid = id.split("_");
+            section_id=splitid[0]+"_"+splitid[1];
+            ligne_id = section_id+"_"+splitid[2]+"_"+splitid[3];
+            
+            $.each(config[section_id]['lignes'][ligne_id]['cols'][id]['styles'], function( index, value ) {
+                $('.boxConfig .'+index).val(value);
+            });
+            $('.boxConfig .class').val(config[section_id]['lignes'][ligne_id]['cols'][id]['class']);
+        }
     }
 
     function closeBoxConfig() {
@@ -734,8 +758,6 @@ foreach ($ligne->cols as $col) {
         // On fait le live update
         $("#"+$(".boxConfig .id").val()).css($(this).attr("name"), $(this).val());
 
-        console.log("update");
-        
         col_id=$(".boxConfig .id").val();
         var id = col_id.split("_");
         section_id=id[0]+"_"+id[1];
