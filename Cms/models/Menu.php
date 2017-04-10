@@ -10,31 +10,18 @@ class Menu extends Model
 {
 
     protected $permittedColumns = array(
-        'parent',
         'label',
-        'link',
-        'position',
         'active'
     );
 
-    public static function getOptions()
+    public function getAssociations()
     {
-        $options = array(
-            0 => array(
-                'value' => '',
-                'label' => '---'
+        return array(
+            'menuitems' => array(
+                'type' => '*',
+                'model' => 'Cms\\models\\MenuItem',
+                'key' => 'menu_id'
             )
         );
-
-        $menus = self::getFlat();
-
-        foreach ($menus as $menu) {
-            $options[$menu->id] = array(
-                'value' => $menu->id,
-                'label' => str_repeat('&nbsp;', $menu->level * 8).$menu->label
-            );
-        }
-
-        return $options;
     }
 }

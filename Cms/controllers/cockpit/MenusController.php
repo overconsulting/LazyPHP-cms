@@ -11,7 +11,8 @@ class MenusController extends CockpitController
 {
     public function indexAction()
     {
-        $menus = Menu::getChildren(null, true, 0, true);
+        // $menus = Menu::getChildren(null, true, 0, true);
+        $menus = Menu::findAll();
 
         $this->render('index', array(
             'menus' => $menus
@@ -30,6 +31,16 @@ class MenusController extends CockpitController
             'pageTitle'     => 'Nouveau menu',
             'menusOptions'  => $menusOptions,
             'formAction'    => Router::url('cockpit_cms_menus_create')
+        ));
+    }
+
+    public function showAction($id)
+    {
+        $this->menu = Menu::findById($id);
+
+        $this->render('show', array(
+            'pageTitle'     => 'Editer le menu '.$this->menu->label,
+            'menu'          => $this->menu
         ));
     }
 
