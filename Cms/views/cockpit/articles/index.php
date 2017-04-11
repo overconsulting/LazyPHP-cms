@@ -27,6 +27,8 @@ foreach ($params['articles'] as $article) {
             '<td>'.$article->title.'</td>'.
             '<td>'.$article->content.'</td>'.
             '<td>';?>
+    {% button new_window="1" url="articles_show_<?php echo $article->id; ?>" type="primary" size="xs" icon="eye" %}
+    {% button url="cockpit_cms_articles_show_<?php echo $article->id; ?>" type="default" size="xs" icon="eye" %}
     {% button url="cockpit_cms_articles_edit_<?php echo $article->id; ?>" type="info" size="xs" icon="pencil" %}
     {% button url="cockpit_cms_articles_delete_<?php echo $article->id; ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article?" %}
 <?php

@@ -15,7 +15,7 @@ class ArticlesController extends FrontController
             'index',
             array(
                 'articles'   => $articles,
-                'titre'      => 'Articles'
+                'pageTitle'  => 'Articles'
             )
         );
     }
@@ -26,7 +26,7 @@ class ArticlesController extends FrontController
         
         $this->render('show', array(
             'article'   => $article,
-            'title'     => $article->title
+            'pageTitle' => $article->title
         ));
     }
 }

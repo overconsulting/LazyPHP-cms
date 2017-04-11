@@ -6,7 +6,11 @@ use System\Model;
 
 class Article extends Model
 {
-    protected $permittedColumns = array('title', 'content', 'user_id');
+    protected $permittedColumns = array(
+        'title',
+        'content',
+        'user_id'
+    );
     
     /**
      * Get list of associed table(s)

@@ -12,11 +12,6 @@ use System\Session;
 
 class ArticlesController extends CockpitController
 {
-    /**
-     * @var app\models\Article
-    */
-    public $article = null;
-
     public function indexAction()
     {
         $articles = Article::findAll();
@@ -27,24 +22,36 @@ class ArticlesController extends CockpitController
         ));
     }
 
+    public function showAction($id)
+    {
+        $article = Article::findById($id);
+
+        $this->render('show', array(
+            'article' => $article,
+            'pageTitle' => '<i class="fa fa-columns"></i> Articles',
+        ));
+    }
+
     public function newAction()
     {
         if ($this->article === null) {
             $this->article = new Article();
         }
 
+        $author = User::findAll();
+
         $this->render('edit', array(
             'id'         => 0,
             'article'    => $this->article,
             'pageTitle'  => 'Nouvel article',
-            'formAction' => Router::url('cockpit_cms_articles_create'),
-            'authorOptions' => User::getOptions()
+            'formAction' => url('cockpit_cms_articles_create'),
+            'authorOptions' => $author
         ));
     }
 
     public function editAction($id)
     {
-        if ($this->article === null) {
+        if (!isset($this->article)) {
             $this->article = Article::findById($id);
         }
 
@@ -52,8 +59,8 @@ class ArticlesController extends CockpitController
             'id'         => $id,
             'article'    => $this->article,
             'pageTitle'  => 'Editer l\'article n°'.$id,
-            'formAction' => Router::url('cockpit_cms_articles_update', array('id' => $id)),
-            'authorOptions' => User::getOptions()
+            'formAction' => url('cockpit_cms_articles_update', array('id' => $id)),
+            'authorOptions' => User::findAll()
         ));
     }
 
