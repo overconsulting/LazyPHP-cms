@@ -4,7 +4,6 @@ namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
 use Cms\models\Menu;
-use system\Router;
 use system\Session;
 
 class MenusController extends CockpitController
@@ -25,11 +24,8 @@ class MenusController extends CockpitController
             $this->menu = new Menu();
         }
 
-        $menusOptions = Menu::getOptions($this->menu->parent);
-
         $this->render('edit', array(
             'pageTitle'     => 'Nouveau menu',
-            'menusOptions'  => $menusOptions,
             'formAction'    => Router::url('cockpit_cms_menus_create')
         ));
     }
@@ -40,7 +36,8 @@ class MenusController extends CockpitController
 
         $this->render('show', array(
             'pageTitle'     => 'Editer le menu '.$this->menu->label,
-            'menu'          => $this->menu
+            'menu'          => $this->menu,
+            'items'         => Menu::getFlat($id, 'menu_id', 'menuitems')
         ));
     }
 
@@ -73,13 +70,10 @@ class MenusController extends CockpitController
             $this->menu = Menu::findById($id);
         }
 
-        $menusOptions = Menu::getOptions($this->menu->parent);
-
         $this->render('edit', array(
             'pageTitle'         => 'Nouveau menu',
             'menu'              => $this->menu,
-            'menusOptions'      => $menusOptions,
-            'formAction'        => Router::url('cockpit_cms_menus_update_'.$id)
+            'formAction'        => url('cockpit_cms_menus_update_'.$id)
         ));
     }
 
@@ -104,5 +98,13 @@ class MenusController extends CockpitController
         }*/
 
         $this->editAction($id);
+    }
+
+    public function deleteAction($id)
+    {
+        $menu = Menu::findById($id);
+        $menu->delete();
+        Session::addFlash('Menu supprimé', 'success');
+        $this->redirect('cockpit_cms_menus');
     }
 }

@@ -12,7 +12,8 @@ class MenuItem extends Model
         'label',
         'link',
         'position',
-        'active'
+        'active',
+        'menu_id'
     );
 
     public function getAssociations()
@@ -25,25 +26,4 @@ class MenuItem extends Model
             )
         );
     }
-
-    /*public static function getOptions()
-    {
-        $options = array(
-            0 => array(
-                'value' => '',
-                'label' => '---'
-            )
-        );
-
-        $itemsMenus = self::getFlat();
-
-        foreach ($itemsMenus as $item) {
-            $options[$item->id] = array(
-                'value' => $item->id,
-                'label' => str_repeat('&nbsp;', $item->level * 8).$item->label
-            );
-        }
-
-        return $options;
-    }*/
 }
