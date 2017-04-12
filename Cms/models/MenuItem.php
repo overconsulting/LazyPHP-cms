@@ -3,7 +3,6 @@
 namespace Cms\models;
 
 use System\Model;
-use System\Query;
 
 class MenuItem extends Model
 {

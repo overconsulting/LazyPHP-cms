@@ -4,6 +4,7 @@ namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
 use Cms\models\Menu;
+use Cms\models\MenuItem;
 use system\Session;
 
 class MenusController extends CockpitController
@@ -37,7 +38,7 @@ class MenusController extends CockpitController
         $this->render('show', array(
             'pageTitle'     => 'Editer le menu '.$this->menu->label,
             'menu'          => $this->menu,
-            'items'         => Menu::getFlat($id, 'menu_id', 'menuitems')
+            'items'         => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
         ));
     }
 
