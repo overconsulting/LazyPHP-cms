@@ -3,8 +3,6 @@
 namespace Cms\models;
 
 use System\Model;
-use System\Query;
-use System\Password;
 
 class Menu extends Model
 {
