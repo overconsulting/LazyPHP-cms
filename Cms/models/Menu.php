@@ -8,7 +8,6 @@ use System\Password;
 
 class Menu extends Model
 {
-
     protected $permittedColumns = array(
         'label',
         'active'
