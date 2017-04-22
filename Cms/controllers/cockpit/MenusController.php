@@ -5,7 +5,8 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 use Cms\models\Menu;
 use Cms\models\MenuItem;
-use system\Session;
+use System\Session;
+use System\Router;
 
 class MenusController extends CockpitController
 {
@@ -14,7 +15,9 @@ class MenusController extends CockpitController
         $menus = Menu::findAll("site_id = ".Session::get("site_id"));
 
         $this->render('index', array(
-            'menus' => $menus
+            'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+            'titleBox'  => 'Liste des menus',
+            'menus'     => $menus
         ));
     }
 
@@ -25,7 +28,8 @@ class MenusController extends CockpitController
         }
 
         $this->render('edit', array(
-            'pageTitle'     => 'Nouveau menu',
+            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+            'titleBox'      => 'Ajouter un menu',
             'formAction'    => Router::url('cockpit_cms_menus_create')
         ));
     }
@@ -35,7 +39,8 @@ class MenusController extends CockpitController
         $this->menu = Menu::findById($id);
 
         $this->render('show', array(
-            'pageTitle'     => 'Menu : '.$this->menu->label,
+            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+            'titleBox'      => 'Menu : '.$this->menu->label,
             'menu'          => $this->menu,
             'items'         => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
         ));
@@ -72,7 +77,8 @@ class MenusController extends CockpitController
         }
 
         $this->render('edit', array(
-            'pageTitle'         => 'Nouveau menu',
+            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+            'titleBox'      => 'Modifier le menu',
             'menu'              => $this->menu,
             'formAction'        => url('cockpit_cms_menus_update_'.$id)
         ));

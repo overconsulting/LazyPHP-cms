@@ -1,8 +1,8 @@
-<h1 class="page-title"><i class="fa fa-bars"></i> Menus</h1>
+<h1 class="page-title">{{ pageTitle }}</h1>
 
 <div class="box box-success">
     <div class="box-header">
-        <h3 class="box-title">Gestion du Menu</h3>
+        <h3 class="box-title">{{ titleBox }}</h3>
 
         <div class="box-tools pull-right">
             <a href="<?php echo url('cockpit_cms_menus_new'); ?>" class="btn btn-success btn-xs"><i class="fa fa-plus"></i></a>

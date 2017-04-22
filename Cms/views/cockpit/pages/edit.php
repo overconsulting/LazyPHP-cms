@@ -1,21 +1,22 @@
-<h1 class="page-title">Créer une page</h1>
+<h1 class="page-title">{{ titlePage }}</h1>
 <form id="formLogin" method="post" action="{{ formAction }}" class="form form-horizontal">
     <input type="hidden" class="config" name="content" value="" />
-    <div class="box">
+    <div class="box box-purple">
         <div class="box-header">
-            <h3 class="box-title">Création d'une page</h3>
+            <h3 class="box-title">{{ titleBox }}</h3>
             <div class="box-tools pull-right">
                 <a href="" class="btn btn-primary btn-xs saveConfig"><i class="fa fa-floppy-o"></i></a>
             </div>
         </div>
         <div class="box-body">
             {% input_text name="title" model="page.title" label="Nom de la page" placeholder="Nom de la page" %}
+            {% input_checkbox name="active" model="page.active" label="Actif" %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-3">
-            <div class="box">
+            <div class="box box-purple">
                 <div class="box-header">
                     <h3 class="box-title">Ajouter des éléments HTML</h3>
                 </div>
@@ -26,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="box boxConfig">
+            <div class="box boxConfig box-purple">
                 <div class="box-header">
                     <h3 class="box-title"></h3>
                 </div>
@@ -246,7 +247,7 @@
         </div>
 
         <div class="col-lg-9">
-            <div class="box">
+            <div class="box box-purple">
                 <div class="box-header">
                     <h3 class="box-title">Rendu HTML</h3>
                     <div class="box-tools pull-right">

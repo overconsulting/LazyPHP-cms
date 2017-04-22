@@ -7,5 +7,10 @@ use System\Query;
 
 class Page extends Model
 {
-    protected $permittedColumns = array('title', 'content');
+    protected $permittedColumns = array(
+        'title',
+        'content',
+        'site_id',
+        'active'
+    );
 }

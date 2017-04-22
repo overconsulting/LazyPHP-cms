@@ -2,7 +2,7 @@
 
 <div class="box box-success">
     <div class="box-header">
-        <h3 class="box-title">Gestion du Menu</h3>
+        <h3 class="box-title">{{ titleBox }}</h3>
 
         <div class="box-tools pull-right">
             <a href="<?php echo url('cockpit_cms_menus_index'); ?>" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>

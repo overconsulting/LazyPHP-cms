@@ -13,13 +13,14 @@ class PagesController extends CockpitController
     public function indexAction()
     {
         /* Récuperation des pages de la bdd */
-        $pages = Page::findAll();
+        $pages = Page::findAll("site_id = " . Session::get('site_id'));
 
         $this->render(
             'index',
             array(
-                'titre'     => 'Listes des pages',
-                'pages'     => $pages
+                'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'titleBox'      => 'Liste des pages',
+                'pages'         => $pages
             )
         );
     }
@@ -34,7 +35,9 @@ class PagesController extends CockpitController
         $errors = array();
         $this->render('edit', array(
             'formAction'    => 'cockpit_cms_pages_create',
-            'page'          => $this->page
+            'page'          => $this->page,
+            'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+            'titleBox'      => 'Ajouter une page',
         ));
     }
 
@@ -58,6 +61,8 @@ class PagesController extends CockpitController
 
         $this->render('edit', array(
             'page'          =>  $this->page,
+            'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+            'titleBox'      => 'Modifier la page: '.$this->page->title,
             'formAction'    => Router::url('cockpit_cms_pages_update_'.$id)
         ));
     }

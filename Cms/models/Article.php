@@ -10,7 +10,9 @@ class Article extends Model
         'title',
         'content',
         'user_id',
-        'site_id'
+        'site_id',
+        'media_id',
+        'active'
     );
     
     /**
@@ -25,6 +27,11 @@ class Article extends Model
                 'type' => '1',
                 'model' => 'Auth\\models\\User',
                 'key' => 'user_id'
+            ),
+            'media' => array(
+                'type' => '1',
+                'model' => 'Media\\models\\Media',
+                'key' => 'media_id'
             )
         );
     }

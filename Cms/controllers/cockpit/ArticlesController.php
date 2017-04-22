@@ -18,7 +18,8 @@ class ArticlesController extends CockpitController
 
         $this->render('index', array(
             'articles' => $articles,
-            'pageTitle' => '<i class="fa fa-columns"></i> Articles',
+            'titlePage' => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
+            'titleBox'     => 'Listes des articles',
         ));
     }
 
@@ -27,8 +28,9 @@ class ArticlesController extends CockpitController
         $article = Article::findById($id);
 
         $this->render('show', array(
-            'article' => $article,
-            'pageTitle' => '<i class="fa fa-columns"></i> Articles',
+            'article'       => $article,
+            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
+            'titleBox'      => 'Article n°'.$article->title,
         ));
     }
 
@@ -41,10 +43,11 @@ class ArticlesController extends CockpitController
         $author = User::findAll();
 
         $this->render('edit', array(
-            'id'         => 0,
-            'article'    => $this->article,
-            'pageTitle'  => 'Nouvel article',
-            'formAction' => url('cockpit_cms_articles_create'),
+            'id'            => 0,
+            'article'       => $this->article,
+            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
+            'titleBox'      => 'Ajouter un nouvel article',
+            'formAction'    => url('cockpit_cms_articles_create'),
             'authorOptions' => $author
         ));
     }
@@ -56,10 +59,11 @@ class ArticlesController extends CockpitController
         }
 
         $this->render('edit', array(
-            'id'         => $id,
-            'article'    => $this->article,
-            'pageTitle'  => 'Editer l\'article n°'.$id,
-            'formAction' => url('cockpit_cms_articles_update', array('id' => $id)),
+            'id'            => $id,
+            'article'       => $this->article,
+            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
+            'titleBox'      => 'Editer l\'article n°'.$id,
+            'formAction'    => url('cockpit_cms_articles_update', array('id' => $id)),
             'authorOptions' => User::findAll()
         ));
     }
@@ -92,7 +96,7 @@ class ArticlesController extends CockpitController
 
         if ($this->article->valid()) {
             if ($this->article->update((array)$this->article)) {
-                Session::addFlash('Utilisateur modifié', 'success');
+                Session::addFlash('Article modifié', 'success');
                 $this->redirect('cockpit_cms_articles');
             } else {
                 Session::addFlash('Erreur mise à jour base de données', 'danger');
