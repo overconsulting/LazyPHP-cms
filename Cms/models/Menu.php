@@ -8,7 +8,9 @@ class Menu extends Model
 {
     protected $permittedColumns = array(
         'label',
-        'active'
+        'active',
+        'principal',
+        'site_id'
     );
 
     public function getAssociations()

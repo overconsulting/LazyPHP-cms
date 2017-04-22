@@ -11,8 +11,7 @@ class MenusController extends CockpitController
 {
     public function indexAction()
     {
-        // $menus = Menu::getChildren(null, true, 0, true);
-        $menus = Menu::findAll();
+        $menus = Menu::findAll("site_id = ".Session::get("site_id"));
 
         $this->render('index', array(
             'menus' => $menus
@@ -36,7 +35,7 @@ class MenusController extends CockpitController
         $this->menu = Menu::findById($id);
 
         $this->render('show', array(
-            'pageTitle'     => 'Editer le menu '.$this->menu->label,
+            'pageTitle'     => 'Menu : '.$this->menu->label,
             'menu'          => $this->menu,
             'items'         => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
         ));
@@ -47,6 +46,7 @@ class MenusController extends CockpitController
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
         }
+        $this->request->post['site_id'] = Session::get("site_id");
 
         $this->menu = new Menu();
         $this->menu->setData($this->request->post);
@@ -83,13 +83,14 @@ class MenusController extends CockpitController
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
         }
+        $this->request->post['site_id'] = Session::get("site_id");
 
         $this->menu = Menu::findById($id);
         $this->menu->setData($this->request->post);
 
         // if ($this->category->valid()) {
         if ($this->menu->update((array)$this->menu)) {
-            Session::addFlash('Catégorie modifiée', 'success');
+            Session::addFlash('Menu modifié', 'success');
             $this->redirect('cockpit_cms_menus');
         } else {
             Session::addFlash('Erreur mise à jour base de données', 'danger');

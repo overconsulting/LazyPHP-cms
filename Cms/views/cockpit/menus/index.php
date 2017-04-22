@@ -23,7 +23,12 @@
 foreach ($params['menus'] as $menu) {
     echo '<tr>';
     echo '<td>'.$menu->id.'</td>';
-    echo '<td>'.$menu->label.'</td>';
+    if ($menu->principal == 1) {
+        echo '<td><b>'.$menu->label.'</b></td>';
+    } else {
+        echo '<td>'.$menu->label.'</td>';
+    }
+    
     if ($menu->active == 1) {
         $label = '<span class="label label-success">Activé</span>';
     } else {

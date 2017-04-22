@@ -9,7 +9,8 @@ class Article extends Model
     protected $permittedColumns = array(
         'title',
         'content',
-        'user_id'
+        'user_id',
+        'site_id'
     );
     
     /**

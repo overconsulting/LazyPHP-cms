@@ -14,7 +14,7 @@ class ArticlesController extends CockpitController
 {
     public function indexAction()
     {
-        $articles = Article::findAll();
+        $articles = Article::findAll("site_id = " . Session::get('site_id'));
 
         $this->render('index', array(
             'articles' => $articles,
@@ -34,7 +34,7 @@ class ArticlesController extends CockpitController
 
     public function newAction()
     {
-        if ($this->article === null) {
+        if (!isset($this->article)) {
             $this->article = new Article();
         }
 
@@ -67,6 +67,7 @@ class ArticlesController extends CockpitController
     public function createAction()
     {
         $this->article = new Article();
+        $this->request->post['site_id'] = Session::get("site_id");
         $this->article->setData($this->request->post);
 
         if ($this->article->valid()) {
@@ -86,6 +87,7 @@ class ArticlesController extends CockpitController
     public function updateAction($id)
     {
         $this->article = Article::findById($id);
+        $this->request->post['site_id'] = Session::get("site_id");
         $this->article->setData($this->request->post);
 
         if ($this->article->valid()) {

@@ -5,8 +5,8 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 use Cms\models\Menu;
 use Cms\models\MenuItem;
-use system\Router;
-use system\Session;
+use System\Router;
+use System\Session;
 
 class MenusitemsController extends CockpitController
 {
@@ -17,13 +17,15 @@ class MenusitemsController extends CockpitController
             $this->menuitem->menu_id = $menu_id;
         }
 
-        $menusItemsOptions = MenuItem::findAll(array(
-            'column'    => 'menu_id',
-            'operator'  => '=',
-            'value'     => $menu_id
-        ));
+        $menusItemsOptions = MenuItem::findAll(
+            array(
+                'column'    => 'menu_id',
+                'operator'  => '=',
+                'value'     => $menu_id
+            )
+        );
 
-        $menusOptions = Menu::findAll();
+        $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
 
         $this->render('edit', array(
             'pageTitle'         => 'Nouvel item',

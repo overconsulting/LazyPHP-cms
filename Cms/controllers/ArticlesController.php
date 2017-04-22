@@ -4,12 +4,13 @@ namespace Cms\controllers;
 
 use app\controllers\FrontController;
 use Cms\models\Article;
+use System\Session;
 
 class ArticlesController extends FrontController
 {
     public function indexAction()
     {
-        $articles = Article::findAll();
+        $articles = Article::findAll("site_id = " . Session::get('site_id'));
 
         $this->render(
             'index',
