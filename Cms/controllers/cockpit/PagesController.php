@@ -34,7 +34,7 @@ class PagesController extends CockpitController
         $post = $this->request->post;
         $errors = array();
         $this->render('edit', array(
-            'formAction'    => 'cockpit_cms_pages_create',
+            'formAction'    => Router::url('cockpit_cms_pages_create'),
             'page'          => $this->page,
             'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
             'titleBox'      => 'Ajouter une page',
@@ -45,6 +45,10 @@ class PagesController extends CockpitController
     {
         $this->page = new Page();
 
+        if (!isset($this->request->post['active'])) {
+            $this->request->post['active'] = 0;
+        }
+        $this->request->post['site_id'] = Session::get("site_id");
         if ($this->page->create($this->request->post)) {
             $this->redirect('cockpit_cms_pages_index');
         }
@@ -70,6 +74,11 @@ class PagesController extends CockpitController
     public function updateAction($id)
     {
         $this->page = Page::findById($id);
+
+        if (!isset($this->request->post['active'])) {
+            $this->request->post['active'] = 0;
+        }
+        $this->request->post['site_id'] = Session::get("site_id");
         $post = $this->request->post;
         
         if ($this->page->update($post)) {

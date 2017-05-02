@@ -76,7 +76,7 @@ class MenusitemsController extends CockpitController
             'value'     => $this->menuitem->menu_id
         ));
         
-        $menusOptions = Menu::findAll();
+        $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
 
         $this->render('edit', array(
             'pageTitle'         => '<i class="fa fa-bars fa-green"></i> Gestion des menus',

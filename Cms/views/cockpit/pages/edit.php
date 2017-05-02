@@ -226,18 +226,33 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="widget">
                                     <br />
-                                    <p align="center"><b>Choisissez votre widget</b></p>
+                                    <div class="fleft"><b>Choisissez votre widget</b></div>
+                                    <br />
                                     <div class="choix_widget">
                                         <a href="" class="widget_text btn btn-default"><i class="fa fa-pencil"></i></a>
+                                        <a href="" class="widget_image btn btn-default"><i class="fa fa-picture-o"></i></a>
                                     </div>
 
-                                    <div class="admin_widget">
+                                    <div class="admin_widget_text admin_widget">
                                         <div class="form-group">
+                                            <br />
                                             <label>Votre text : </label>
                                             <br />
                                             <textarea name="widget_text_content" class="form-control updated_widget" value="" /></textarea>
                                         </div>
+                                        <div class="" align="right"><a href="" class="btn btn-default btn-admin-widget">Retour</a></div>
                                     </div>
+
+                                    <div class="admin_widget_image admin_widget">
+                                        <div class="form-group">
+                                            <br />
+                                            <label>Votre image : </label>
+                                            <br />
+                                            {% input_media name="media_id" label="Image" mediaType="image" %}
+                                        </div>
+                                        <div class="" align="right"><a href="" class="btn btn-default btn-admin-widget">Retour</a></div>
+                                    </div>
+                                    <br />
                                 </div>
                             </div>
                         </div>
@@ -288,8 +303,8 @@ foreach ($content as $section) {
 <section id="<?php echo $section->name ?>" class="section section<?php echo $compteur_section; ?> <?php echo $section->class ?>" style="<?php foreach ($section->styles as $key => $value) { ?>
                         <?php echo "$key: $value;"; ?>
                     <?php } ?>">
-    <div class="label label-default sectionConfig">Section <?php echo $compteur_section; ?></div>
     <div class="action">
+        <div class="label label-default sectionConfig">Section <?php echo $compteur_section; ?></div>
         <a href="" class="label-success addLigne label"><i class="fa fa-plus"></i> ligne</a>
         <a href="" class="label-danger delSection label"><i class="fa fa-trash-o"></i> section</a>
     </div>
@@ -301,8 +316,8 @@ foreach ($section->lignes as $ligne) {
     <div class="row row<?php echo $compteur_ligne; ?> <?php echo $ligne->class ?>" id="<?php echo $ligne->name ?>" style="<?php foreach ($ligne->styles as $key => $value) { ?>
                         <?php echo "$key: $value;"; ?>
                     <?php } ?>">
-        <div class="label label-default ligneConfig">Ligne <?php echo $compteur_ligne; ?></div>
         <div class="action">
+            <div class="label label-default ligneConfig">Ligne <?php echo $compteur_ligne; ?></div>
             <a href="" class="label-success addCol label"><i class="fa fa-plus"></i> colonne</a>
             <a href="" class="label-danger delLigne label"><i class="fa fa-trash-o"></i> ligne</a>
         </div>
@@ -314,12 +329,20 @@ foreach ($ligne->cols as $col) {
     <div class="col col-lg-<?php echo 12/count((array)$ligne->cols); ?> <?php echo $col->class ?>" id="<?php echo $col->name ?>" style="<?php foreach ($col->styles as $key => $value) { ?>
                         <?php echo "$key: $value;"; ?>
                     <?php } ?>">
-        <div class="label label-default colConfig">Col <?php echo $compteur_col; ?></div>
-        <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
+        <div class="action">
+            <div class="label label-default colConfig">Col <?php echo $compteur_col; ?></div>
+            <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
+        </div>
         <?php if (property_exists($col, "widgets")) { ?>
-            <?php foreach ($col->widgets as $value) { ?>
-                <?php echo $value; ?>
+            <?php if(!empty((array)$col->widgets)) { ?>
+                <?php foreach ($col->widgets as $value) { ?>
+                    <div class="content_widget"><?php echo $value; ?></div>
+                <?php } ?>
+            <?php } else { ?>
+                <div class="content_widget">Center</div>
             <?php } ?>
+        <?php } else { ?>
+            <div class="content_widget">Center</div>
         <?php } ?>
     </div>
 <?php } ?>
@@ -348,37 +371,41 @@ foreach ($ligne->cols as $col) {
     <div id="htmlElement">
         <section class="section section1">
             <input type="hidden" value="1" class="nbSectionLigne" name="nbSectionLigne" />
-            <div class="label label-default sectionConfig">Section 1</div>
             <div class="action">
+                <div class="label label-default sectionConfig">Section 1</div>
                 <a href="" class="label-success addLigne label"><i class="fa fa-plus"></i> ligne</a>
                 <a href="" class="label-danger delSection label"><i class="fa fa-trash-o"></i> section</a>
             </div>
             <div class="row row1">
                 <input type="hidden" class="nbSectionLigneCol" value="1" />
-                <div class="label label-default ligneConfig">Ligne 1</div>
                 <div class="action">
+                    <div class="label label-default ligneConfig">Ligne 1</div>
                     <a href="" class="label-success addCol label"><i class="fa fa-plus"></i> colonne</a>
                     <a href="" class="label-danger delLigne label"><i class="fa fa-trash-o"></i> ligne</a>
                 </div>
                 <div class="col col-lg-12">
-                    <div class="label label-default colConfig">Col 1</div>
-                    <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
-                    Center
+                    <div class="action">
+                        <div class="label label-default colConfig">Col 1</div>
+                        <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
+                    </div>
+                    <div class="content_widget">Center</div>
                 </div>
             </div>
         </section>
 
         <div class="row row1">
             <input type="hidden" class="nbSectionLigneCol" value="1" />
-            <div class="label label-default ligneConfig">Ligne 1</div>
             <div class="action">
+                <div class="label label-default ligneConfig">Ligne 1</div>
                 <a href="" class="label-success addCol label"><i class="fa fa-plus"></i> colonne</a>
                 <a href="" class="label-danger delLigne label"><i class="fa fa-trash-o"></i> ligne</a>
             </div>
             <div class="col col-lg-12">
-                <div class="label label-default colConfig">Col 1</div>
-                <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
-                Center
+                <div class="action">
+                    <div class="label label-default colConfig">Col 1</div>
+                    <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
+                </div>
+                <div class="content_widget">Center</div>
             </div>
         </div>
     </div>
@@ -436,11 +463,6 @@ foreach ($ligne->cols as $col) {
     cible = "rendrecontent";
     console.log(config);
 
-    $('.addSection').click(function(event) {
-        event.preventDefault();
-        addSection();
-    });
-
     function addSection() {
         sections = $('.nbSection').val();
         sections++;
@@ -494,8 +516,7 @@ foreach ($ligne->cols as $col) {
         // On récupère le nombre de Ligne et on le met à jour
         nbLigne = section.find('.nbSectionLigne').val();
         newNbLigne = (parseInt(nbLigne)+1);
-        console.log(nbLigne, newNbLigne);
-
+        
         section.find('.nbSectionLigne').val(newNbLigne);
 
         // On affiche la nouvelle ligne
@@ -506,6 +527,9 @@ foreach ($ligne->cols as $col) {
 
         // On met à jour l'id de la ligne
         row.attr('id', section.attr('id')+"_"+'ligne_'+newNbLigne);
+
+        // on met à jour l'id de la col
+        row.find('.col').attr('id', section.attr('id')+"_"+'ligne_'+newNbLigne+'_col_1');
 
         // On met à jour la config
         config[section.attr('id')]["lignes"][section.attr('id')+"_ligne_"+newNbLigne]= 
@@ -531,7 +555,6 @@ foreach ($ligne->cols as $col) {
     function addCol(obj) {
         // On récupère le nombre de colonne
         nbCol = $(obj).parent().parent().find('.nbSectionLigneCol').val();
-        console.log(nbCol);
         
         if (nbCol > 5) {
             alert('Vous ne pouvez pas ajouter plus de colonne');
@@ -548,9 +571,9 @@ foreach ($ligne->cols as $col) {
             row.find( ".col" ).removeClass('col-lg-'+(12/parseInt(nbCol)));
 
             // on ajout la nouvelle colonne
-            section = $(obj).parent().parent().parent().attr('id')
+            section = $(obj).parent().parent().parent().attr('id');
             col_id = row.attr('id')+"_col_"+newNbCol;
-            row.append('<div class="col" id='+col_id+'><div class="label label-default colConfig">Col '+newNbCol+'</div>Center</div>');
+            row.append('<div class="col" id='+col_id+'><div class="action"><div class="label label-default colConfig">Col '+newNbCol+'</div></div><div class="content_widget">Center</div></div>');
 
             config[section]['lignes'][row.attr('id')]['cols'][col_id] = {
                 "name": col_id,
@@ -558,7 +581,7 @@ foreach ($ligne->cols as $col) {
                 "styles": {}
             };
 
-            $(obj).parent().attr('id', col_id)
+            // $(obj).parent().attr('id', col_id)
 
             // on set les nouvelles valeurs
             row.find( ".col" ).addClass('col-lg-'+newSizeCol);
@@ -566,7 +589,7 @@ foreach ($ligne->cols as $col) {
     }
 
     // Partie pour les hover sur les blocs de configuration
-    function hasBorderConfig(id) {
+    /*function hasBorderConfig(id) {
         hasBorderConfig = false
         if (config[id].hasOwnProperty("border-color")) {
             hasBorderConfig = true;
@@ -579,7 +602,7 @@ foreach ($ligne->cols as $col) {
         }
 
         return hasBorderConfig;
-    }
+    }*/
 
     /*$(document).on('mouseenter', '.rendrecontent .section', function() {
         $(this).css('border', '1px dashed #000');
@@ -613,9 +636,9 @@ foreach ($ligne->cols as $col) {
 
     
     // Partie pour les clicks sur les boutons d'ajout
-    $(document).on('click', '.addCol', function(event) {
+    $(document).on('click', '.addSection', function(event) {
         event.preventDefault();
-        addCol(this);
+        addSection();
     });
 
     $(document).on('click', '.addLigne', function(event) {
@@ -623,10 +646,15 @@ foreach ($ligne->cols as $col) {
         addLigne(this);
     });
 
-    // Partie pour les clicks de configration
-    $(document).on('click', '.colConfig', function(event) {
+    $(document).on('click', '.addCol', function(event) {
         event.preventDefault();
-        showPanel('col', this);
+        addCol(this);
+    });
+
+    // Partie pour les clicks de configration
+    $(document).on('click', '.sectionConfig', function(event) {
+        event.preventDefault();
+        showPanel('section', this);
     });
 
     $(document).on('click', '.ligneConfig', function(event) {
@@ -634,9 +662,9 @@ foreach ($ligne->cols as $col) {
         showPanel('ligne', this);
     });
 
-    $(document).on('click', '.sectionConfig', function(event) {
+    $(document).on('click', '.colConfig', function(event) {
         event.preventDefault();
-        showPanel('section', this);
+        showPanel('col', this);
     });
 
     $(document).on('click', '.saveConfig', function(event) {
@@ -646,8 +674,27 @@ foreach ($ligne->cols as $col) {
 
     $(document).on('click', '.widget_text', function(event) {
         event.preventDefault();
-        $('.admin_widget').show();
+        // On recupère le html
+        $('.admin_widget_text').find('textarea').val( $('#' + $('.elementConf .id').val() + " .content_widget").html() );
+        $('.admin_widget_image').hide();
+        $('.admin_widget_text').show();
         $('.choix_widget').hide();
+    });
+
+    $(document).on('click', '.widget_image', function(event) {
+        event.preventDefault();
+        // On recupère le html
+
+        $('.admin_widget_text').hide();
+        $('.admin_widget_image').show();
+        $('.choix_widget').hide();
+    });
+
+    $(document).on('click', '.btn-admin-widget', function(event) {
+        event.preventDefault();
+        $('.admin_widget_text').hide();
+        $('.admin_widget_image').hide();
+        $('.choix_widget').show();
     });
 
     $(document).on('click', '.delSection', function(event) {
@@ -683,7 +730,7 @@ foreach ($ligne->cols as $col) {
     function showPanel(className, obj) {
         closeBoxConfig(className);
         $('.boxConfig').show();
-        id = $(obj).parent().attr('id');
+        id = $(obj).parent().parent().attr('id');
         $('#'+className+'Panel').show();
         $('.boxConfig .box-title').html("Configuration du bloc "+id);
         $('.boxConfig .id').val(id);
@@ -772,6 +819,19 @@ foreach ($ligne->cols as $col) {
         }
     });
 
+    $('.boxConfig #colPanel #media_id_url').bind('change',function() {
+        col_id=$(".boxConfig .id").val();
+        var id = col_id.split("_");
+        section_id=id[0]+"_"+id[1];
+        ligne_id = section_id+"_"+id[2]+"_"+id[3];
+
+        
+        // On sauvegarde la config de l'éléments
+        widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
+        widgets[$(this).attr("name")] = "<img src='"+$(this).parent().find('#media_id_url').val()+"' alt='' />";
+        $("#"+$(".boxConfig .id").val()+" .content_widget").html("<img src='"+$(this).parent().find('#media_id_url').val()+"' alt='' />");
+    });
+
     // Partie live update des champs
     $('.boxConfig #lignePanel .updated').bind('keyup',function() {
         // On fait le live update
@@ -801,6 +861,7 @@ foreach ($ligne->cols as $col) {
         // On sauvegarde la config de l'éléments
         widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
         widgets[$(this).attr("name")] = $(this).val();
-        $("#"+$(".boxConfig .id").val()).html($(this).val());
+
+        $("#"+$(".boxConfig .id").val()+" .content_widget").html($(this).val());
     });
 </script>

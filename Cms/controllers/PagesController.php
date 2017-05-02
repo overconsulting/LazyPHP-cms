@@ -12,9 +12,13 @@ class PagesController extends FrontController
     {
         $page = Page::findById($id);
         
+        if ($page->active != 1) {
+            $this->redirect("/");
+        }
+        
         $this->render('show', array(
             'page'      => $page,
-            'title'     => $page->title
+            'pageTitle' => $page->title
         ));
     }
 }
