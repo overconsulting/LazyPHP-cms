@@ -80,7 +80,7 @@ class PagesController extends CockpitController
         }
         $this->request->post['site_id'] = Session::get("site_id");
         $post = $this->request->post;
-        
+
         if ($this->page->update($post)) {
             Session::addFlash('Page modifiée', 'success');
             $this->redirect('cockpit_cms_pages_edit_'.$id);

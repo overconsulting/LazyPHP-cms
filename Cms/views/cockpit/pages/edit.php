@@ -9,6 +9,7 @@
             </div>
         </div>
         <div class="box-body">
+            {% input_text name="url" value="/pages/<?php echo $params['page']->id; ?>" label="Url de la page" placeholder="Url de la page" %}
             {% input_text name="title" model="page.title" label="Nom de la page" placeholder="Nom de la page" %}
             {% input_checkbox name="active" model="page.active" label="Actif" %}
         </div>
@@ -52,11 +53,6 @@
                                     <div class="form-group">
                                         <label>Hauteur : </label>
                                         <input type="text" name="height" class="form-control updated height" value="" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Color : </label>
-                                        <input type="text" name="color" class="form-control updated color" value="" />
                                     </div>
 
                                     <hr />
@@ -124,11 +120,6 @@
                                         <input type="text" name="height" class="form-control updated height" value="" />
                                     </div>
 
-                                    <div class="form-group">
-                                        <label>Color : </label>
-                                        <input type="text" name="color" class="form-control updated color" value="" />
-                                    </div>
-
                                     <hr />
 
                                     <div class="form-group">
@@ -186,35 +177,10 @@
                                 <div role="tabpanel" class="tab-pane active" id="style">
                                     <br />
                                     <p align="center"><b>Configuration de la colonne</b></p>
-                                    <div class="form-group">
-                                        <label>Color : </label>
-                                        <input type="text" name="color" class="form-control updated color" value="" />
-                                    </div>
 
                                     <div class="form-group">
                                         <label>Fond d'écran : </label>
                                         <input type="text" name="background" class="form-control updated background" value="" />
-                                    </div>
-
-                                    <hr />
-
-                                    <div class="form-group">
-                                        <label>Taille de la police : </label>
-                                        <input type="text" name="font-size" class="form-control updated font-size" value="" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Text align : </label>
-                                        <select class="form-control updated text-align" name="text-align">
-                                            <option value="left">Gauche</option>
-                                            <option value="center">Centré</option>
-                                            <option value="right">Droite</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Hauteur de la ligne : </label>
-                                        <input type="text" name="line-height" class="form-control updated line-height" value="" />
                                     </div>
 
                                     <hr />
@@ -235,10 +201,36 @@
 
                                     <div class="admin_widget_text admin_widget">
                                         <div class="form-group">
+                                            <label>Color : </label>
+                                            <input type="text" name="color" class="form-control updated_widget color" value="" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Taille de la police : </label>
+                                            <input type="text" name="font-size" class="form-control updated_widget font-size" value="" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Text align : </label>
+                                            <select class="form-control updated text-align" name="text-align">
+                                                <option value="left">Gauche</option>
+                                                <option value="center">Centré</option>
+                                                <option value="right">Droite</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Hauteur de la ligne : </label>
+                                            <input type="text" name="line-height" class="form-control updated_widget line-height" value="" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="form-group">
                                             <br />
                                             <label>Votre text : </label>
                                             <br />
-                                            <textarea name="widget_text_content" class="form-control updated_widget" value="" /></textarea>
+                                            <textarea name="widget_text_content" class="form-control updated_widget_content" value="" /></textarea>
                                         </div>
                                         <div class="" align="right"><a href="" class="btn btn-default btn-admin-widget">Retour</a></div>
                                     </div>
@@ -289,7 +281,9 @@ if ($content == "") {
                         'name' => "section_1_ligne_1_col_1",
                         'class' => '',
                         'styles' => (object) array(),
-                        'widgets'   => (object) array(),
+                        'widgets'   => (object) array(
+                            'styles' => (object) array()
+                        ),
                     )
                 )
             )
@@ -336,7 +330,13 @@ foreach ($ligne->cols as $col) {
         <?php if (property_exists($col, "widgets")) { ?>
             <?php if(!empty((array)$col->widgets)) { ?>
                 <?php foreach ($col->widgets as $value) { ?>
-                    <div class="content_widget"><?php echo $value; ?></div>
+                    <?php if(!is_object($value)) { ?>
+                        <div class="content_widget" style="<?php if (property_exists($col->widgets, "styles")) { ?>
+                            <?php foreach ($col->widgets->styles as $key_styles => $value_styles) { ?>
+                                    <?php echo $key_styles.": ".$value_styles; ?>
+                                <?php } ?>
+                         <?php } ?>"><?php echo $value; ?></div>
+                    <?php } ?>
                 <?php } ?>
             <?php } else { ?>
                 <div class="content_widget">Center</div>
@@ -441,9 +441,10 @@ foreach ($ligne->cols as $col) {
                                         'widgets': {
                                             <?php if (property_exists($col, "widgets")) { ?>
                                                 <?php foreach ($col->widgets as $key => $value) { ?>
-                                                    "<?php echo $key ?>": "<?php echo $value ?>",
+                                                    "<?php echo $key ?>": <?php echo json_encode($value) ?>,
                                                 <?php } ?>
                                             <?php } ?>
+                                            'styles': {}
                                         },
                                     },
                                 <?php } ?>
@@ -851,7 +852,20 @@ foreach ($ligne->cols as $col) {
 
     $('.boxConfig #colPanel .updated_widget').bind('keyup',function() {
         // On fait le live update
-        $("#"+$(".boxConfig .id").val()).css($(this).attr("name"), $(this).val());
+        $("#"+$(".boxConfig .id").val() + " .content_widget").css($(this).attr("name"), $(this).val());
+
+        col_id=$(".boxConfig .id").val();
+        var id = col_id.split("_");
+        section_id=id[0]+"_"+id[1];
+        ligne_id = section_id+"_"+id[2]+"_"+id[3];
+
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['styles'][$(this).attr("name")] = $(this).val();
+
+    });
+
+    $('.boxConfig #colPanel .updated_widget_content').bind('keyup',function() {
+        // On fait le live update
+        // $("#"+$(".boxConfig .id").val()).css($(this).attr("name"), $(this).val());
         
         col_id=$(".boxConfig .id").val();
         var id = col_id.split("_");
@@ -859,8 +873,8 @@ foreach ($ligne->cols as $col) {
         ligne_id = section_id+"_"+id[2]+"_"+id[3];
 
         // On sauvegarde la config de l'éléments
-        widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
-        widgets[$(this).attr("name")] = $(this).val();
+        // widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'][$(this).attr("name")] = $(this).val();
 
         $("#"+$(".boxConfig .id").val()+" .content_widget").html($(this).val());
     });

@@ -17,9 +17,9 @@ class ArticlesController extends CockpitController
         $articles = Article::findAll("site_id = " . Session::get('site_id'));
 
         $this->render('index', array(
-            'articles' => $articles,
+            'articles'  => $articles,
             'titlePage' => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'     => 'Listes des articles',
+            'titleBox'  => 'Listes des articles',
         ));
     }
 

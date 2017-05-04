@@ -12,7 +12,8 @@ class MenuItem extends Model
         'link',
         'position',
         'active',
-        'menu_id'
+        'menu_id',
+        'media_id'
     );
 
     public function getAssociations()
@@ -22,6 +23,11 @@ class MenuItem extends Model
                 'type' => '1',
                 'model' => 'Cms\\models\\Menu',
                 'key' => 'menu_id'
+            ),
+            'media' => array(
+                'type' => '1',
+                'model' => 'Media\\models\\Media',
+                'key' => 'media_id'
             )
         );
     }

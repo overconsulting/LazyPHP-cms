@@ -10,10 +10,12 @@
         </div>
     </div>
     <div class="box-body">
+
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th width="1%">ID</th>
+                    <th width="10%">Item</th>
                     <th width="80%">Label</th>
                     <th>Status</th>
                     <th width="10%">Actions</th>
@@ -24,6 +26,18 @@
 foreach ($params['items'] as $item) {
     echo '<tr>';
     echo '<td>'.$item->id.'</td>';
+    
+    if ($item->media->image != null) {
+        if ($item->media->image->url != '') {
+            $thumbnail = '<img src="'.$item->media->image->url.'" width="25" height="25" />';
+        }
+    } else {
+        $thumbnail = '';
+    }
+
+    echo '<td>'.$thumbnail.'</td>';
+    
+
     echo '<td>';
     echo '<span style="font-family: monospace;">'.str_repeat('&nbsp;', $item->level * 4).'|__</span>&nbsp;&nbsp;';
     echo $item->label;

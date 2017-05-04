@@ -12,6 +12,7 @@
 	    {% form_open id="formMenu" action="formAction" class="form-horizontal" %}
 	    	{% input_select name="menu_id" model="menuitem.menu_id" options="menusOptions" label="Menu" %}
 	    	{% input_select name="parent" model="menuitem.parent" options="menusItemsOptions" label="Item parent" %}
+	    	{% input_media name="media_id" model="menuitem.media_id" label="Image" mediaType="image" mediaCategory="menuitem" %}
 	    	{% input_text name="label" model="menuitem.label" label="Nom" %}
 		    {% input_text name="link" model="menuitem.link" label="Link" %}
 		    {% input_checkbox name="active" model="menuitem.active" label="Actif" %}
