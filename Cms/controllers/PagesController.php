@@ -12,7 +12,7 @@ class PagesController extends FrontController
     {
         $page = Page::findById($id);
         
-        if ($page->active != 1) {
+        if ($page->active != 1 or $page->content == null) {
             $this->redirect("/");
         }
         

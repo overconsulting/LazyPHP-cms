@@ -51,6 +51,11 @@ class MenusController extends CockpitController
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
         }
+        
+        if (!isset($this->request->post['principal'])) {
+            $this->request->post['principal'] = 0;
+        }
+
         $this->request->post['site_id'] = Session::get("site_id");
 
         $this->menu = new Menu();
@@ -89,6 +94,11 @@ class MenusController extends CockpitController
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
         }
+
+        if (!isset($this->request->post['principal'])) {
+            $this->request->post['principal'] = 0;
+        }
+
         $this->request->post['site_id'] = Session::get("site_id");
 
         $this->menu = Menu::findById($id);

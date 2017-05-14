@@ -46,8 +46,13 @@
                                     <br />
                                     <p align="center"><b>Configuration de la section</b></p>
                                     <div class="form-group">
-                                        <label>Fond d'écran : </label>
+                                        <label>Fond (couleur) : </label>
                                         <input type="text" name="background" class="form-control updated background" value="" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Fond (image) : </label>
+                                        {% input_media name="media_id" label="Image" mediaType="image" %}
                                     </div>
 
                                     <div class="form-group">
@@ -111,8 +116,8 @@
                                     <br />
                                     <p align="center"><b>Configuration de la ligne</b></p>
                                     <div class="form-group">
-                                        <label>Fond d'écran : </label>
-                                        <input type="text" name="background" class="form-control updated background" value="" />
+                                        <label>Fond d'écran: </label>
+                                        <input type="text" name="background-color" class="form-control updated background" value="" />
                                     </div>
 
                                     <div class="form-group">
@@ -183,6 +188,46 @@
                                         <input type="text" name="background" class="form-control updated background" value="" />
                                     </div>
 
+                                    <div class="form-group">
+                                        <label>Hauteur : </label>
+                                        <input type="text" name="height" class="form-control updated height" value="" />
+                                    </div>
+
+                                    <hr />
+
+                                    <div class="form-group">
+                                        <label>Margin : </label>
+                                        <br />
+                                        <input type="text" name="margin-top" class="col-lg-3 updated margin-top" value="" />
+                                        <input type="text" name="margin-right" class="col-lg-3 updated margin-right" value="" />
+                                        <input type="text" name="margin-bottom" class="col-lg-3 updated margin-bottom" value="" />
+                                        <input type="text" name="margin-left" class="col-lg-3 updated margin-left" value="" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Padding : </label>
+                                        <br />
+                                        <input type="text" name="padding-top" class="col-lg-3 updated padding-top" value="" />
+                                        <input type="text" name="padding-right" class="col-lg-3 updated padding-right" value="" />
+                                        <input type="text" name="padding-bottom" class="col-lg-3 updated padding-bottom" value="" />
+                                        <input type="text" name="padding-left" class="col-lg-3 updated padding-left" value="" />
+                                    </div>
+
+                                    <hr />
+
+                                    <div class="form-group">
+                                        <label>Border : </label>
+                                        <br />
+                                        <input type="text" name="border-width" class="col-lg-3 updated border-width" value="" />
+                                        <select class="col-lg-4 updated text-align" name="border-style">
+                                            <option value="solid">Pleine</option>
+                                            <option value="dotted">Pointillé</option>
+                                            <option value="dashed">Tiret</option>
+                                            <option value="none">Sans</option>
+                                        </select>
+                                        <input type="text" name="border-color" class="col-lg-4 updated border-color" value="" />
+                                    </div>
+
                                     <hr />
 
                                     <div class="form-group">
@@ -197,6 +242,7 @@
                                     <div class="choix_widget">
                                         <a href="" class="widget_text btn btn-default"><i class="fa fa-pencil"></i></a>
                                         <a href="" class="widget_image btn btn-default"><i class="fa fa-picture-o"></i></a>
+                                        <a href="" class="widget_widget btn btn-default"><i class="fa fa-qrcode"></i></a>
                                     </div>
 
                                     <div class="admin_widget_text admin_widget">
@@ -240,9 +286,13 @@
                                             <br />
                                             <label>Votre image : </label>
                                             <br />
-                                            {% input_media name="media_id" label="Image" mediaType="image" %}
+                                            {% input_media name="media_widget_image_id" label="Image" mediaType="image" %}
                                         </div>
                                         <div class="" align="right"><a href="" class="btn btn-default btn-admin-widget">Retour</a></div>
+                                    </div>
+
+                                    <div class="admin_widget_widget admin_widget">
+
                                     </div>
                                     <br />
                                 </div>
@@ -282,7 +332,11 @@ if ($content == "") {
                         'class' => '',
                         'styles' => (object) array(),
                         'widgets'   => (object) array(
-                            'styles' => (object) array()
+                            'content'     => 'Center',
+                            'content_id'  => null,
+                            'label'       => 'Widget Text',
+                            'type'        =>  'text',
+                            'styles'      => (object) array()
                         ),
                     )
                 )
@@ -328,16 +382,19 @@ foreach ($ligne->cols as $col) {
             <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
         </div>
         <?php if (property_exists($col, "widgets")) { ?>
-            <?php if(!empty((array)$col->widgets)) { ?>
-                <?php foreach ($col->widgets as $value) { ?>
-                    <?php if(!is_object($value)) { ?>
-                        <div class="content_widget" style="<?php if (property_exists($col->widgets, "styles")) { ?>
-                            <?php foreach ($col->widgets->styles as $key_styles => $value_styles) { ?>
-                                    <?php echo $key_styles.": ".$value_styles; ?>
-                                <?php } ?>
-                         <?php } ?>"><?php echo $value; ?></div>
+            <?php if (!empty((array)$col->widgets)) { ?>
+                <div class="content_widget" style="<?php if (property_exists($col->widgets, "styles")) { ?>
+                    <?php foreach ($col->widgets->styles as $key_styles => $value_styles) { ?>
+                        <?php echo $key_styles.": ".$value_styles; ?>
                     <?php } ?>
-                <?php } ?>
+                <?php } ?>">
+                    <?php if ($col->widgets->type == "text") { ?>
+                        <?php echo $col->widgets->content; ?>
+                    <?php } ?>
+                    <?php if ($col->widgets->type == "image") { ?>
+                        <?php echo $col->widgets->content; ?>
+                    <?php } ?>
+                </div>
             <?php } else { ?>
                 <div class="content_widget">Center</div>
             <?php } ?>
@@ -439,12 +496,17 @@ foreach ($ligne->cols as $col) {
                                             <?php } ?>
                                         },
                                         'widgets': {
-                                            <?php if (property_exists($col, "widgets")) { ?>
-                                                <?php foreach ($col->widgets as $key => $value) { ?>
-                                                    "<?php echo $key ?>": <?php echo json_encode($value) ?>,
+                                            "content": <?php echo json_encode($col->widgets->content) ?>,
+                                            "content_id": <?php echo json_encode($col->widgets->content_id) ?>,
+                                            "label": <?php echo json_encode($col->widgets->label) ?>,
+                                            "type": <?php echo json_encode($col->widgets->type) ?>,
+                                            'styles': {
+                                                <?php if (property_exists($col->widgets, "styles")) { ?>
+                                                    <?php foreach ($col->widgets->styles as $key => $value) { ?>
+                                                        "<?php echo $key ?>": <?php echo json_encode($value) ?>,
+                                                    <?php } ?>
                                                 <?php } ?>
-                                            <?php } ?>
-                                            'styles': {}
+                                            }
                                         },
                                     },
                                 <?php } ?>
@@ -507,6 +569,13 @@ foreach ($ligne->cols as $col) {
             "name": col_id,
             "styles": {},
             "class": "",
+            'widgets': {
+                'content'     : 'Center',
+                'content_id'  : null,
+                'label'       : 'Widget Text',
+                'type'        : 'text',
+                'styles'      : {}
+            },
         };
     }
 
@@ -546,7 +615,14 @@ foreach ($ligne->cols as $col) {
         config[section.attr('id')]['lignes'][section.attr('id')+"_ligne_"+newNbLigne]['cols'][col_id] = {
             "name": col_id,
             "class": "",
-            "styles": {}
+            "styles": {},
+            'widgets': {
+                'content'     : 'Center',
+                'content_id'  : null,
+                'label'       : 'Widget Text',
+                'type'        : 'text',
+                'styles'      : {}
+            },
         };
 
         // On met à jour les infos de la nouvelle ligne
@@ -574,14 +650,22 @@ foreach ($ligne->cols as $col) {
             // on ajout la nouvelle colonne
             section = $(obj).parent().parent().parent().attr('id');
             col_id = row.attr('id')+"_col_"+newNbCol;
-            row.append('<div class="col" id='+col_id+'><div class="action"><div class="label label-default colConfig">Col '+newNbCol+'</div></div><div class="content_widget">Center</div></div>');
+            row.append('<div class="col" id='+col_id+'><div class="action"><div class="label label-default colConfig">Col '+newNbCol+'</div><a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a></div><div class="content_widget">Center</div></div>');
 
             config[section]['lignes'][row.attr('id')]['cols'][col_id] = {
                 "name": col_id,
                 "class": "",
-                "styles": {}
+                "styles": {},
+                'widgets': {
+                    'content'     : 'Center',
+                    'content_id'  : null,
+                    'label'       : 'Widget Text',
+                    'type'        : 'text',
+                    'styles'      : {}
+                },
             };
 
+            $(obj).parent().parent().find('.nbSectionLigneCol').val(newNbCol);
             // $(obj).parent().attr('id', col_id)
 
             // on set les nouvelles valeurs
@@ -691,6 +775,15 @@ foreach ($ligne->cols as $col) {
         $('.choix_widget').hide();
     });
 
+    $(document).on('click', '.widget_widget', function(event) {
+        event.preventDefault();
+        // On recupère le html
+
+        $('.admin_widget_text').hide();
+        $('.admin_widget_image').show();
+        $('.choix_widget').hide();
+    });
+
     $(document).on('click', '.btn-admin-widget', function(event) {
         event.preventDefault();
         $('.admin_widget_text').hide();
@@ -700,32 +793,112 @@ foreach ($ligne->cols as $col) {
 
     $(document).on('click', '.delSection', function(event) {
         event.preventDefault();
-        delete config[$(this).parent().parent().attr("id")];
-        $(this).parent().parent().remove();
+        hidePanel();
+        nbSection = $(this).parent().parent().parent().find('.nbSection').val();
+        if (nbSection > 1) {
+            $(this).parent().parent().parent().find('.nbSection').val((nbSection-1));
+            delete config[$(this).parent().parent().attr("id")];
+            $(this).parent().parent().remove();
+        } else {
+            alert('Il doit toujours y a voir au moins une section');
+        }
     });
 
     $(document).on('click', '.delLigne', function(event) {
         event.preventDefault();
-        ligne_id = $(this).parent().parent().attr("id");
-        splitid = ligne_id.split("_");
-        section_id=splitid[0]+"_"+splitid[1];
-        delete config[section_id]['lignes'][ligne_id];
-        $(this).parent().parent().remove();
+        hidePanel();
+        nbLigne = $(this).parent().parent().parent().find('.nbSectionLigne').val();
+        if (nbLigne > 1) {
+            $(this).parent().parent().parent().find('.nbSectionLigne').val((nbLigne-1));
+            ligne_id = $(this).parent().parent().attr("id");
+            splitid = ligne_id.split("_");
+            section_id=splitid[0]+"_"+splitid[1];
+            delete config[section_id]['lignes'][ligne_id];
+            $(this).parent().parent().remove();
+
+
+            // On parcours les lignes pour mettre à jour
+            count = (parseInt(splitid[3])+1);
+            len = (Object.keys(config[section_id]['lignes']).length+1);
+            for (; count <= len; count++) {
+                id = section_id+'_ligne_'+count;
+                new_id = section_id+'_ligne_'+(count-1);
+                
+                // On s'occupe de la partie config
+                config[section_id]['lignes'][id]['name'] = new_id;
+                config[section_id]['lignes'][new_id] = config[section_id]['lignes'][id];
+                delete config[section_id]['lignes'][id];
+                len_col = (Object.keys(config[section_id]['lignes'][new_id]["cols"]).length+1);
+
+                // On modifie le HTML
+                $("#"+id).find('.ligneConfig').html("Ligne "+ (count-1));
+                $("#"+id).attr('id', new_id);
+
+                // On modifie les Cols en fonction du nouvel id
+                console.log(len_col);
+                count_col = 1;
+                for (; count_col < len_col; count_col++) {
+                    console.log(id+"_col_"+count_col);
+                    config[section_id]['lignes'][new_id]['cols'][id+"_col_"+count_col]['name'] = new_id+'_col_'+count_col;
+                    config[section_id]['lignes'][new_id]['cols'][new_id+'_col_'+count_col] = config[section_id]['lignes'][new_id]['cols'][id+"_col_"+count_col];
+                    delete config[section_id]['lignes'][new_id]['cols'][id+"_col_"+count_col];
+                }
+            }
+
+        } else {
+            alert('Il doit toujours y a voir au moins une ligne');
+        }
     });
 
     $(document).on('click', '.delCol', function(event) {
         event.preventDefault();
-        col_id = $(this).parent().attr("id");
-        splitid = col_id.split("_");
-        section_id=splitid[0]+"_"+splitid[1];
-        ligne_id=section_id+"_"+splitid[2]+"_"+splitid[3];
-        delete config[section_id]['lignes'][ligne_id]['cols'][col_id];
-        $(this).parent().remove();
+        hidePanel();
+        nbCol = $(this).parent().parent().parent().find('.nbSectionLigneCol').val();
+        if (nbCol > 1) {
+            col_id = $(this).parent().parent().attr("id");
+            splitid = col_id.split("_");
+            section_id = splitid[0]+"_"+splitid[1];
+            ligne_id = section_id+"_"+splitid[2]+"_"+splitid[3];
+            
+            // On supprime la ligne en trop
+            delete config[section_id]['lignes'][ligne_id]['cols'][col_id];
+            $(this).parent().parent().remove();
+
+            // Ici on refait les div correctement
+            newNbCol = parseInt(nbCol)-1;
+            $('#'+ligne_id+' .nbSectionLigneCol').val(newNbCol);
+            newSizeCol = (12/newNbCol);
+            $('#'+ligne_id+' .col').removeClass().addClass('col col-lg-'+newSizeCol);
+
+            // On fait une boucle pour remettre la configuration et les id
+            count = (parseInt(splitid[5])+1);
+            len = (Object.keys(config[section_id]['lignes'][ligne_id]['cols']).length+1);
+            for (; count <= len; count++) {
+                id = ligne_id+'_col_'+count;
+                new_id = ligne_id+'_col_'+(count-1);
+                
+                // On s'occupe de la partie config
+                config[section_id]['lignes'][ligne_id]['cols'][id]['name'] = ligne_id+'_col_'+ (count-1);
+                config[section_id]['lignes'][ligne_id]['cols'][new_id] = config[section_id]['lignes'][ligne_id]['cols'][id];
+                delete config[section_id]['lignes'][ligne_id]['cols'][id];
+
+                // On modifie le HTML
+                $("#"+id).find('.colConfig').html("Col "+ (count-1));
+                $("#"+id).attr('id', new_id);
+            }
+
+        } else {
+            alert('Il doit toujours y a voir au moins une colonne');
+        }
     });
 
     function saveConfig(config) {
         $('.config').val(JSON.stringify(config));
         $('#formLogin').submit();
+    }
+
+    function hidePanel() {
+        $('.boxConfig').hide();
     }
 
     function showPanel(className, obj) {
@@ -785,6 +958,20 @@ foreach ($ligne->cols as $col) {
         }
     });
 
+    $('.boxConfig #sectionPanel #media_id_url').bind('change',function() {
+        // On fait le live update
+        // console.log("change fond 'écran");
+        $("#"+$(".boxConfig .id").val()).css("background", "url("+$(this).parent().find('#media_id_url').val()+")");
+        $("#"+$(".boxConfig .id").val()).css("background-size", "cover");
+        $("#"+$(".boxConfig .id").val()).css("background-position", "center center");
+
+        // On sauvegarde la config de l'éléments
+        // console.log("#"+$(".boxConfig .id").val(), $(this).attr("name"));
+        config[$(".boxConfig .id").val()]['styles']["background"] = "url("+$(this).parent().find('#media_id_url').val()+")";
+        config[$(".boxConfig .id").val()]['styles']["background-size"] = "cover";
+        config[$(".boxConfig .id").val()]['styles']["background-position"] = "center center";
+    });
+
     // Partie live update des champs
     $('.boxConfig #colPanel .updated').bind('keyup',function() {
         // On fait le live update
@@ -820,7 +1007,7 @@ foreach ($ligne->cols as $col) {
         }
     });
 
-    $('.boxConfig #colPanel #media_id_url').bind('change',function() {
+    $('.boxConfig #colPanel #media_widget_image_id_url').bind('change',function() {
         col_id=$(".boxConfig .id").val();
         var id = col_id.split("_");
         section_id=id[0]+"_"+id[1];
@@ -829,8 +1016,13 @@ foreach ($ligne->cols as $col) {
         
         // On sauvegarde la config de l'éléments
         widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
-        widgets[$(this).attr("name")] = "<img src='"+$(this).parent().find('#media_id_url').val()+"' alt='' />";
-        $("#"+$(".boxConfig .id").val()+" .content_widget").html("<img src='"+$(this).parent().find('#media_id_url').val()+"' alt='' />");
+        widgets[$(this).attr("name")] = "<img src='"+$(this).parent().find('#media_widget_image_id_url').val()+"' alt='' />";
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['label'] = "Widget Image";
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['type'] = 'image';
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['content_id'] = null;
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['content'] = "<img src='"+$(this).parent().find('#media_widget_image_id_url').val()+"' alt='' />";
+
+        $("#"+$(".boxConfig .id").val()+" .content_widget").html("<img src='"+$(this).parent().find('#media_widget_image_id_url').val()+"' alt='' />");
     });
 
     // Partie live update des champs
@@ -875,6 +1067,10 @@ foreach ($ligne->cols as $col) {
         // On sauvegarde la config de l'éléments
         // widgets = config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'] = {};
         config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets'][$(this).attr("name")] = $(this).val();
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['label'] = "Widget Text";
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['type'] = 'text';
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['content_id'] = null;
+        config[section_id]['lignes'][ligne_id]['cols'][col_id]['widgets']['content'] = $(this).val();
 
         $("#"+$(".boxConfig .id").val()+" .content_widget").html($(this).val());
     });
