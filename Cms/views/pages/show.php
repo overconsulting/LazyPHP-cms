@@ -44,8 +44,4 @@ foreach ($ligne->cols as $col) {
 }
 ?>
 
-<?php
-
-echo Widget\Widget::getWidget('gallery', 3);
-
-?>
+{% widget type="startups" length="3" %}
