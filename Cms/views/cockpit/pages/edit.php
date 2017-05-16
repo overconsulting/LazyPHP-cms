@@ -388,10 +388,10 @@ foreach ($ligne->cols as $col) {
                         <?php echo $key_styles.": ".$value_styles; ?>
                     <?php } ?>
                 <?php } ?>">
-                    <?php if ($col->widgets->type == "text") { ?>
+                    <?php if (isset($col->widgets->type) && $col->widgets->type == "text") { ?>
                         <?php echo $col->widgets->content; ?>
                     <?php } ?>
-                    <?php if ($col->widgets->type == "image") { ?>
+                    <?php if (isset($col->widgets->type) && $col->widgets->type == "image") { ?>
                         <?php echo $col->widgets->content; ?>
                     <?php } ?>
                 </div>
