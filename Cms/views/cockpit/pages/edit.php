@@ -172,13 +172,13 @@
 
                         <div id="colPanel" class="panel">
                             <!-- Nav tabs -->
-                              <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#style" aria-controls="style" role="tab" data-toggle="tab">Style</a></li>
-                                <li role="presentation"><a href="#widget" aria-controls="widget" role="tab" data-toggle="tab">Widget</a></li>
-                              </ul>
+                            <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#style" aria-controls="style" role="tab" data-toggle="tab">Style</a></li>
+                            <li role="presentation"><a href="#widget" aria-controls="widget" role="tab" data-toggle="tab">Widget</a></li>
+                            </ul>
 
-                              <!-- Tab panes -->
-                              <div class="tab-content">
+                            <!-- Tab panes -->
+                            <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="style">
                                     <br />
                                     <p align="center"><b>Configuration de la colonne</b></p>
@@ -366,7 +366,6 @@ foreach ($section->lignes as $ligne) {
                     <?php } ?>">
         <div class="action">
             <div class="label label-default ligneConfig">Ligne <?php echo $compteur_ligne; ?></div>
-            <a href="" class="label-success addCol label"><i class="fa fa-plus"></i> colonne</a>
             <a href="" class="label-danger delLigne label"><i class="fa fa-trash-o"></i> ligne</a>
         </div>
 <?php
@@ -379,6 +378,7 @@ foreach ($ligne->cols as $col) {
                     <?php } ?>">
         <div class="action">
             <div class="label label-default colConfig">Col <?php echo $compteur_col; ?></div>
+            <a href="" class="label-success addCol label"><i class="fa fa-plus"></i> col</a>
             <a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a>
         </div>
         <?php if (property_exists($col, "widgets")) { ?>
@@ -526,6 +526,13 @@ foreach ($ligne->cols as $col) {
     cible = "rendrecontent";
     console.log(config);
 
+    function addElement(type, element) {
+        cibleId = $(element).parent().parent().parent().attr('id');
+        if (type == 'col') {
+            addCol(cibleId, element);
+        }
+    }
+
     function addSection() {
         sections = $('.nbSection').val();
         sections++;
@@ -629,30 +636,56 @@ foreach ($ligne->cols as $col) {
         row.find(".label:first").html('Ligne '+newNbLigne);
     }
 
-    function addCol(obj) {
+    function getIds(element) {
+        splitId = element.split("_");
+        return splitId;
+    }
+
+    function addCol(cibleId, element) {
+        afterId = $(element).parent().parent().attr('id');
+        console.log(afterId);
         // On récupère le nombre de colonne
-        nbCol = $(obj).parent().parent().find('.nbSectionLigneCol').val();
-        
+        nbCol = parseInt($("#"+cibleId).find(".nbSectionLigneCol").val());
+
         if (nbCol > 5) {
             alert('Vous ne pouvez pas ajouter plus de colonne');
         } else {
-            // On calcule le bon nom
-            newNbCol = (parseInt(nbCol)+1);
-            $(obj).parent().parent().find('.nbSectionLigneCol').val(newNbCol);
+            // On get les infos sur le noeud
+            splitids = getIds(cibleId);
+            sectionId = splitids[0]+"_"+splitids[1];
+            ligneId = splitids[2]+"_"+splitids[3];
+
+            // On calcule la taille de colonne
+            newNbCol = nbCol + 1;
             newSizeCol = (12/newNbCol);
-            
-            // On set les valeurs
-            row = $(obj).parent().parent();
+            sietCol = (12/nbCol);
 
-            // on vire les ancienne class
-            row.find( ".col" ).removeClass('col-lg-'+(12/parseInt(nbCol)));
+            col_id = cibleId + "_col_" + newNbCol;
+            $(element).parent().parent().after('<div class="col" id='+col_id+'><div class="action"><div class="label label-default colConfig">Col '+newNbCol+'</div><a href="" class="label-success addCol label"><i class="fa fa-plus"></i> col</a><a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a></div><div class="content_widget">Center</div></div>');
 
-            // on ajout la nouvelle colonne
-            section = $(obj).parent().parent().parent().attr('id');
-            col_id = row.attr('id')+"_col_"+newNbCol;
-            row.append('<div class="col" id='+col_id+'><div class="action"><div class="label label-default colConfig">Col '+newNbCol+'</div><a href="" class="label-danger delCol label"><i class="fa fa-trash-o"></i> col</a></div><div class="content_widget">Center</div></div>');
+            $("#"+cibleId).removeClass('col-lg-'+sietCol);
+            $("#"+cibleId).find( ".col" ).addClass('col-lg-'+newSizeCol);
+            $("#"+cibleId).find(".nbSectionLigneCol").val(newNbCol);
 
-            config[section]['lignes'][row.attr('id')]['cols'][col_id] = {
+            $(element).parent().parent().parent().find('.col').each(function(index, el) {
+                $(el).attr('id', sectionId+"_"+ligneId+"_col_"+(index+1));
+                $(el).find(".colConfig").html("Col "+(index+1));
+            });
+
+            // La partie config
+            for(var i = nbCol; i > 0; i--){
+                if (cibleId+"_col_"+i != afterId) {
+                    console.log(sectionId, ligneId, cibleId+"_col_"+i);
+                    config[sectionId]['lignes'][sectionId+"_"+ligneId]['cols'][cibleId+"_col_"+(i)]['name'] = cibleId+"_col_"+(i);
+                    config[sectionId]['lignes'][sectionId+"_"+ligneId]['cols'][cibleId+"_col_"+(i+1)] = config[sectionId]['lignes'][sectionId+"_"+ligneId]['cols'][cibleId+"_col_"+(i)];
+                    // delete config[sectionId]['lignes'][sectionId+"_"+ligneId]['cols'][cibleId+"_col_"+(i)];
+                } else {
+                    break;
+                }
+            }
+
+            console.log(col_id);
+            config[sectionId]['lignes'][sectionId+"_"+ligneId]['cols'][col_id] = {
                 "name": col_id,
                 "class": "",
                 "styles": {},
@@ -664,13 +697,11 @@ foreach ($ligne->cols as $col) {
                     'styles'      : {}
                 },
             };
-
-            $(obj).parent().parent().find('.nbSectionLigneCol').val(newNbCol);
-            // $(obj).parent().attr('id', col_id)
-
-            // on set les nouvelles valeurs
-            row.find( ".col" ).addClass('col-lg-'+newSizeCol);
         }
+    }
+
+    function configMoveElement() {
+
     }
 
     // Partie pour les hover sur les blocs de configuration
@@ -733,7 +764,8 @@ foreach ($ligne->cols as $col) {
 
     $(document).on('click', '.addCol', function(event) {
         event.preventDefault();
-        addCol(this);
+        // addCol(this);
+        addElement("col", this)
     });
 
     // Partie pour les clicks de configration
