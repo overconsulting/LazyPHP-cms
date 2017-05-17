@@ -1,5 +1,5 @@
 <h1 class="page-title">{{ titlePage }}</h1>
-<form id="formLogin" method="post" action="{{ formAction }}" class="form form-horizontal">
+<form id="formPage" method="post" action="{{ formAction }}" class="form form-horizontal">
     <input type="hidden" class="config" name="content" value="" />
     <div class="box box-purple">
         <div class="box-header">
@@ -926,7 +926,7 @@ foreach ($ligne->cols as $col) {
 
     function saveConfig(config) {
         $('.config').val(JSON.stringify(config));
-        $('#formLogin').submit();
+        $('#formPage').submit();
     }
 
     function hidePanel() {

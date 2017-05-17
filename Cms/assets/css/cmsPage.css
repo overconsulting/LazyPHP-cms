@@ -1,0 +1,66 @@
+#cms_page_container {
+	padding: 10px;
+}
+
+#cms_page_container section {
+	/*background: #cc3333;*/
+	margin: 5px 0;
+	padding: 10px;
+	min-height: 3em;
+	width: 100%;
+	position: relative;
+	border: dashed 1px #cccccc;
+}
+
+#cms_page_container section:hover {
+	border: dashed 1px #333333;
+}
+
+#cms_page_container section.selected {
+	border: dashed 1px #ff3333;
+}
+
+#cms_page_container section .cms-page-row {
+	/*background: #33cc33;*/
+	margin: 5px 0;
+	padding: 31px 10px 10px 10px;
+	min-height: 3em;
+	width: 100%;
+	position: relative;
+	border: dashed 1px #cccccc;
+}
+
+#cms_page_container section .cms-page-row:hover {
+	border: dashed 1px #333333;
+}
+
+#cms_page_container section .cms-page-row.selected {
+	border: dashed 1px #cc3333;
+}
+
+#cms_page_container section .cms-page-row .cms-page-col {
+	/*background: #3333cc;*/
+	display: inline-block;
+	margin: 0 5px;
+	padding: 10px;
+	min-height: 3em;
+	min-width: 100px;
+	position: relative;
+	border: dashed 1px #cccccc;
+}
+
+#cms_page_container section .cms-page-row .cms-page-col:hover {
+	border: dashed 1px #333333;
+}
+
+#cms_page_container section .cms-page-row .cms-page-col.selected {
+	border: dashed 1px #cc3333;
+}
+
+#cms_page_container button.action-del-section,
+#cms_page_container button.action-del-row,
+#cms_page_container button.action-del-col {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
