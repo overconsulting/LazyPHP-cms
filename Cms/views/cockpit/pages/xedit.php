@@ -27,8 +27,10 @@
                 <h3 class="box-title">Propriétés</h3>
             </div>
             <div id="cms_page_element_properties" class="box-body">
-                {% form_open id="formProperties" %}
-                    {% input_text label="Id" value="" %}
+                <div id="cms_page_element_name"></div>
+                {% form_open id="formProperties" noBootstrapCol="1" %}
+                    {% input_text name="id" label="Id" %}
+                    {% input_text name="background" label="Couleur de fond" %}
                 {% form_close %}
             </div>
         </div>

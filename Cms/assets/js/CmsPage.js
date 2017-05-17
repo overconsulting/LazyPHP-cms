@@ -62,18 +62,18 @@ CmsPage.prototype.createHtml = function() {
 	// var colSize = defaultColSize;
 
 	for (s = 0; s < this.sections.length; s = s + 1) {
-		html = html + _getAddSectionButton(s) + '<section class="cms-page-section">' + _getDelSectionButton(s);
+		html = html + _getAddSectionButton(s) + '<section class="cms-page-section" data-section-index="'+s+'">' + _getDelSectionButton(s);
 
 		for (r = 0; r < this.sections[s].rows.length; r = r + 1) {
-			html = html + _getAddRowButton(s, r) + '<div class="cms-page-row">' + _getDelRowButton(s, r);
+			html = html + _getAddRowButton(s, r) + '<div class="cms-page-row" data-section-index="'+s+'" data-row-index="'+r+'">' + _getDelRowButton(s, r);
 
 			// defaultColSize = _getBootstrapColSize(this.sections[s].rows[r].cols.length);
 
 			for (c = 0; c < this.sections[s].rows[r].cols.length; c = c + 1) {				
 				// colSize = this.sections[s].rows[r].cols[c].colSize != null ? this.sections[s].rows[r].cols[c].colSize : defaultColSize;
 
-				html = html + _getAddColButton(s, r, c) + '<div class="cms-page-col">' + _getDelColButton(s, r, c);
-				html = html + s+", "+r+", "+c;
+				html = html + _getAddColButton(s, r, c) + '<div class="cms-page-col" data-section-index="'+s+'" data-row-index="'+r+'" data-col-index="'+c+'">' + _getDelColButton(s, r, c);
+				//html = html + s+", "+r+", "+c;
 				html = html + "</div>"
 			}
 			html = html + _getAddColButton(s, r, this.sections[s].rows[r].cols.length);
@@ -93,6 +93,8 @@ CmsPage.prototype.createHtml = function() {
 		$(cmsPageContainer).find(".action").on("click", {page: this}, this.doAction);
 
 		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectElement);
+
+		$("#formProperties input[type=text]").on("change", {page: this}, this.selectElement);
 
 		var cols = null;
 		var buttons = null;
@@ -117,13 +119,33 @@ CmsPage.prototype.createHtml = function() {
 	return html;
 }
 
+CmsPage.prototype.loadProperties = function(element) {
+	var sectionIndex = element.hasAttribute("data-section-index") ? parseInt(element.getAttribute("data-section-index")) : null;
+	var rowIndex = element.hasAttribute("data-row-index") ? parseInt(element.getAttribute("data-row-index")) : null;
+	var colIndex = element.hasAttribute("data-col-index") ? parseInt(element.getAttribute("data-col-index")) : null;
+
+	var elementName = document.getElementById("cms_page_element_name");
+	html = "Section : "+sectionIndex;
+	if (rowIndex != null) {
+		html = html + " / Ligne : " + rowIndex;
+
+		if (colIndex != null) {
+			html = html + " / Colonne : " + colIndex;
+		}
+	} else {
+
+	}
+	elementName.innerHTML = html;
+}
+
 CmsPage.prototype.selectElement = function(event) {
 	var element = event.currentTarget;
 	var cmsPageContainer = document.getElementById("cms_page_container");
 
-	console.log(element);
 	$(cmsPageContainer).find(".cms-page-section.selected, .cms-page-row.selected, .cms-page-col.selected").removeClass("selected");
 	$(element).addClass("selected");
+
+	event.data.page.loadProperties(element);
 
 	event.stopPropagation();
 }
@@ -218,39 +240,6 @@ function _getDelColButton(sectionIndex, rowIndex, colIndex)
 		'</button>';
 	return html;
 }
-
-// function _getBootstrapColSize(colCount)
-// {
-// 	var colSize = 12;
-// 	switch (colCount) {
-// 		case 1:
-// 			colSize = 12;
-// 			break;
-// 		case 2:
-// 			colSize = 6;
-// 			break;
-// 		case 3:
-// 			colSize = 4;
-// 			break;
-// 		case 4:
-// 			colSize = 3;
-// 			break;
-// 		case 5:
-// 		case 6:
-// 			colSize = 2;
-// 			break;
-// 		case 7:
-// 		case 8:
-// 		case 9:
-// 		case 10:
-// 			colSize = 1;
-// 			break;
-// 		default:
-// 			colSize = 12;
-// 			break;
-// 	}
-// 	return colSize;
-// }
 
 var page = null;
 
