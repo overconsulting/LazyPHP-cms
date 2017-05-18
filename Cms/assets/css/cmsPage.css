@@ -43,6 +43,7 @@
 #cms_page_container section .cms-page-row .cms-page-col {
 	/*background: #3333cc;*/
 	display: inline-block;
+	vertical-align: top;
 	margin: 0 5px;
 	padding: 10px;
 	min-height: 3em;

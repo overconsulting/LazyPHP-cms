@@ -45,6 +45,11 @@
                                     {% input_text name="color" label="Couleur du texte" data-property-type="style" data-property-name="color" %}
                                     {% input_text name="background" label="Couleur ou image de fond" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="height" label="Hauteur" data-property-type="style" data-property-name="height" %}
+                                    <label class="control-label">Paddings</label>
+                                    {% input_text name="padding-top" data-property-type="style" data-property-name="padding-top" %}
+                                    {% input_text name="padding-right" data-property-type="style" data-property-name="padding-right" %}
+                                    {% input_text name="padding-bottom" data-property-type="style" data-property-name="padding-bottom" %}
+                                    {% input_text name="padding-left" data-property-type="style" data-property-name="padding-left" %}                                    
                                 </div>
                             </div>
                         </div>
