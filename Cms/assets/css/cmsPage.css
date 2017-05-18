@@ -17,7 +17,8 @@
 }
 
 #cms_page_container section.selected {
-	border: dashed 1px #ff3333;
+	border: dashed 1px #cc3333;
+	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
 }
 
 #cms_page_container section .cms-page-row {
@@ -36,6 +37,7 @@
 
 #cms_page_container section .cms-page-row.selected {
 	border: dashed 1px #cc3333;
+	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
 }
 
 #cms_page_container section .cms-page-row .cms-page-col {
@@ -55,6 +57,7 @@
 
 #cms_page_container section .cms-page-row .cms-page-col.selected {
 	border: dashed 1px #cc3333;
+	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
 }
 
 #cms_page_container button.action-del-section,

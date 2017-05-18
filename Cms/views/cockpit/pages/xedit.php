@@ -26,11 +26,13 @@
             <div class="box-header">
                 <h3 class="box-title">Propriétés</h3>
             </div>
-            <div id="cms_page_element_properties" class="box-body">
-                <div id="cms_page_element_name"></div>
+            <div id="cms_page_block_properties" class="box-body">
+                <div id="cms_page_block_name"></div>
                 {% form_open id="formProperties" noBootstrapCol="1" %}
-                    {% input_text name="id" label="Id" %}
-                    {% input_text name="background" label="Couleur de fond" %}
+                    {% input_text name="id" label="Id" data-property-type="attribute" data-property-name="id" %}
+                    {% input_text name="color" label="Couleur du texte" data-property-type="style" data-property-name="color" %}
+                    {% input_text name="background" label="Couleur de fond" data-property-type="style" data-property-name="background" %}
+                    {% input_textarea name="content" label="Contenu HTML" data-property-type="content" %}
                 {% form_close %}
             </div>
         </div>
