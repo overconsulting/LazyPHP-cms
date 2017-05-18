@@ -34,7 +34,7 @@ foreach ($params['pages'] as $page) {
         echo '<td>'.$label.'</td>';
         ?>
         <td>
-            {% button url="cockpit_cms_pages_xedit_<?php echo $page->id ?>" type="info" size="xs" icon="pencil" content="" %}
+            {% button url="cockpit_cms_pages_edit_<?php echo $page->id ?>" type="info" size="xs" icon="pencil" content="" %}
             {% button url="cockpit_cms_pages_delete_<?php echo $page->id ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page ?" %}
         </td>
     </tr>

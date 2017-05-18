@@ -43,18 +43,40 @@ class PagesController extends CockpitController
 
     public function editAction($id)
     {
-        $post = $this->request->post;
-        $errors = array();
-        
         $this->page = Page::findById($id);
 
+        $contentJson = 
+            $this->page->content != '' ?
+            $this->page->content :
+            json_encode(array(
+                'title' => $this->page->title,
+                'active' => $this->page->active,
+                'sections' => array()
+            ));
+
         $this->render('edit', array(
-            'page'          =>  $this->page,
-            'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-            'titleBox'      => 'Modifier la page: '.$this->page->title,
-            'formAction'    => Router::url('cockpit_cms_pages_update_'.$id)
+            'page' =>  $this->page,
+            'contentJson' => $contentJson,
+            'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+            'boxTitle' => 'Modifier la page: '.$this->page->title,
+            'formAction' => Router::url('cockpit_cms_pages_update_'.$id)
         ));
     }
+
+    // public function editAction($id)
+    // {
+    //     $post = $this->request->post;
+    //     $errors = array();
+        
+    //     $this->page = Page::findById($id);
+
+    //     $this->render('edit', array(
+    //         'page'          =>  $this->page,
+    //         'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+    //         'titleBox'      => 'Modifier la page: '.$this->page->title,
+    //         'formAction'    => Router::url('cockpit_cms_pages_update_'.$id)
+    //     ));
+    // }
 
     public function createAction()
     {
@@ -73,7 +95,7 @@ class PagesController extends CockpitController
             Session::addFlash('Erreur mise à jour base de données', 'danger');
         }
 
-        $this->xeditAction($id);
+        $this->editAction($id);
     }
 
     public function updateAction($id)
@@ -88,12 +110,12 @@ class PagesController extends CockpitController
 
         if ($this->page->save($this->request->post)) {
             Session::addFlash('Page modifiée', 'success');
-            $this->redirect('cockpit_cms_pages_xedit_'.$id);
+            $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
             Session::addFlash('Erreur mise à jour base de données', 'danger');
         }
 
-        $this->xeditAction($id);
+        $this->editAction($id);
     }
 
     public function deleteAction($id)
@@ -102,27 +124,5 @@ class PagesController extends CockpitController
         $page->delete();
         Session::addFlash('Page supprimée', 'success');
         $this->redirect('cockpit_cms_pages_index');
-    }
-
-    public function xeditAction($id)
-    {
-        $this->page = Page::findById($id);
-
-        $contentJson = 
-            $this->page->content != '' ?
-            $this->page->content :
-            json_encode(array(
-                'title' => $this->page->title,
-                'active' => $this->page->active,
-                'sections' => array()
-            ));
-
-        $this->render('xedit', array(
-            'page' =>  $this->page,
-            'contentJson' => $contentJson,
-            'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-            'boxTitle' => 'Modifier la page: '.$this->page->title,
-            'formAction' => Router::url('cockpit_cms_pages_update_'.$id)
-        ));
     }
 }
