@@ -111,7 +111,7 @@ CmsPage.prototype.createHtml = function() {
 	for (s = 0; s < this.sections.length; s = s + 1) {
 		html = html +
 			_getAddSectionButton(s) +
-			'<section class="cms-page-section" data-section-index="' + s + '"' +
+			'<section class="cms-page-section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +
 				this.attributesToHtml(this.sections[s].attributes) +
 				this.stylesToHtml(this.sections[s].styles) + '>' +
 			_getDelSectionButton(s);
@@ -119,7 +119,7 @@ CmsPage.prototype.createHtml = function() {
 		for (r = 0; r < this.sections[s].rows.length; r = r + 1) {
 			html = html +
 				_getAddRowButton(s, r) +
-				'<div class="cms-page-row" data-section-index="' + s + '" data-row-index="' + r + '"' +
+				'<div class="cms-page-row" data-section-index="' + s + '" data-row-index="' + r + '"' + ' data-default-class="cms-page-row"' +
 					this.attributesToHtml(this.sections[s].rows[r].attributes) +
 					this.stylesToHtml(this.sections[s].rows[r].styles) + '>' +
 				_getDelRowButton(s, r);
@@ -127,7 +127,7 @@ CmsPage.prototype.createHtml = function() {
 			for (c = 0; c < this.sections[s].rows[r].cols.length; c = c + 1) {
 				html = html +
 					_getAddColButton(s, r, c) +
-					'<div class="cms-page-col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' +
+					'<div class="cms-page-col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' + ' data-default-class="cms-page-col"' +
 						this.attributesToHtml(this.sections[s].rows[r].cols[c].attributes)+
 						this.stylesToHtml(this.sections[s].rows[r].cols[c].styles) + '>' +
 					_getDelColButton(s, r, c) +
@@ -159,7 +159,9 @@ CmsPage.prototype.createHtml = function() {
 
 		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectBlockEvent);
 
-		$("#formProperties").find("input[type=text], textarea").on("change", {page: this}, this.propertyChangeEvent);
+		$("#formProperties").find("input[type=text], select, textarea").on("change", {page: this}, this.propertyChangeEvent);
+		$("#formProperties").find("textarea[name=content]").on("focus", {page: this}, this.colContentFocusEvent);
+		$("#formProperties").find("textarea[name=content]").on("blur", {page: this}, this.colContentBlurEvent);
 
 		var cols = null;
 		var buttons = null;
@@ -211,12 +213,11 @@ CmsPage.prototype.loadProperties = function(block) {
 	var propertyType = null;
 	var propertyName = null;
 	if (item != null) {
-		$("#formProperties").find("input[type=text], textarea").each(function(index, input) {
+		$("#formProperties").find("input[type=text], select, textarea").each(function(index, input) {
 			propertyType = input.hasAttribute("data-property-type") ? input.getAttribute("data-property-type") : null;
 			propertyName = input.hasAttribute("data-property-name") ? input.getAttribute("data-property-name") : null;
 
 			// console.log(propertyType, propertyName);
-
 			if (propertyType != null) {
 				switch (propertyType) {
 					case "attribute":
@@ -231,11 +232,11 @@ CmsPage.prototype.loadProperties = function(block) {
 						break;
 					case "content":
 						if (colIndex != null) {
-							input.innerHTML = item.content != "" ? decodeURI(item.content) : "";
+							input.value = item.content != "" ? decodeURI(item.content) : "";
 							$(input).parents(".panel").show();
 						} else {
+							input.value = "";
 							$(input).parents(".panel").hide();
-							input.innerHTML = "";
 						}
 						break;
 				}
@@ -275,6 +276,7 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 		var sectionIndex = block.hasAttribute("data-section-index") ? parseInt(block.getAttribute("data-section-index")) : null;
 		var rowIndex = block.hasAttribute("data-row-index") ? parseInt(block.getAttribute("data-row-index")) : null;
 		var colIndex = block.hasAttribute("data-col-index") ? parseInt(block.getAttribute("data-col-index")) : null;
+		var defaultClass = block.hasAttribute("data-default-class") ? block.getAttribute("data-default-class") : null;
 
 		var item = event.data.page.getItem(sectionIndex, rowIndex, colIndex);
 
@@ -285,28 +287,47 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 		// console.log(propertyType, propertyName);
 
 		if (propertyType != null) {
+			var inputValue = input.value.trim();
+
 			switch (propertyType) {
 				case "attribute":
 					if (propertyName != null) {
-						block.setAttribute(propertyName, input.value);
-						item.attributes[propertyName] = input.value;
+						if (propertyName == 'class') {
+
+							block.className = defaultClass + " " + inputValue;
+						} else {
+							block.setAttribute(propertyName, inputValue);
+						}
+						item.attributes[propertyName] = inputValue;
 					}
 					break;
 
 				case "style":
 					if (propertyName != null) {
-						$(block).css(propertyName, input.value);
-						item.styles[propertyName] = input.value;
+						$(block).css(propertyName, inputValue);
+						item.styles[propertyName] = inputValue;
 					}
 					break;
 
 				case "content":
-					$(block).find(".cms-page-col-content")[0].innerHTML = input.value;
-					item.content = encodeURI(input.value);
+					$(block).find(".cms-page-col-content")[0].innerHTML = inputValue;
+					item.content = encodeURI(inputValue);
 					break;
 			}
 		}
 	}
+}
+
+CmsPage.prototype.colContentFocusEvent = function(event) {
+	var textarea = event.currentTarget;
+	// $(textarea).parents(".form-group").css("position", "absolute");
+	// $(textarea).parents(".form-group").css("width", "100%");
+}
+
+CmsPage.prototype.colContentBlurEvent = function(event) {
+	var textarea = event.currentTarget;
+	// $(textarea).parents(".form-group").css("position", "static");
+	// $(textarea).parents(".form-group").css("width", "auto");
 }
 
 CmsPage.prototype.doActionEvent = function(event) {

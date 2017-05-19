@@ -1,3 +1,72 @@
+.rendrecontent {
+    border: 1px solid #000;
+    width: 100%;
+}
+
+.rendrecontent .section {
+    border: 1px dashed #C0C0C0;
+    position: relative;
+    padding: 0;
+}
+
+.rendrecontent .section .label {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.rendrecontent .section .addLigne.label {
+    left: 60px;
+}
+
+.rendrecontent .row {
+    border: 1px dashed #C0C0C0;
+    position: relative;
+    margin: 20px 0;
+}
+
+.rendrecontent .row .addCol.label {
+    left: 50px;
+}
+
+.rendrecontent .col {
+    border: 1px dashed #C0C0C0;
+    /*text-align: center;*/
+    position: relative;
+    margin: 2% 0;
+    /*width: 96%;*/
+}
+
+.rendrecontent .content_widget {
+    padding: 20px;
+}
+
+.rendreaction {
+    margin-top: 20px;
+}
+
+#htmlElement, .boxConfig, .boxConfig .sectionPanel, .boxConfig .lignePanel, .boxConfig .colPanel, .boxConfig #colPanel .admin_widget {
+    display: none;
+}
+
+.rendrecontent .delSection {
+    left: 109px !important;
+}
+
+.rendrecontent .delLigne {
+    left: 115px !important;
+}
+
+.rendrecontent .delCol {
+    left: 40px !important;
+}
+
+.boxConfig .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
 <h1 class="page-title">{{ titlePage }}</h1>
 <form id="formPage" method="post" action="{{ formAction }}" class="form form-horizontal">
     <input type="hidden" class="config" name="content" value="" />

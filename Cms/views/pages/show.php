@@ -7,7 +7,7 @@ if ($page->title != '') {
 }
 
 foreach ($content['sections'] as $s => $section) {
-    echo '<section'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>';
+    echo '<section class="container"'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>';
 
     foreach ($section['rows'] as $r => $row) {
         echo '<div class="row"'.attributesToHtml($row['attributes']).stylesToHtml($row['styles']).'>';

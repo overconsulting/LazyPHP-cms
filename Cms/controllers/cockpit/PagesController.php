@@ -3,6 +3,7 @@
 namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
+use widget\models\Widget;
 use Cms\models\Page;
 use System\Router;
 use System\Session;
@@ -31,13 +32,20 @@ class PagesController extends CockpitController
             $this->page = new Page();
         }
 
-        $post = $this->request->post;
-        $errors = array();
+        $contentJson = json_encode(array(
+                'title' => $this->page->title,
+                'active' => $this->page->active,
+                'sections' => array()
+        ));
+
         $this->render('edit', array(
-            'formAction'    => Router::url('cockpit_cms_pages_create'),
-            'page'          => $this->page,
-            'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-            'titleBox'      => 'Ajouter une page',
+            'page' => $this->page,
+            'contentJson' => $contentJson,
+            'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+            'boxTitle' => 'Nouvelle page',
+            'formAction' => Router::url('cockpit_cms_pages_create'),
+            'fontWeightOptions' => $this->getFontWeightOptions(),
+            'widgets' => $this->getWidgets()
         ));
     }
 
@@ -55,11 +63,13 @@ class PagesController extends CockpitController
             ));
 
         $this->render('edit', array(
-            'page' =>  $this->page,
+            'page' => $this->page,
             'contentJson' => $contentJson,
             'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
             'boxTitle' => 'Modifier la page: '.$this->page->title,
-            'formAction' => Router::url('cockpit_cms_pages_update_'.$id)
+            'formAction' => Router::url('cockpit_cms_pages_update_'.$id),
+            'fontWeightOptions' => $this->getFontWeightOptions(),
+            'widgets' => $this->getWidgets()
         ));
     }
 
@@ -124,5 +134,29 @@ class PagesController extends CockpitController
         $page->delete();
         Session::addFlash('Page supprimée', 'success');
         $this->redirect('cockpit_cms_pages_index');
+    }
+
+    private function getFontWeightOptions()
+    {
+        return array(
+            array('label' => '---', 'value' => ''),
+            array('label' => 'normal', 'value' => 'normal'),
+            array('label' => 'bold', 'value' => 'bold'),
+            array('label' => 'bolder', 'value' => 'bolder'),
+            array('label' => 'lighter', 'value' => 'lighter'),
+            array('label' => '100', 'value' => '100'),
+            array('label' => '200', 'value' => '200'),
+            array('label' => '300', 'value' => '300'),
+            array('label' => '400', 'value' => '400'),
+            array('label' => '500', 'value' => '500'),
+            array('label' => '600', 'value' => '600'),
+            array('label' => '700', 'value' => '700'),
+            array('label' => '800', 'value' => '800'),
+            array('label' => '900', 'value' => '900')
+        );
+    }
+
+    private function getWidgets()
+    {
     }
 }

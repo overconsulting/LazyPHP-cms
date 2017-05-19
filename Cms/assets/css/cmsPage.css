@@ -50,6 +50,7 @@
 	min-width: 100px;
 	position: relative;
 	border: dashed 1px #cccccc;
+	overflow: hidden;
 }
 
 #cms_page_container section .cms-page-row .cms-page-col:hover {
@@ -67,4 +68,32 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
+}
+
+#cms_page_block_properties_container {
+	position: fixed !important;
+	width: 20% !important;
+}
+
+#cms_page_block_properties .form-group {
+	margin: 5px;
+} 
+
+#cms_page_block_properties label {
+	font-size: 12px;
+}
+
+#cms_page_block_properties fieldset legend {
+	font-size: 12px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+#cms_page_block_properties fieldset {
+	margin-top: 10px;
+	font-size:;
+}
+
+#cms_page_block_properties textarea[name="content"] {
+	font-family: monospace;
 }
