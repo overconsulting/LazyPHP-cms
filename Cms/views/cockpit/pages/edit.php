@@ -16,6 +16,7 @@
     <div class="box-body">
         <input type="hidden" name="content" value="<?php echo htmlspecialchars($page->content); ?>" />
         {% input_text name="title" model="page.title" label="Nom de la page" placeholder="Nom de la page" %}
+        {% input_text name="layout" model="page.layout" label="Layout de la page" placeholder="Layout de la page" %}
         {% input_checkbox name="active" model="page.active" label="Actif" %}
     </div>
     {% form_close %}

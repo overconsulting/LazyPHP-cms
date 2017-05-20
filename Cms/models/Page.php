@@ -11,6 +11,7 @@ class Page extends Model
         'title',
         'content',
         'site_id',
-        'active'
+        'active',
+        'layout'
     );
 }

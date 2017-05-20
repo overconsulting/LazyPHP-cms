@@ -15,6 +15,10 @@ class PagesController extends FrontController
         if ($page->active != 1 or $page->content == null) {
             $this->redirect("/");
         }
+
+        if ($page->layout != null) {
+            $this->layout = $page->layout;
+        }
         
         $this->render('show', array(
             'page'      => $page,
