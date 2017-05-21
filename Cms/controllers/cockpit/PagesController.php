@@ -3,7 +3,8 @@
 namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
-use widget\models\Widget;
+use Widget\models\Widget as WidgetList;
+use Widget\widgets\Widget;
 use Cms\models\Page;
 use System\Router;
 use System\Session;
@@ -73,27 +74,16 @@ class PagesController extends CockpitController
         ));
     }
 
-    // public function editAction($id)
-    // {
-    //     $post = $this->request->post;
-    //     $errors = array();
-        
-    //     $this->page = Page::findById($id);
-
-    //     $this->render('edit', array(
-    //         'page'          =>  $this->page,
-    //         'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-    //         'titleBox'      => 'Modifier la page: '.$this->page->title,
-    //         'formAction'    => Router::url('cockpit_cms_pages_update_'.$id)
-    //     ));
-    // }
-
     public function createAction()
     {
         $this->page = new Page();
 
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
+        }
+
+        if (!isset($this->request->post['show_page_title'])) {
+            $this->request->post['show_page_title'] = 0;
         }
 
         $this->request->post['site_id'] = Session::get('site_id');
@@ -114,6 +104,10 @@ class PagesController extends CockpitController
 
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
+        }
+
+        if (!isset($this->request->post['show_page_title'])) {
+            $this->request->post['show_page_title'] = 0;
         }
 
         $this->request->post['site_id'] = Session::get('site_id');
@@ -158,5 +152,16 @@ class PagesController extends CockpitController
 
     private function getWidgets()
     {
+        $widgetList = WidgetList::findAll();
+
+        $widgets = array();
+        foreach ($widgetList as $wl) {
+            $class = Widget::$widgetTypes[$wl->type];
+            $dbModel = $class::getDbModel();
+            $widgets[$wl->type] = (array)$wl;
+            $widgets[$wl->type]['items'] = $dbModel::findAll();
+        }
+
+        return $widgets;
     }
 }

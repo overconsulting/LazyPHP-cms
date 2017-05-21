@@ -12,6 +12,14 @@ class Page extends Model
         'content',
         'site_id',
         'active',
-        'layout'
+        'layout',
+        'show_page_title'
     );
+
+    public function setDefaultProperties()
+    {
+        parent::setDefaultProperties();
+
+        $this->show_page_title = 1;
+    }
 }

@@ -14,6 +14,7 @@
                 <tr>
                     <th width="10%">#</th>
                     <th>Titre</th>
+                    <th>Layout</th>
                     <th width="10%">Status</th>
                     <th width="10%">Actions</th>
                 </tr>
@@ -23,8 +24,9 @@
 foreach ($params['pages'] as $page) {
     ?>
     <tr>
-        <td><?php echo $page->id ?></td>
-        <td><?php echo $page->title ?></td>
+        <td><?php echo $page->id; ?></td>
+        <td><?php echo $page->title; ?></td>
+        <td><?php echo $page->layout; ?></td>
         <?php
         if ($page->active == 1) {
             $label = '<span class="label label-success">Activé</span>';
@@ -34,8 +36,8 @@ foreach ($params['pages'] as $page) {
         echo '<td>'.$label.'</td>';
         ?>
         <td>
-            {% button url="cockpit_cms_pages_edit_<?php echo $page->id ?>" type="info" size="xs" icon="pencil" content="" %}
-            {% button url="cockpit_cms_pages_delete_<?php echo $page->id ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page ?" %}
+            {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="xs" icon="pencil" content="" %}
+            {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page?" %}
         </td>
     </tr>
     <?php

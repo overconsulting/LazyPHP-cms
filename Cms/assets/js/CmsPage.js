@@ -48,7 +48,7 @@ CmsPage.prototype.addSection = function(position = null) {
 	if (position == null) {
 		position = this.sections.length;
 	}
-	this.sections.splice(position, 0 , {attributes: {}, styles: {}, rows: []});
+	this.sections.splice(position, 0 , {blockType: "section", attributes: {}, styles: {}, rows: []});
 	this.createHtml();
 	// var block = $("#cms_page_container .cms-page-section[data-section-index="+position+"]")[0];
 	// $(block).click();
@@ -66,7 +66,7 @@ CmsPage.prototype.addRow = function(sectionIndex, position = null) {
 	if (position == null) {
 		position = this.sections[sectionIndex].rows.length;
 	}
-	this.sections[sectionIndex].rows.splice(position, 0 , {attributes: {}, styles: {}, cols: []});
+	this.sections[sectionIndex].rows.splice(position, 0 , {blockType: "row", attributes: {}, styles: {}, cols: []});
 	this.createHtml();
 	// var block = $("#cms_page_container .cms-page-row[data-section-index="+sectionIndex+"][data-row-index="+position+"]")[0];
 	// $(block).click();
@@ -85,7 +85,7 @@ CmsPage.prototype.addCol = function(sectionIndex, rowIndex, position = null) {
 	if (position == null) {
 		position = this.sections[sectionIndex].rows[rowIndex].cols.length;
 	}
-	this.sections[sectionIndex].rows[rowIndex].cols.splice(position, 0 , {attributes: {}, styles: {}, content: "", widgets: []});
+	this.sections[sectionIndex].rows[rowIndex].cols.splice(position, 0 , {blockType: "col", attributes: {}, styles: {}, content: "", widget: null});
 	this.createHtml();
 	// var block = $("#cms_page_container .cms-page-col[data-section-index="+sectionIndex+"][data-row-index="+rowIndex+"][data-col-index="+position+"]")[0];
 	// $(block).click();
@@ -109,25 +109,31 @@ CmsPage.prototype.createHtml = function() {
 	var c = 0;
 
 	for (s = 0; s < this.sections.length; s = s + 1) {
+		this.sections[s].blockType = "section";
+
 		html = html +
 			_getAddSectionButton(s) +
-			'<section class="cms-page-section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +
+			'<section class="cms-page-section" data-block-type="section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +
 				this.attributesToHtml(this.sections[s].attributes) +
 				this.stylesToHtml(this.sections[s].styles) + '>' +
 			_getDelSectionButton(s);
 
 		for (r = 0; r < this.sections[s].rows.length; r = r + 1) {
+			this.sections[s].rows[r].blockType = "row";
+
 			html = html +
 				_getAddRowButton(s, r) +
-				'<div class="cms-page-row" data-section-index="' + s + '" data-row-index="' + r + '"' + ' data-default-class="cms-page-row"' +
+				'<div class="cms-page-row" data-block-type="row" data-section-index="' + s + '" data-row-index="' + r + '"' + ' data-default-class="cms-page-row"' +
 					this.attributesToHtml(this.sections[s].rows[r].attributes) +
 					this.stylesToHtml(this.sections[s].rows[r].styles) + '>' +
 				_getDelRowButton(s, r);
 
 			for (c = 0; c < this.sections[s].rows[r].cols.length; c = c + 1) {
+				this.sections[s].rows[r].cols[c].blockType = "row";
+
 				html = html +
 					_getAddColButton(s, r, c) +
-					'<div class="cms-page-col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' + ' data-default-class="cms-page-col"' +
+					'<div class="cms-page-col" data-block-type="col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' + ' data-default-class="cms-page-col"' +
 						this.attributesToHtml(this.sections[s].rows[r].cols[c].attributes)+
 						this.stylesToHtml(this.sections[s].rows[r].cols[c].styles) + '>' +
 					_getDelColButton(s, r, c) +
@@ -156,12 +162,13 @@ CmsPage.prototype.createHtml = function() {
 		cmsPageContainer.innerHTML = html;
 
 		$(cmsPageContainer).find(".action").on("click", {page: this}, this.doActionEvent);
+		$("#cms_page_widget_select").find(".action").on("click", {page: this}, this.doActionEvent);
 
 		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectBlockEvent);
 
 		$("#formProperties").find("input[type=text], select, textarea").on("change", {page: this}, this.propertyChangeEvent);
-		$("#formProperties").find("textarea[name=content]").on("focus", {page: this}, this.colContentFocusEvent);
-		$("#formProperties").find("textarea[name=content]").on("blur", {page: this}, this.colContentBlurEvent);
+		// $("#formProperties").find("textarea[name=content]").on("focus", {page: this}, this.colContentFocusEvent);
+		// $("#formProperties").find("textarea[name=content]").on("blur", {page: this}, this.colContentBlurEvent);
 
 		var cols = null;
 		var buttons = null;
@@ -194,6 +201,7 @@ CmsPage.prototype.loadProperties = function(block) {
 	var sectionIndex = block.hasAttribute("data-section-index") ? parseInt(block.getAttribute("data-section-index")) : null;
 	var rowIndex = block.hasAttribute("data-row-index") ? parseInt(block.getAttribute("data-row-index")) : null;
 	var colIndex = block.hasAttribute("data-col-index") ? parseInt(block.getAttribute("data-col-index")) : null;
+	var blockType = block.hasAttribute("data-block-type") ? block.getAttribute("data-block-type") : null;
 
 	var blockName = document.getElementById("cms_page_block_name");	
 	html = "Aucun block sélectioné";
@@ -231,7 +239,7 @@ CmsPage.prototype.loadProperties = function(block) {
 						}
 						break;
 					case "content":
-						if (colIndex != null) {
+						if (blockType == "col") {
 							input.value = item.content != "" ? decodeURI(item.content) : "";
 							$(input).parents(".panel").show();
 						} else {
@@ -332,6 +340,7 @@ CmsPage.prototype.colContentBlurEvent = function(event) {
 
 CmsPage.prototype.doActionEvent = function(event) {
 	// console.log("doActionEvent", event.currentTarget.getAttribute("data-action"));
+
 	var button = event.currentTarget;
 	var action = button.getAttribute("data-action");
 	var position = button.hasAttribute("data-position") ? parseInt(button.getAttribute("data-position")) : null;
@@ -362,6 +371,21 @@ CmsPage.prototype.doActionEvent = function(event) {
 
 		case "delCol":
 			event.data.page.delCol(sectionIndex, rowIndex, colIndex);
+			break;
+
+		case "selectWidget":
+			var widgetType = button.hasAttribute("data-widget-type") ? button.getAttribute("data-widget-type") : null;
+			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
+			$(button).removeClass("btn-default").addClass("btn-warning selected");
+			$(".cms-page-widget-params").hide().removeClass("active");
+			$("#cms_page_widget_params_" + widgetType).show().addClass("active");
+			break;
+
+		case "insertWidget":
+			var x = $("#cms_page_widget_select button[data-action=selectWidget].selected")[0];
+			var widgetType = x.hasAttribute("data-widget-type") ? x.getAttribute("data-widget-type") : null;
+			var content = $("#formProperties").find("textarea[name=content]")[0];
+			content.value = '{% widget type="' + widgetType + '" id="" %}';
 			break;
 	}
 
