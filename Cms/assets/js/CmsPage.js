@@ -456,9 +456,29 @@ $(document).ready(function() {
 	}
 
 	$("#formPage").on("submit", formPageSubmit);
+
+	$(window).on("scroll", cmsPageScroll);
 });
 
 function formPageSubmit(event) {
 	var formPage = $("#formPage")[0];
 	formPage.elements["content"].value = JSON.stringify(page);
+}
+
+var cmsPageBlockPropertiesContainerWidth = null;
+
+function cmsPageScroll(event) {
+	var $cmsPageBlockPropertiesContainer = $("#cms_page_block_properties_container");
+
+	if (cmsPageBlockPropertiesContainerWidth == null) {
+		cmsPageBlockPropertiesContainerWidth = $cmsPageBlockPropertiesContainer.width();
+	}
+	if ($(window).scrollTop() > 340) {
+		$cmsPageBlockPropertiesContainer.css("position", "fixed");
+		$cmsPageBlockPropertiesContainer.css("top", "60px");
+		$cmsPageBlockPropertiesContainer.width(cmsPageBlockPropertiesContainerWidth);
+	} else {
+		$cmsPageBlockPropertiesContainer.css("position", "static");
+		$cmsPageBlockPropertiesContainer.width(cmsPageBlockPropertiesContainerWidth);
+	}
 }
