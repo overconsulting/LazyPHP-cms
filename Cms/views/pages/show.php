@@ -30,7 +30,7 @@ foreach ($content['sections'] as $s => $section) {
 
         foreach ($row['cols'] as $c => $col) {
             $attributesToMerge = array(
-                'class' => 'col-lg-'.$colSize
+                'class' => 'col-md-'.$colSize
             );
 
             echo 
