@@ -35,7 +35,7 @@ foreach ($content['sections'] as $s => $section) {
 
             echo 
                 '<div'.attributesToHtml($col['attributes'], $attributesToMerge).stylesToHtml($col['styles']).'>'.
-                    urldecode($col['content']).
+                    rawurldecode($col['content']).
                 '</div>';
         }
 

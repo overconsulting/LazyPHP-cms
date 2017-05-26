@@ -140,7 +140,7 @@ CmsPage.prototype.createHtml = function() {
 					'<div class="cms-page-col-content">';
 
 				if (this.sections[s].rows[r].cols[c].content != null && this.sections[s].rows[r].cols[c].content != "") {
-					html = html + decodeURI(this.sections[s].rows[r].cols[c].content);
+					html = html + decodeURIComponent(this.sections[s].rows[r].cols[c].content);
 				} else {
 					html = html + "&nbsp;";
 				}
@@ -240,7 +240,7 @@ CmsPage.prototype.loadProperties = function(block) {
 						break;
 					case "content":
 						if (blockType == "col") {
-							input.value = item.content != "" ? decodeURI(item.content) : "";
+							input.value = item.content != "" ? decodeURIComponent(item.content) : "";
 							$(input).parents(".panel").show();
 						} else {
 							input.value = "";
@@ -319,7 +319,7 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 
 				case "content":
 					$(block).find(".cms-page-col-content")[0].innerHTML = inputValue;
-					item.content = encodeURI(inputValue);
+					item.content = encodeURIComponent(inputValue);
 					break;
 			}
 		}
