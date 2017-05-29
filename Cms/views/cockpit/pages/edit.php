@@ -132,8 +132,8 @@
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_heading">
                                 <div class="panel-body">
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation">
-                                            <a href="#cms_page_tab_content_html" class="active" aria-expanded="true" role="tab" data-toggle="tab">
+                                        <li class="active" role="presentation">
+                                            <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
                                                 Contenu HTML
                                             </a>
                                         </li>
