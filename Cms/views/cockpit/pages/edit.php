@@ -76,7 +76,7 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_heading">
                                 <div class="panel-body">
-                                    {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
+                                    {% input_text name="background" class="colorpicker" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
                                     {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" %}
                                 </div>
@@ -191,6 +191,7 @@ echo
                             </div>
                         </div>
                     </div>
+                    {% input_submit name="submit" value="save_and_stay" formId="formPage" class="btn-primary" icon="save" label="Enregistrer &amp; Rester" %}
                 {% form_close %}
             </div>
         </div>
@@ -209,3 +210,7 @@ echo
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('.colorpicker').ColorPicker();
+</script>
