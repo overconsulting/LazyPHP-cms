@@ -132,8 +132,8 @@
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_heading">
                                 <div class="panel-body">
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation">
-                                            <a href="#cms_page_tab_content_html" class="active" aria-expanded="true" role="tab" data-toggle="tab">
+                                        <li class="active" role="presentation">
+                                            <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
                                                 Contenu HTML
                                             </a>
                                         </li>
@@ -162,18 +162,20 @@ foreach ($widgets as $widget) {
 foreach ($widgets as $widget) {
     echo '<div id="cms_page_widget_params_'.$widget['type'].'" class="cms-page-widget-params">';
     $widgetParams = explode(';', $widget['params']);
-    foreach ($widgetParams as $wp) {
-        echo '<div class="cms-page-widget-param">';
-        if ($wp == 'id') {
-            $widgetParamIdOptions = '';
-            foreach ($widget['items'] as $item) {
-                $widgetParamIdOptions .= $item->id.':'.$item->id.';';
+    if (!empty($widgetParams) && $widgetParams[0] != '') {
+        foreach ($widgetParams as $wp) {
+            echo '<div class="cms-page-widget-param">';
+            if ($wp == 'id') {
+                $widgetParamIdOptions = '';
+                foreach ($widget['items'] as $item) {
+                    $widgetParamIdOptions .= $item->id.':'.$item->id.';';
+                }
+                echo '{% input_select name="'.$wp.'" label="'.$wp.'" options="['.trim($widgetParamIdOptions, ';').']" %}';
+            } else {
+                echo '{% input_text name="'.$wp.'" label="'.$wp.'" %}';
             }
-            echo '{% input_select name="'.$wp.'" label="'.$wp.'" options="['.trim($widgetParamIdOptions, ';').']" %}';
-        } else {
-            echo '{% input_text name="'.$wp.'" label="'.$wp.'" %}';
+            echo '</div>';
         }
-        echo '</div>';
     }
     echo '</div>';
 }
