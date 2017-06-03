@@ -2,8 +2,7 @@
 
 namespace Cms\models;
 
-use System\Model;
-use System\Query;
+use Core\Model;
 
 class Page extends Model
 {

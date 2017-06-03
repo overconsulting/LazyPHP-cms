@@ -2,7 +2,7 @@
 
 namespace Cms\models;
 
-use System\Model;
+use Core\Model;
 
 class Article extends Model
 {

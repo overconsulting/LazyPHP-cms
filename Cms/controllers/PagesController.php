@@ -20,7 +20,7 @@ class PagesController extends FrontController
             $this->layout = $page->layout;
         }
         
-        $this->render('show', array(
+        $this->render('cms::pages::show', array(
             'page'      => $page,
             'pageTitle' => $page->title
         ));
