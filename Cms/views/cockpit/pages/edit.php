@@ -44,6 +44,7 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_box" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_box_heading">
                                 <div class="panel-body">
+                                    {% input_select name="fullwidth" label="Contenu pleine largeur" data-property-type="fullwidth" options="fullwidthOptions" %}
                                     {% input_text name="id" label="Id" data-property-type="attribute" data-property-name="id" %}
                                     {% input_text name="class" label="Class" data-property-type="attribute" data-property-name="class" %}
                                     {% input_text name="height" label="Hauteur" data-property-type="style" data-property-name="height" %}
@@ -76,7 +77,7 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_heading">
                                 <div class="panel-body">
-                                    {% input_text name="background" class="colorpicker" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
+                                    {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
                                     {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" %}
                                 </div>
@@ -193,9 +194,9 @@ echo
                             </div>
                         </div>
                     </div>
-                    {% input_submit name="submit" value="save_and_stay" formId="formPage" class="btn-primary" icon="save" label="Enregistrer &amp; Rester" %}
                 {% form_close %}
             </div>
+            {% input_submit name="submit" value="save_and_stay" formId="formPage" class="btn-primary" icon="save" label="Enregistrer &amp; Rester" %}
         </div>
     </div>
 
@@ -209,10 +210,8 @@ echo
             </div>
             <div id="cms_page_container" class="box-body">
             </div>
+            <div id="delete_mask"></div>
+            <div id="insert_mask"></div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $('.colorpicker').ColorPicker();
-</script>

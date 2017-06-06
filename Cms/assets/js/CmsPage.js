@@ -20,6 +20,22 @@ CmsPage.prototype.getItem = function(sectionIndex, rowIndex, colIndex) {
 	}
 }
 
+CmsPage.prototype.getBlock = function(sectionIndex, rowIndex, colIndex) {
+	if (sectionIndex != null) {
+		if (rowIndex != null) {
+			if (colIndex != null) {
+				return $(".cms-page-col[data-section-index="+sectionIndex+"][data-row-index="+rowIndex+"][data-col-index="+colIndex+"]")[0];
+			} else {
+				return $(".cms-page-row[data-section-index="+sectionIndex+"][data-row-index="+rowIndex+"]")[0];
+			}
+		} else {
+			return $(".cms-page-section[data-section-index="+sectionIndex+"]")[0];
+		}
+	} else {
+		return null;
+	}
+}
+
 CmsPage.prototype.attributesToHtml = function(attributes) {
 	var html = "";
 	if (attributes != null && attributes.length > 0) {
@@ -48,7 +64,7 @@ CmsPage.prototype.addSection = function(position = null) {
 	if (position == null) {
 		position = this.sections.length;
 	}
-	this.sections.splice(position, 0 , {blockType: "section", attributes: {}, styles: {}, rows: []});
+	this.sections.splice(position, 0 , {blockType: "section", fullwidth: true, attributes: {}, styles: {}, rows: []});
 	this.createHtml();
 	// var block = $("#cms_page_container .cms-page-section[data-section-index="+position+"]")[0];
 	// $(block).click();
@@ -164,6 +180,12 @@ CmsPage.prototype.createHtml = function() {
 		$(cmsPageContainer).find(".action").on("click", {page: this}, this.doActionEvent);
 		$("#cms_page_widget_select").find(".action").on("click", {page: this}, this.doActionEvent);
 
+		$(".action-del-section, .action-del-row, .action-del-col").on("mouseenter", {page: this}, this.doDelButtonMouseenterEvent);
+		$(".action-del-section, .action-del-row, .action-del-col").on("mouseleave", {page: this}, this.doDelButtonMouseleaveEvent);
+
+		$(".action-add-section, .action-add-row, .action-add-col").on("mouseenter", {page: this}, this.doAddButtonMouseenterEvent);
+		$(".action-add-section, .action-add-row, .action-add-col").on("mouseleave", {page: this}, this.doAddButtonMouseleaveEvent);
+
 		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectBlockEvent);
 
 		$("#formProperties").find("input[type=text], select, textarea").on("change", {page: this}, this.propertyChangeEvent);
@@ -227,17 +249,19 @@ CmsPage.prototype.loadProperties = function(block) {
 
 			// console.log(propertyType, propertyName);
 			if (propertyType != null) {
-				switch (propertyType) {
+				switch (propertyType) {					
 					case "attribute":
 						if (propertyName != null) {
 							input.value = item.attributes[propertyName] != null ? item.attributes[propertyName] : "";
 						}
 						break;
+
 					case "style":
 						if (propertyName != null) {
 							input.value = item.styles[propertyName] != null ? item.styles[propertyName] : "";
 						}
 						break;
+
 					case "content":
 						if (blockType == "col") {
 							input.value = item.content != "" ? decodeURIComponent(item.content) : "";
@@ -245,6 +269,16 @@ CmsPage.prototype.loadProperties = function(block) {
 						} else {
 							input.value = "";
 							$(input).parents(".panel").hide();
+						}
+						break;
+
+					case "fullwidth":
+						if (blockType == "section") {console.log(input);console.log(item.fullwidth);
+							input.selectedIndex = item.fullwidth ? 0 : 1;
+							$(input).parents(".form-group").show();
+						} else {
+							input.value = "";
+							$(input).parents(".form-group").hide();
 						}
 						break;
 				}
@@ -295,13 +329,13 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 		// console.log(propertyType, propertyName);
 
 		if (propertyType != null) {
-			var inputValue = input.value.trim();
+			var inputValue = "";
 
 			switch (propertyType) {
 				case "attribute":
+					inputValue = input.value.trim();
 					if (propertyName != null) {
 						if (propertyName == 'class') {
-
 							block.className = defaultClass + " " + inputValue;
 						} else {
 							block.setAttribute(propertyName, inputValue);
@@ -311,6 +345,7 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 					break;
 
 				case "style":
+					inputValue = input.value.trim();
 					if (propertyName != null) {
 						$(block).css(propertyName, inputValue);
 						item.styles[propertyName] = inputValue;
@@ -318,8 +353,16 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 					break;
 
 				case "content":
+					inputValue = input.value.trim();
 					$(block).find(".cms-page-col-content")[0].innerHTML = inputValue;
 					item.content = encodeURIComponent(inputValue);
+					break;
+
+				case "fullwidth":
+					if (item.blockType == "section") {
+						inputValue = input.options[input.selectedValue];
+						item.fullwidth = inputValue == "1";
+					}
 					break;
 			}
 		}
@@ -393,6 +436,76 @@ CmsPage.prototype.doActionEvent = function(event) {
 	event.preventDefault();
 }
 
+CmsPage.prototype.doDelButtonMouseenterEvent = function(event) {
+	var button = event.currentTarget;
+	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
+	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
+	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
+
+	var $block = $(event.data.page.getBlock(sectionIndex, rowIndex, colIndex));
+	$("#delete_mask").show();
+	$("#delete_mask").offset($block.offset());
+	$("#delete_mask").outerWidth($block.outerWidth());
+	$("#delete_mask").outerHeight($block.outerHeight());
+
+	event.stopPropagation();
+	event.preventDefault();
+}
+
+CmsPage.prototype.doDelButtonMouseleaveEvent = function(event) {
+	$("#delete_mask").hide();
+
+	event.stopPropagation();
+	event.preventDefault();
+}
+
+CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
+	var button = event.currentTarget;
+	var action = button.getAttribute("data-action");
+
+	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
+	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
+	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
+
+	var $button = $(button);
+	var $block = null;
+	var buttonOffset = $button.offset();
+
+	$("#insert_mask").show();
+	switch(action) {
+		case "addSection":
+			$block = $button.parents("#cms_page_container");
+			$("#insert_mask").offset({top: buttonOffset.top + $button.outerHeight() / 2 - 2, left: buttonOffset.left + $button.outerWidth()});
+			$("#insert_mask").outerWidth($block.width() - $button.outerWidth());
+			$("#insert_mask").outerHeight(5);
+			break;
+
+		case "addRow":
+			$block = $button.parents(".cms-page-section");
+			$("#insert_mask").offset({top: buttonOffset.top + $button.outerHeight() / 2 - 2, left: buttonOffset.left + $button.outerWidth()});
+			$("#insert_mask").outerWidth($block.width() - $button.outerWidth());
+			$("#insert_mask").outerHeight(5);
+			break;
+
+		case "addCol":
+			$block = $button.parents(".cms-page-row");
+			$("#insert_mask").offset({top: 0, left: buttonOffset.left + $button.outerWidth() / 2 - 2});
+			$("#insert_mask").outerWidth(5);
+			$("#insert_mask").outerHeight($block.height());
+			break;
+	}
+
+	event.stopPropagation();
+	event.preventDefault();
+}
+
+CmsPage.prototype.doAddButtonMouseleaveEvent = function(event) {
+	$("#insert_mask").hide();
+
+	event.stopPropagation();
+	event.preventDefault();
+}
+
 function _getAddSectionButton(position)
 {
 	html = 
@@ -458,6 +571,8 @@ $(document).ready(function() {
 	$("#formPage").on("submit", formPageSubmit);
 
 	$(window).on("scroll", cmsPageScroll);
+
+    // $('.colorpicker').ColorPicker();
 });
 
 function formPageSubmit(event) {

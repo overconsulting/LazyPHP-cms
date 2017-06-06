@@ -7,8 +7,8 @@ use app\controllers\cockpit\CockpitController;
 use Cms\models\Article;
 use Auth\models\User;
 
-use System\Router;
-use System\Session;
+use Core\Router;
+use Core\Session;
 
 class ArticlesController extends CockpitController
 {

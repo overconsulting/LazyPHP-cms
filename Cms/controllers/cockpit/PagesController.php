@@ -6,8 +6,8 @@ use app\controllers\cockpit\CockpitController;
 use Widget\models\Widget as WidgetList;
 use Widget\widgets\Widget;
 use Cms\models\Page;
-use System\Router;
-use System\Session;
+use Core\Router;
+use Core\Session;
 
 class PagesController extends CockpitController
 {
@@ -18,10 +18,10 @@ class PagesController extends CockpitController
         $pages = Page::findAll("site_id = " . Session::get('site_id'));
 
         $this->render(
-            'index',
+            'cms::pages::index',
             array(
-                'titlePage'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-                'titleBox'      => 'Liste des pages',
+                'pageTitle'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'boxTitle'      => 'Liste des pages',
                 'pages'         => $pages
             )
         );
@@ -39,15 +39,19 @@ class PagesController extends CockpitController
                 'sections' => array()
         ));
 
-        $this->render('edit', array(
-            'page' => $this->page,
-            'contentJson' => $contentJson,
-            'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-            'boxTitle' => 'Nouvelle page',
-            'formAction' => Router::url('cockpit_cms_pages_create'),
-            'fontWeightOptions' => $this->getFontWeightOptions(),
-            'widgets' => $this->getWidgets()
-        ));
+        $this->render(
+            'cms::pages::edit',
+            array(
+                'page' => $this->page,
+                'contentJson' => $contentJson,
+                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'boxTitle' => 'Nouvelle page',
+                'formAction' => Router::url('cockpit_cms_pages_create'),
+                'fullwidthOptions' => $this->getFullwidthOptions(),
+                'fontWeightOptions' => $this->getFontWeightOptions(),
+                'widgets' => $this->getWidgets()
+            )
+        );
     }
 
     public function editAction($id)
@@ -63,32 +67,37 @@ class PagesController extends CockpitController
                 'sections' => array()
             ));
 
-        $this->render('edit', array(
-            'page' => $this->page,
-            'contentJson' => $contentJson,
-            'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-            'boxTitle' => 'Modifier la page: '.$this->page->title,
-            'formAction' => Router::url('cockpit_cms_pages_update_'.$id),
-            'fontWeightOptions' => $this->getFontWeightOptions(),
-            'widgets' => $this->getWidgets()
-        ));
+        $this->render(
+            'cms::pages::edit',
+            array(
+                'page' => $this->page,
+                'contentJson' => $contentJson,
+                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'boxTitle' => 'Nouvelle page',
+                'formAction' => Router::url('cockpit_cms_pages_update_'.$id),
+                'fullwidthOptions' => $this->getFullwidthOptions(),
+                'fontWeightOptions' => $this->getFontWeightOptions(),
+                'widgets' => $this->getWidgets()
+            )
+        );
     }
 
     public function createAction()
     {
         $this->page = new Page();
 
-        if (!isset($this->request->post['active'])) {
-            $this->request->post['active'] = 0;
+        $post = $this->request->post;
+        if (!isset($post['active'])) {
+            $post['active'] = 0;
         }
 
-        if (!isset($this->request->post['show_page_title'])) {
-            $this->request->post['show_page_title'] = 0;
+        if (!isset($post['show_page_title'])) {
+            $post['show_page_title'] = 0;
         }
 
-        $this->request->post['site_id'] = Session::get('site_id');
+        $post['site_id'] = Session::get('site_id');
 
-        if ($this->page->save($this->request->post)) {
+        if ($this->page->save($post)) {
             Session::addFlash('Page ajoutée', 'success');
             $this->redirect('cockpit_cms_pages_index');
         } else {
@@ -102,17 +111,18 @@ class PagesController extends CockpitController
     {
         $this->page = Page::findById($id);
 
-        if (!isset($this->request->post['active'])) {
-            $this->request->post['active'] = 0;
+        $post = $this->request->post;
+        if (!isset($post['active'])) {
+            $post['active'] = 0;
         }
 
-        if (!isset($this->request->post['show_page_title'])) {
-            $this->request->post['show_page_title'] = 0;
+        if (!isset($post['show_page_title'])) {
+            $post['show_page_title'] = 0;
         }
 
-        $this->request->post['site_id'] = Session::get('site_id');
+        $post['site_id'] = Session::get('site_id');
 
-        if ($this->page->save($this->request->post)) {
+        if ($this->page->save($post)) {
             Session::addFlash('Page modifiée', 'success');
             $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
@@ -128,6 +138,14 @@ class PagesController extends CockpitController
         $page->delete();
         Session::addFlash('Page supprimée', 'success');
         $this->redirect('cockpit_cms_pages_index');
+    }
+
+    private function getFullwidthOptions()
+    {
+        return array(
+            array('label' => 'Pleine largeur (container-fluid)', 'value' => '1'),
+            array('label' => 'Recadré (container)', 'value' => '0')
+        );
     }
 
     private function getFontWeightOptions()

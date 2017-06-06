@@ -36,9 +36,9 @@ foreach ($params['menus'] as $menu) {
     }
     echo '<td>'.$label.'</td>';
     echo '<td>';
-    echo '<a href="'.System\Router::url('cockpit_cms_menus_show', array('id' => $menu->id)).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a> ';
-    echo '<a href="'.System\Router::url('cockpit_cms_menus_edit', array('id' => $menu->id)).'" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a> ';
-    echo '<a href="'.System\Router::url('cockpit_cms_menus_delete', array('id' => $menu->id)).'" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></a>';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_show', array('id' => $menu->id)).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a> ';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_edit', array('id' => $menu->id)).'" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a> ';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_delete', array('id' => $menu->id)).'" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></a>';
     echo '</td>';
     echo '</tr>';
 }

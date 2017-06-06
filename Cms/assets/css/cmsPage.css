@@ -1,9 +1,9 @@
 #cms_page_container {
 	padding: 10px;
+	position: relative;
 }
 
 #cms_page_container section {
-	/*background: #cc3333;*/
 	margin: 5px 0;
 	padding: 10px;
 	min-height: 3em;
@@ -17,12 +17,17 @@
 }
 
 #cms_page_container section.selected {
-	border: dashed 1px #cc3333;
-	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
+	border: dashed 1px #3333cc;
+	box-shadow: 0px 0px 5px #3333cc inset, 0px 0px 5px #3333cc;
 }
 
+/*#cms_page_container section.delete-mask {
+	background: rgba(204, 51, 51, 0.25);
+	border: dashed 1px #cc3333;
+	box-shadow: 0px 0px 5px #cc3333 inset, 0px 0px 5px #cc3333;
+}*/
+
 #cms_page_container section .cms-page-row {
-	/*background: #33cc33;*/
 	margin: 5px 0;
 	padding: 31px 10px 10px 10px;
 	min-height: 3em;
@@ -36,12 +41,17 @@
 }
 
 #cms_page_container section .cms-page-row.selected {
-	border: dashed 1px #cc3333;
-	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
+	border: dashed 1px #3333cc;
+	box-shadow: 0px 0px 5px #3333cc inset, 0px 0px 5px #3333cc;
 }
 
+/*#cms_page_container section .cms-page-row.delete-mask {
+	background: rgba(204, 51, 51, 0.25);
+	border: dashed 1px #cc3333;
+	box-shadow: 0px 0px 5px #cc3333 inset, 0px 0px 5px #cc3333;
+}*/
+
 #cms_page_container section .cms-page-row .cms-page-col {
-	/*background: #3333cc;*/
 	display: inline-block;
 	vertical-align: top;
 	margin: 0 5px;
@@ -58,8 +68,14 @@
 }
 
 #cms_page_container section .cms-page-row .cms-page-col.selected {
-	border: dashed 1px #cc3333;
-	box-shadow: 0px 1px 3px #cc3333 inset, 0px 0px 8px #cc3333;
+	border: dashed 1px #3333cc;
+	box-shadow: 0px 0px 5px #3333cc inset, 0px 0px 5px #3333cc;
+}
+
+#cms_page_container button.action-add-section,
+#cms_page_container button.action-add-row,
+#cms_page_container button.action-add-col {
+	z-index: 1001;
 }
 
 #cms_page_container button.action-del-section,
@@ -68,6 +84,7 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
+	z-index: 1001;
 }
 
 #cms_page_block_properties_container {
@@ -120,4 +137,30 @@
 .cms-page-widget-params {
 	display: none;
 	margin-bottom: 10px;
+}
+
+#delete_mask {
+	display: none;
+	position: absolute;
+	background: rgba(204, 51, 51, 0.25);
+	border: dashed 1px #cc3333;
+	box-shadow: 0px 0px 3px #cc3333 inset, 0px 0px 3px #cc3333;
+	width: 100px;
+	height: 100px;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+
+#insert_mask {
+	display: none;
+	position: absolute;
+	background: rgba(51, 201, 51, 0.25);
+	border: dashed 1px #33cc33;
+	box-shadow: 0px 0px 3px #33cc33 inset, 0px 0px 3px #33cc33;
+	width: 100px;
+	height: 5px;
+	top: 0;
+	left: 0;
+	z-index: 1000;
 }

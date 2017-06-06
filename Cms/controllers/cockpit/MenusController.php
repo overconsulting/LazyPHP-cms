@@ -5,8 +5,8 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 use Cms\models\Menu;
 use Cms\models\MenuItem;
-use System\Session;
-use System\Router;
+use Core\Session;
+use Core\Router;
 
 class MenusController extends CockpitController
 {

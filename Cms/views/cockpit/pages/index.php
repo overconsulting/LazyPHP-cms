@@ -1,8 +1,8 @@
-<h1 class="page-title">{{ titlePage }}</h1>
+<h1 class="page-title">{{ pageTitle }}</h1>
 
 <div class="box box-purple">
     <div class="box-header">
-        <h3 class="box-title">{{ titleBox }}</h3>
+        <h3 class="box-title">{{ boxTitle }}</h3>
 
         <div class="box-tools pull-right">
             <a href="<?php echo url('cockpit_cms_pages_new'); ?>" class="btn btn-success btn-xs"><i class="fa fa-plus"></i></a>
