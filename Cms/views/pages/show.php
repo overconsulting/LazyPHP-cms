@@ -7,13 +7,15 @@ if ($page->title != '' && $page->showPageTitle) {
 }
 
 foreach ($content['sections'] as $s => $section) {
-    $attr = explode(" ", $section['attributes']['class']);
-    $section['attributes']['class'] = implode(" ", array_slice($attr, 1));
-    $containerAttr['class'] = $attr[0];
-    
-    echo '<section'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>';
-    //var_dump($section['attributes']);
-        echo '<div'.attributesToHtml($containerAttr).'>';
+    if ($section['fullwidth']) {
+        $containerClass = 'container-fluid';
+    } else {
+        $containerClass = 'container';
+    }
+
+    echo 
+        '<section'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>'.
+            '<div class="'.$containerClass.'">';
 
     foreach ($section['rows'] as $r => $row) {
         $attributesToMerge = array(
@@ -41,9 +43,10 @@ foreach ($content['sections'] as $s => $section) {
 
         echo '</div>';
     }
-        echo '</div>';
 
-    echo '</section>';
+    echo 
+            '</div>'.
+        '</section>';
 }
 
 function attributesToHtml($attributes, $attributesToMerge = array()) {

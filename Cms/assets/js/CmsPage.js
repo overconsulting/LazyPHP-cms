@@ -189,8 +189,6 @@ CmsPage.prototype.createHtml = function() {
 		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectBlockEvent);
 
 		$("#formProperties").find("input[type=text], select, textarea").on("change", {page: this}, this.propertyChangeEvent);
-		// $("#formProperties").find("textarea[name=content]").on("focus", {page: this}, this.colContentFocusEvent);
-		// $("#formProperties").find("textarea[name=content]").on("blur", {page: this}, this.colContentBlurEvent);
 
 		var cols = null;
 		var buttons = null;
@@ -273,7 +271,7 @@ CmsPage.prototype.loadProperties = function(block) {
 						break;
 
 					case "fullwidth":
-						if (blockType == "section") {console.log(input);console.log(item.fullwidth);
+						if (blockType == "section") {
 							input.selectedIndex = item.fullwidth ? 0 : 1;
 							$(input).parents(".form-group").show();
 						} else {
@@ -360,7 +358,7 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 
 				case "fullwidth":
 					if (item.blockType == "section") {
-						inputValue = input.options[input.selectedValue];
+						inputValue = input.options[input.selectedIndex].value;
 						item.fullwidth = inputValue == "1";
 					}
 					break;
@@ -422,13 +420,25 @@ CmsPage.prototype.doActionEvent = function(event) {
 			$(button).removeClass("btn-default").addClass("btn-warning selected");
 			$(".cms-page-widget-params").hide().removeClass("active");
 			$("#cms_page_widget_params_" + widgetType).show().addClass("active");
+			$("#cms_page_widget_select button[data-action=insertWidget]").removeClass("disabled");
 			break;
 
 		case "insertWidget":
-			var x = $("#cms_page_widget_select button[data-action=selectWidget].selected")[0];
-			var widgetType = x.hasAttribute("data-widget-type") ? x.getAttribute("data-widget-type") : null;
-			var content = $("#formProperties").find("textarea[name=content]")[0];
-			content.value = '{% widget type="' + widgetType + '" id="" %}';
+			var selectedWidgetButton = $("#cms_page_widget_select button[data-action=selectWidget].selected")[0];
+			if (selectedWidgetButton != null) {
+				var widgetType = selectedWidgetButton.hasAttribute("data-widget-type") ? selectedWidgetButton.getAttribute("data-widget-type") : null;
+				var widgetHtml = '{% widget type="' + widgetType + '"';
+				$("#cms_page_widget_params_" + widgetType).find("input, select").each(function(index, input) {
+					widgetHtml = widgetHtml + " " + input.name + '="' + input.value + '"';
+				});
+				widgetHtml = widgetHtml + " %}";
+				var content = $("#formProperties").find("textarea[name=content]")[0];
+				var contentValue = content.value;
+				content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
+				$(content).trigger("change", {page: this});
+			} else  {
+				alert("Sélectionnez d'abord le type de widget à insérer");
+			}
 			break;
 	}
 
@@ -489,9 +499,9 @@ CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
 
 		case "addCol":
 			$block = $button.parents(".cms-page-row");
-			$("#insert_mask").offset({top: 0, left: buttonOffset.left + $button.outerWidth() / 2 - 2});
+			$("#insert_mask").offset({top: $block.offset().top, left: buttonOffset.left + $button.outerWidth() / 2 - 2});
 			$("#insert_mask").outerWidth(5);
-			$("#insert_mask").outerHeight($block.height());
+			$("#insert_mask").outerHeight($block.outerHeight());
 			break;
 	}
 

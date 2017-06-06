@@ -75,7 +75,8 @@
 #cms_page_container button.action-add-section,
 #cms_page_container button.action-add-row,
 #cms_page_container button.action-add-col {
-	z-index: 1001;
+	position: relative;;
+	z-index: 1011;
 }
 
 #cms_page_container button.action-del-section,
@@ -162,5 +163,5 @@
 	height: 5px;
 	top: 0;
 	left: 0;
-	z-index: 1000;
+	z-index: 1010;
 }

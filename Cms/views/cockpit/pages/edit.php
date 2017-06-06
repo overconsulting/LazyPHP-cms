@@ -155,7 +155,7 @@ echo '<div id="cms_page_widget_select">';
 
 foreach ($widgets as $widget) {
     echo 
-        '<button type="button" class="btn btn-default action" data-action="selectWidget" data-widget-type="'.$widget['type'].'">'.
+        '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="'.$widget['type'].'">'.
             $widget['label'].
         '</button>';
 }
@@ -182,7 +182,7 @@ foreach ($widgets as $widget) {
 }
 
 echo 
-        '<button type="button" class="btn btn-success action" data-action="insertWidget">'.
+        '<button type="button" class="btn btn-success action action-insert-widget disabled" data-action="insertWidget">'.
             '<i class="fa fa-plus"></i> Insérer le widget'.
         '</button>'.
     '</div>';
