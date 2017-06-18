@@ -16,7 +16,7 @@ class ArticlesController extends CockpitController
     {
         $articles = Article::findAll("site_id = " . Session::get('site_id'));
 
-        $this->render('index', array(
+        $this->render('cms::articles::index', array(
             'articles'  => $articles,
             'titlePage' => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
             'titleBox'  => 'Listes des articles',
@@ -27,7 +27,7 @@ class ArticlesController extends CockpitController
     {
         $article = Article::findById($id);
 
-        $this->render('show', array(
+        $this->render('cms::articles::show', array(
             'article'       => $article,
             'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
             'titleBox'      => 'Article n°'.$article->title,
@@ -42,7 +42,7 @@ class ArticlesController extends CockpitController
 
         $author = User::findAll();
 
-        $this->render('edit', array(
+        $this->render('cms::articles::edit', array(
             'id'            => 0,
             'article'       => $this->article,
             'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
@@ -58,7 +58,7 @@ class ArticlesController extends CockpitController
             $this->article = Article::findById($id);
         }
 
-        $this->render('edit', array(
+        $this->render('cms::articles::edit', array(
             'id'            => $id,
             'article'       => $this->article,
             'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',

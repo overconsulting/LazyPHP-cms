@@ -27,7 +27,7 @@ class MenusitemsController extends CockpitController
 
         $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
 
-        $this->render('edit', array(
+        $this->render('cms::menusitems::edit', array(
             'pageTitle'         => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
             'titleBox'          => 'Ajouter un nouvel item au menu',
             'menuitem'          => $this->menuitem,
@@ -75,10 +75,10 @@ class MenusitemsController extends CockpitController
             'operator'  => '=',
             'value'     => $this->menuitem->menu_id
         ));
-        
+
         $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
 
-        $this->render('edit', array(
+        $this->render('cms::menusitems::edit', array(
             'pageTitle'         => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
             'titleBox'          => 'Modifier l\'item du menu',
             'menuitem'          => $this->menuitem,

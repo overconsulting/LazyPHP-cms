@@ -16,18 +16,19 @@
                 <tr>
                     <th width="1%">ID</th>
                     <th width="10%">Item</th>
-                    <th width="80%">Label</th>
+                    <th width="60%">Label</th>
+                    <th width="20%">URL</th>
                     <th>Status</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
 <?php
-foreach ($params['items'] as $item) {
+foreach ($items as $item) {
     echo '<tr>';
     echo '<td>'.$item->id.'</td>';
-    
-    if ($item->media->image != null) {
+
+    if ($item->media != null) {
         if ($item->media->image->url != '') {
             $thumbnail = '<img src="'.$item->media->image->url.'" width="25" height="25" />';
         }
@@ -36,12 +37,13 @@ foreach ($params['items'] as $item) {
     }
 
     echo '<td>'.$thumbnail.'</td>';
-    
+
 
     echo '<td>';
     echo '<span style="font-family: monospace;">'.str_repeat('&nbsp;', $item->level * 4).'|__</span>&nbsp;&nbsp;';
     echo $item->label;
     echo '</td>';
+    echo '<td>'.$item->link.'</td>';
     if ($item->active == 1) {
         $label = '<span class="label label-success">Activé</span>';
     } else {
