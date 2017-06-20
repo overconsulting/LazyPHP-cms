@@ -178,7 +178,7 @@ CmsPage.prototype.createHtml = function() {
 		cmsPageContainer.innerHTML = html;
 
 		$(cmsPageContainer).find(".action").on("click", {page: this}, this.doActionEvent);
-		$("#cms_page_widget_select").find(".action").on("click", {page: this}, this.doActionEvent);
+		$("#cms_page_block_properties_container").find(".action").on("click", {page: this}, this.doActionEvent);
 
 		$(".action-del-section, .action-del-row, .action-del-col").on("mouseenter", {page: this}, this.doDelButtonMouseenterEvent);
 		$(".action-del-section, .action-del-row, .action-del-col").on("mouseleave", {page: this}, this.doDelButtonMouseleaveEvent);
@@ -211,6 +211,8 @@ CmsPage.prototype.createHtml = function() {
 	}
 
 	this.selectBlockEvent(null);
+	$("#delete_mask").hide();
+	$("#insert_mask").hide();
 
 	return html;
 }
@@ -440,10 +442,82 @@ CmsPage.prototype.doActionEvent = function(event) {
 				alert("Sélectionnez d'abord le type de widget à insérer");
 			}
 			break;
+
+		case "contentBold":
+			var content = $("#formProperties").find("textarea[name=content]")[0];
+			var contentValue = content.value;
+
+			content.value = 
+				contentValue.substring(0, content.selectionStart) +
+				"<strong>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</strong>" +
+				 contentValue.substr(content.selectionEnd);
+
+			$(content).trigger("change", {page: this});
+			break;
+
+		case "contentItalic":
+			var content = $("#formProperties").find("textarea[name=content]")[0];
+			var contentValue = content.value;
+
+			content.value = 
+				contentValue.substring(0, content.selectionStart) +
+				"<em>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</em>" +
+				 contentValue.substr(content.selectionEnd);
+
+			$(content).trigger("change", {page: this});
+			break;
+
+		case "contentMaximize":
+				console.log(this.contentDialogLoadEvent);
+			options = {
+				postData: null,
+				id: "cms_page_content_dialog",
+				title: "Modifier le contenu de la colonne",
+				url: "",
+				actions: {
+					load: this.contentDialogLoadEvent,
+					close: this.contentDialogValidEvent,
+					cancel: this.contentDialogValidEvent,
+					valid: this.contentDialogValidEvent
+				}
+			};
+
+    		lazyDialogOpen(options);
+			break;
+
+		case "contentMinimize":
+			// var $contentEditor = $("#cms_page_block_properties_accordion_content");
+			// $contentEditor.css("position", "");
+			// $contentEditor.css("top", "");
+			// $contentEditor.css("left", "");
+			// $contentEditor.css("width", "");
+			// $contentEditor.css("height", "");
+			// $contentEditor.insertAfter("#cms_page_block_properties_accordion_content_heading");
+			// $("#cms_page_content_maximize").show();
+			// $("#cms_page_content_minimize").hide();
+			break;
 	}
 
 	event.stopPropagation();
 	event.preventDefault();
+}
+
+CmsPage.prototype.contentDialogLoadEvent = function() {
+	var $contentEditor = $("#cms_page_block_properties_accordion_content");
+	$("#cms_page_content_dialog .lazy-dialog-body").append($contentEditor);
+	$("#cms_page_content_maximize").hide();
+}
+
+CmsPage.prototype.contentDialogValidEvent = function() {
+	var $contentEditor = $("#cms_page_block_properties_accordion_content");
+	console.log($contentEditor[0]);
+	$contentEditor.insertAfter("#cms_page_block_properties_accordion_content_heading");
+	$("#cms_page_content_maximize").show();
+
+	var $content = $("#formProperties").find("textarea[name=content]");
+	$content.trigger("change", {page: this});
+
+	return true;
 }
 
 CmsPage.prototype.doDelButtonMouseenterEvent = function(event) {
@@ -579,6 +653,8 @@ $(document).ready(function() {
 	}
 
 	$("#formPage").on("submit", formPageSubmit);
+
+	$(".cms-page-maximize").on()
 
 	$(window).on("scroll", cmsPageScroll);
 

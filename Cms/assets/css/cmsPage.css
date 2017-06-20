@@ -112,6 +112,7 @@
 
 #cms_page_block_properties textarea[name="content"] {
 	font-family: monospace;
+	height: 100%;
 }
 
 .input-box-model-top input, .input-box-model-left-right input, .input-box-model-bottom input {
@@ -138,6 +139,11 @@
 .cms-page-widget-params {
 	display: none;
 	margin-bottom: 10px;
+}
+
+#cms_page_content_maximize,
+#cms_page_content_minimize {
+	display: none;	
 }
 
 #delete_mask {

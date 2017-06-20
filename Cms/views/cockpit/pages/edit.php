@@ -132,6 +132,11 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_heading">
                                 <div class="panel-body">
+                                    <div class="pull-right">
+                                        <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-xs action action-content-maximize" data-action="contentMaximize"><i class="fa fa-window-maximize"></i></button>
+                                        <button type="button" id="cms_page_content_minimize" class="btn btn-info btn-xs action action-content-minimize" data-action="contentMinimize"><i class="fa fa-window-minimize"></i></button>
+                                    </div>
+                                    <div class="clear-fix">&nbsp;</div>
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="active" role="presentation">
                                             <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
@@ -146,6 +151,10 @@
                                     </ul>
                                     <div class="tab-content">
                                         <div id="cms_page_tab_content_html" class="tab-pane fade in active" role="tabpanel">
+                                            <div class="form-group">
+                                                <button type="button" id="cms_page_content_bold" class="btn btn-default btn-xs action action-content-bold" data-action="contentBold"><i class="fa fa-bold"></i></button>
+                                                <button type="button" id="cms_page_content_italic" class="btn btn-default btn-xs action action-content-italic" data-action="contentItalic"><i class="fa fa-italic"></i></button>
+                                            </div>
                                             {% input_textarea name="content" data-property-type="content" rows="15" %}
                                         </div>
                                         <div id="cms_page_tab_content_widgets" class="tab-pane fade" role="tabpanel">
