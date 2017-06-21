@@ -1,7 +1,7 @@
 var CmsPage = function(title = '', active = 1, sections = []) {
 	this.title = title;
 	this.active = active;
-	this.sections = sections
+	this.sections = sections;
 };
 
 CmsPage.prototype.getItem = function(sectionIndex, rowIndex, colIndex) {
@@ -203,7 +203,7 @@ CmsPage.prototype.createHtml = function() {
 				width = Math.floor($(row).innerWidth());
 				width = width - parseInt($(row).css('padding-left')) - parseInt($(row).css('padding-right'));
 				width = width - ((parseInt($(cols).css('margin-left')) + parseInt($(cols).css('margin-right'))) * cols.length);
-				width = width - ($(buttons).outerWidth() * (cols.length + 1));
+				width = width - ($(buttons).outerWidth() * (cols.length + 2));
 				width = Math.floor(width / cols.length);
 				cols.outerWidth(width);
 			}
@@ -418,11 +418,24 @@ CmsPage.prototype.doActionEvent = function(event) {
 
 		case "selectWidget":
 			var widgetType = button.hasAttribute("data-widget-type") ? button.getAttribute("data-widget-type") : null;
-			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
+
 			$(button).removeClass("btn-default").addClass("btn-warning selected");
-			$(".cms-page-widget-params").hide().removeClass("active");
-			$("#cms_page_widget_params_" + widgetType).show().addClass("active");
-			$("#cms_page_widget_select button[data-action=insertWidget]").removeClass("disabled");
+			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
+
+			if (widgetType == "image") {
+				$("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
+				mediaInputId = "";
+				mediaInputDisplayId = "";
+				mediaSelectMultiple = 0;
+				mediaType = "image"
+				mediaCategory = "page";
+				mediaOnValid = event.data.page.contentMediaValidEvent;
+				selectMedias();
+			} else {
+				$(".cms-page-widget-params").hide().removeClass("active");
+				$("#cms_page_widget_params_" + widgetType).show().addClass("active");
+				$("#cms_page_widget_select button[data-action=insertWidget]").removeClass("disabled");
+			}
 			break;
 
 		case "insertWidget":
@@ -434,29 +447,23 @@ CmsPage.prototype.doActionEvent = function(event) {
 					widgetHtml = widgetHtml + " " + input.name + '="' + input.value + '"';
 				});
 				widgetHtml = widgetHtml + " %}";
-				var content = $("#formProperties").find("textarea[name=content]")[0];
-				var contentValue = content.value;
-				content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
-				$(content).trigger("change", {page: this});
+
+				var editor = tinymce.get("cms_page_editor_content");
+				if (editor != null) {
+					editor.insertContent(widgetHtml);
+				} else {
+					var content = $("textarea[name=content]")[0];
+					var contentValue = content.value;
+					content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
+					$(content).trigger("change", {page: this});
+				}
 			} else  {
 				alert("Sélectionnez d'abord le type de widget à insérer");
 			}
 			break;
 
-		case "contentBold":
-			var content = $("#formProperties").find("textarea[name=content]")[0];
-			var contentValue = content.value;
-
-			content.value = 
-				contentValue.substring(0, content.selectionStart) +
-				"<strong>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</strong>" +
-				 contentValue.substr(content.selectionEnd);
-
-			$(content).trigger("change", {page: this});
-			break;
-
-		case "contentItalic":
-			var content = $("#formProperties").find("textarea[name=content]")[0];
+		case "contentImage":
+			var content = $("textarea[name=content]")[0];
 			var contentValue = content.value;
 
 			content.value = 
@@ -464,37 +471,25 @@ CmsPage.prototype.doActionEvent = function(event) {
 				"<em>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</em>" +
 				 contentValue.substr(content.selectionEnd);
 
-			$(content).trigger("change", {page: this});
+			$(content).trigger("change", {page: event.data.page});
 			break;
 
 		case "contentMaximize":
-				console.log(this.contentDialogLoadEvent);
 			options = {
 				postData: null,
 				id: "cms_page_content_dialog",
 				title: "Modifier le contenu de la colonne",
 				url: "",
 				actions: {
-					load: this.contentDialogLoadEvent,
-					close: this.contentDialogValidEvent,
-					cancel: this.contentDialogValidEvent,
-					valid: this.contentDialogValidEvent
+					load: event.data.page.contentDialogLoadEvent,
+					close: event.data.page.contentDialogCancelEvent,
+					cancel: event.data.page.contentDialogCancelEvent,
+					valid: event.data.page.contentDialogValidEvent
 				}
 			};
 
-    		lazyDialogOpen(options);
-			break;
-
-		case "contentMinimize":
-			// var $contentEditor = $("#cms_page_block_properties_accordion_content");
-			// $contentEditor.css("position", "");
-			// $contentEditor.css("top", "");
-			// $contentEditor.css("left", "");
-			// $contentEditor.css("width", "");
-			// $contentEditor.css("height", "");
-			// $contentEditor.insertAfter("#cms_page_block_properties_accordion_content_heading");
-			// $("#cms_page_content_maximize").show();
-			// $("#cms_page_content_minimize").hide();
+			var lazyDialog = new LazyDialog();
+			lazyDialog.open(options);
 			break;
 	}
 
@@ -502,20 +497,84 @@ CmsPage.prototype.doActionEvent = function(event) {
 	event.preventDefault();
 }
 
+CmsPage.prototype.contentMediaValidEvent = function() {
+	var imageHtml = '{% image src="" %}';
+
+	var editor = tinymce.get("cms_page_editor_content");
+	if (editor != null) {
+		editor.insertContent(widgetHtml);
+	} else {
+		var content = $("textarea[name=content]")[0];
+		var contentValue = content.value;
+		content.value = contentValue.substring(0, content.selectionStart) + imageHtml + contentValue.substr(content.selectionStart);
+		$(content).trigger("change", {page: this});
+	}
+
+	return true;
+}
+
 CmsPage.prototype.contentDialogLoadEvent = function() {
-	var $contentEditor = $("#cms_page_block_properties_accordion_content");
-	$("#cms_page_content_dialog .lazy-dialog-body").append($contentEditor);
+	var editorContainer = $("#cms_page_content_dialog .lazy-dialog-body")[0];
+	editorContainer.innerHTML = 
+		'<div id="cms_page_editor container-fluid">' +
+			'<div class="row">' +
+				'<div class="col-md-8">' +
+					'<textarea id="cms_page_editor_content"></textarea>' +
+				'</div>' +
+				'<div id="cms_page_editor_widgets" class="col-md-4">' +
+					'<h3>Widgets</h3>'+
+				'</div>' +
+			'</div>' +
+		'</div>';
+
+	var editorContent = $("#cms_page_editor_content")[0];
+	var content = $("textarea[name=content]")[0];
+	editorContent.value = content.value;
+
+	tinymce.init({
+		selector: '#cms_page_editor_content',
+		branding: false,
+		forced_root_block: false,
+		height: 400,
+		language: 'fr_FR',
+		plugins: "code link lists visualblocks",
+		menubar: "edit format tools",
+		toolbar: [
+			"code | undo redo | styleselect | removeformat | visualblocks | " +
+			"bold italic underline strikethrough subscript superscript | " +
+			"alignleft aligncenter alignright alignjustify alignnone | " +
+			"bullist numlist | link unlink"
+		]
+	});
+
+	var widgets = $("#cms_page_widget_select")[0];
+	$('#cms_page_editor_widgets').append(widgets);
+
 	$("#cms_page_content_maximize").hide();
 }
 
-CmsPage.prototype.contentDialogValidEvent = function() {
-	var $contentEditor = $("#cms_page_block_properties_accordion_content");
-	console.log($contentEditor[0]);
-	$contentEditor.insertAfter("#cms_page_block_properties_accordion_content_heading");
+CmsPage.prototype.contentDialogCancelEvent = function() {
+	tinymce.remove("#cms_page_editor_content");
+
+	var widgets = $("#cms_page_widget_select")[0];
+	$('#cms_page_tab_content_widgets').append(widgets);
+
 	$("#cms_page_content_maximize").show();
 
-	var $content = $("#formProperties").find("textarea[name=content]");
-	$content.trigger("change", {page: this});
+	return true;
+}
+
+CmsPage.prototype.contentDialogValidEvent = function() {
+	var editor = tinymce.get("cms_page_editor_content");
+	var content = $("textarea[name=content]")[0];
+	content.value = editor.getContent();
+	$(content).trigger("change", {page: this});
+	tinymce.remove("#cms_page_editor_content");
+
+	var widgets = $("#cms_page_widget_select")[0];
+	$('#cms_page_tab_content_widgets').append(widgets);
+
+	$("#cms_page_content_maximize").show();
 
 	return true;
 }
@@ -658,7 +717,7 @@ $(document).ready(function() {
 
 	$(window).on("scroll", cmsPageScroll);
 
-    // $('.colorpicker').ColorPicker();
+	// $('.colorpicker').ColorPicker();
 });
 
 function formPageSubmit(event) {

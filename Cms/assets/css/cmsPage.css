@@ -91,11 +91,11 @@
 #cms_page_block_properties_container {
 }
 
-#cms_page_block_properties .form-group {
+#cms_page_block_properties .form-group, #cms_page_widget_select .form-group {
 	margin: 5px;
 } 
 
-#cms_page_block_properties label {
+#cms_page_block_properties label, #cms_page_widget_select label {
 	font-size: 12px;
 }
 
@@ -141,15 +141,14 @@
 	margin-bottom: 10px;
 }
 
-#cms_page_content_maximize,
-#cms_page_content_minimize {
-	display: none;	
+#cms_page_editor_content {
+	height: 100%;
 }
 
 #delete_mask {
 	display: none;
 	position: absolute;
-	background: rgba(204, 51, 51, 0.25);
+	background: rgba(204, 51, 51, 0.5);
 	border: dashed 1px #cc3333;
 	box-shadow: 0px 0px 3px #cc3333 inset, 0px 0px 3px #cc3333;
 	width: 100px;
@@ -162,7 +161,7 @@
 #insert_mask {
 	display: none;
 	position: absolute;
-	background: rgba(51, 201, 51, 0.25);
+	background: rgba(51, 201, 51, 0.5);
 	border: dashed 1px #33cc33;
 	box-shadow: 0px 0px 3px #33cc33 inset, 0px 0px 3px #33cc33;
 	width: 100px;
