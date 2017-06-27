@@ -79,7 +79,7 @@
                                 <div class="panel-body">
                                     {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
-                                    {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" %}
+                                    {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" mediaType="image" mediaCategory="page" %}
                                 </div>
                             </div>
                         </div>
@@ -136,28 +136,30 @@
                                         <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-xs action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
                                     </div>
                                     <div class="clear-fix">&nbsp;</div>
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li class="active" role="presentation">
-                                            <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
-                                                Contenu HTML
-                                            </a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a href="#cms_page_tab_content_widgets" aria-expanded="false" role="tab" data-toggle="tab">
-                                                Widgets
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div id="cms_page_tab_content_html" class="tab-pane fade in active" role="tabpanel">
-                                            {% input_textarea name="content" data-property-type="content" rows="15" %}
-                                        </div>
-                                        <div id="cms_page_tab_content_widgets" class="tab-pane fade" role="tabpanel">
+                                    <div id="cms_page_content">
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li class="active" role="presentation">
+                                                <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
+                                                    Contenu HTML
+                                                </a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#cms_page_tab_content_widgets" aria-expanded="false" role="tab" data-toggle="tab">
+                                                    Widgets
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div id="cms_page_tab_content_html" class="tab-pane in active" role="tabpanel">
+                                                {% input_textarea name="content" data-property-type="content" rows="15" %}
+                                                <textarea id="cms_page_editor_content"></textarea>
+                                            </div>
+                                            <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
 <?php
 
 echo '<div id="cms_page_widget_select">';
 
-echo '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="image">Image</button>';
+echo '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="media" data-input-id="selected_media" data-media-type="image">Media</button>';
 
 foreach ($widgets as $widget) {
     echo 
@@ -165,6 +167,11 @@ foreach ($widgets as $widget) {
             $widget['label'].
         '</button>';
 }
+
+echo 
+    '<div id="cms_page_widget_params_media" class="cms-page-widget-params">'.
+        '{% input_media name="selected_media multiple="0" mediaType="image" mediaCategory="page" %}'.
+    '</div>';
 
 foreach ($widgets as $widget) {
     echo '<div id="cms_page_widget_params_'.$widget['type'].'" class="cms-page-widget-params">';
@@ -194,6 +201,7 @@ echo
     '</div>';
 
 ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -390,30 +390,33 @@ CmsPage.prototype.doActionEvent = function(event) {
 	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
 	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
 	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
+	var page = event.data.page;
+	var item = page.getItem(sectionIndex, rowIndex, colIndex);
+
 
 	switch (action) {
 		case "addSection":
-			event.data.page.addSection(position);
+			page.addSection(position);
 			break;
 
 		case "delSection":
-			event.data.page.delSection(sectionIndex);
+			page.delSection(sectionIndex);
 			break;
 
 		case "addRow":
-			event.data.page.addRow(sectionIndex, position);
+			page.addRow(sectionIndex, position);
 			break;
 
 		case "delRow":
-			event.data.page.delRow(sectionIndex, rowIndex);
+			page.delRow(sectionIndex, rowIndex);
 			break;
 
 		case "addCol":
-			event.data.page.addCol(sectionIndex, rowIndex, position);
+			page.addCol(sectionIndex, rowIndex, position);
 			break;
 
 		case "delCol":
-			event.data.page.delCol(sectionIndex, rowIndex, colIndex);
+			page.delCol(sectionIndex, rowIndex, colIndex);
 			break;
 
 		case "selectWidget":
@@ -422,15 +425,8 @@ CmsPage.prototype.doActionEvent = function(event) {
 			$(button).removeClass("btn-default").addClass("btn-warning selected");
 			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
 
-			if (widgetType == "image") {
-				$("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
-				mediaInputId = "";
-				mediaInputDisplayId = "";
-				mediaSelectMultiple = 0;
-				mediaType = "image"
-				mediaCategory = "page";
-				mediaOnValid = event.data.page.contentMediaValidEvent;
-				selectMedias();
+			if (widgetType == "media") {
+				// $("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
 			} else {
 				$(".cms-page-widget-params").hide().removeClass("active");
 				$("#cms_page_widget_params_" + widgetType).show().addClass("active");
@@ -450,12 +446,13 @@ CmsPage.prototype.doActionEvent = function(event) {
 
 				var editor = tinymce.get("cms_page_editor_content");
 				if (editor != null) {
-					editor.insertContent(widgetHtml);
+					editor.setContent(widgetHtml);
 				} else {
 					var content = $("textarea[name=content]")[0];
 					var contentValue = content.value;
-					content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
-					$(content).trigger("change", {page: this});
+					// content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
+					content.value = widgetHtml;
+					$(content).trigger("change", {page: page});
 				}
 			} else  {
 				alert("Sélectionnez d'abord le type de widget à insérer");
@@ -471,7 +468,7 @@ CmsPage.prototype.doActionEvent = function(event) {
 				"<em>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</em>" +
 				 contentValue.substr(content.selectionEnd);
 
-			$(content).trigger("change", {page: event.data.page});
+			$(content).trigger("change", {page: page});
 			break;
 
 		case "contentMaximize":
@@ -481,10 +478,10 @@ CmsPage.prototype.doActionEvent = function(event) {
 				title: "Modifier le contenu de la colonne",
 				url: "",
 				actions: {
-					load: event.data.page.contentDialogLoadEvent,
-					close: event.data.page.contentDialogCancelEvent,
-					cancel: event.data.page.contentDialogCancelEvent,
-					valid: event.data.page.contentDialogValidEvent
+					load: page.contentDialogLoadEvent,
+					close: page.contentDialogCancelEvent,
+					cancel: page.contentDialogCancelEvent,
+					valid: page.contentDialogValidEvent
 				}
 			};
 
@@ -518,11 +515,13 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 	editorContainer.innerHTML = 
 		'<div id="cms_page_editor container-fluid">' +
 			'<div class="row">' +
-				'<div class="col-md-8">' +
-					'<textarea id="cms_page_editor_content"></textarea>' +
-				'</div>' +
-				'<div id="cms_page_editor_widgets" class="col-md-4">' +
-					'<h3>Widgets</h3>'+
+				// '<div class="col-md-8">' +
+				// '<textarea id="cms_page_editor_content"></textarea>' +
+				// '</div>' +
+				// '<div id="cms_page_editor_widgets" class="col-md-4">' +
+				// 	'<h3>Widgets</h3>'+
+				// '</div>' +
+				'<div id="cms_page_content_container" class="col-md-12">' +
 				'</div>' +
 			'</div>' +
 		'</div>';
@@ -530,6 +529,7 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 	var editorContent = $("#cms_page_editor_content")[0];
 	var content = $("textarea[name=content]")[0];
 	editorContent.value = content.value;
+	$(content).hide();
 
 	tinymce.init({
 		selector: '#cms_page_editor_content',
@@ -547,17 +547,23 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 		]
 	});
 
-	var widgets = $("#cms_page_widget_select")[0];
-	$('#cms_page_editor_widgets').append(widgets);
+	var cmsPageContent = $("#cms_page_content")[0];
+	$("#cms_page_content_container").append(cmsPageContent);
+	// var widgets = $("#cms_page_widget_select")[0];
+	// $("#cms_page_editor_widgets").append(widgets);
 
 	$("#cms_page_content_maximize").hide();
 }
 
 CmsPage.prototype.contentDialogCancelEvent = function() {
+	var content = $("textarea[name=content]")[0];
+	$(content).show();
 	tinymce.remove("#cms_page_editor_content");
 
-	var widgets = $("#cms_page_widget_select")[0];
-	$('#cms_page_tab_content_widgets').append(widgets);
+	var cmsPageContent = $("#cms_page_content")[0];
+	$("#cms_page_block_properties_accordion_content .panel-body").append(cmsPageContent);
+	// var widgets = $("#cms_page_widget_select")[0];
+	// $('#cms_page_tab_content_widgets').append(widgets);
 
 	$("#cms_page_content_maximize").show();
 
@@ -568,11 +574,14 @@ CmsPage.prototype.contentDialogValidEvent = function() {
 	var editor = tinymce.get("cms_page_editor_content");
 	var content = $("textarea[name=content]")[0];
 	content.value = editor.getContent();
+	$(content).show();
 	$(content).trigger("change", {page: this});
 	tinymce.remove("#cms_page_editor_content");
 
-	var widgets = $("#cms_page_widget_select")[0];
-	$('#cms_page_tab_content_widgets').append(widgets);
+	var cmsPageContent = $("#cms_page_content")[0];
+	$("#cms_page_block_properties_accordion_content .panel-body").append(cmsPageContent);
+	// var widgets = $("#cms_page_widget_select")[0];
+	// $('#cms_page_tab_content_widgets').append(widgets);
 
 	$("#cms_page_content_maximize").show();
 
