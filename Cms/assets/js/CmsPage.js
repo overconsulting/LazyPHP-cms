@@ -420,15 +420,13 @@ CmsPage.prototype.doActionEvent = function(event) {
 			break;
 
 		case "selectWidget":
-			var widgetType = button.hasAttribute("data-widget-type") ? button.getAttribute("data-widget-type") : null;
-
 			$(button).removeClass("btn-default").addClass("btn-warning selected");
 			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
+			$(".cms-page-widget-params").hide().removeClass("active");
+			$("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
 
-			if (widgetType == "media") {
-				// $("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
-			} else {
-				$(".cms-page-widget-params").hide().removeClass("active");
+			var widgetType = button.hasAttribute("data-widget-type") ? button.getAttribute("data-widget-type") : null;
+			if (widgetType != null) {
 				$("#cms_page_widget_params_" + widgetType).show().addClass("active");
 				$("#cms_page_widget_select button[data-action=insertWidget]").removeClass("disabled");
 			}
@@ -438,21 +436,32 @@ CmsPage.prototype.doActionEvent = function(event) {
 			var selectedWidgetButton = $("#cms_page_widget_select button[data-action=selectWidget].selected")[0];
 			if (selectedWidgetButton != null) {
 				var widgetType = selectedWidgetButton.hasAttribute("data-widget-type") ? selectedWidgetButton.getAttribute("data-widget-type") : null;
-				var widgetHtml = '{% widget type="' + widgetType + '"';
-				$("#cms_page_widget_params_" + widgetType).find("input, select").each(function(index, input) {
-					widgetHtml = widgetHtml + " " + input.name + '="' + input.value + '"';
-				});
-				widgetHtml = widgetHtml + " %}";
+				if (widgetType != null) {
+					var widgetHtml = "";
+					switch (widgetType) {
+						case "media":
+							widgetHtml = widgetHtml + '{% image src="' + $("#widget_selected_media_url").val() + '" %}';
+							break;
 
-				var editor = tinymce.get("cms_page_editor_content");
-				if (editor != null) {
-					editor.setContent(widgetHtml);
-				} else {
-					var content = $("textarea[name=content]")[0];
-					var contentValue = content.value;
-					// content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
-					content.value = widgetHtml;
-					$(content).trigger("change", {page: page});
+						default:
+							widgetHtml = widgetHtml + '{% widget type="' + widgetType + '"';
+							$("#cms_page_widget_params_" + widgetType).find("input, select").each(function(index, input) {
+								widgetHtml = widgetHtml + " " + input.name + '="' + input.value + '"';
+							});
+							widgetHtml = widgetHtml + " %}";
+							break;
+					}
+
+					var editor = tinymce.get("cms_page_editor_content");
+					if (editor != null) {
+						editor.setContent(widgetHtml);
+					} else {
+						var content = $("textarea[name=content]")[0];
+						var contentValue = content.value;
+						// content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
+						content.value = widgetHtml;
+						$(content).trigger("change", {page: page});
+					}
 				}
 			} else  {
 				alert("Sélectionnez d'abord le type de widget à insérer");
@@ -472,7 +481,7 @@ CmsPage.prototype.doActionEvent = function(event) {
 			break;
 
 		case "contentMaximize":
-			options = {
+			params = {
 				postData: null,
 				id: "cms_page_content_dialog",
 				title: "Modifier le contenu de la colonne",
@@ -486,7 +495,7 @@ CmsPage.prototype.doActionEvent = function(event) {
 			};
 
 			var lazyDialog = new LazyDialog();
-			lazyDialog.open(options);
+			lazyDialog.open(params);
 			break;
 	}
 
@@ -618,6 +627,7 @@ CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
 	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
 	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
 	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
+	var position = button.hasAttribute("data-position") ? parseInt(button.getAttribute("data-position")) : null;
 
 	var $button = $(button);
 	var $block = null;
@@ -634,8 +644,9 @@ CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
 
 		case "addRow":
 			$block = $button.parents(".cms-page-section");
-			$("#insert_mask").offset({top: buttonOffset.top + $button.outerHeight() / 2 - 2, left: buttonOffset.left + $button.outerWidth()});
-			$("#insert_mask").outerWidth($block.width() - $button.outerWidth());
+			var delta = position == 0 ? $button.outerWidth() : 0;
+			$("#insert_mask").offset({top: buttonOffset.top + $button.outerHeight() / 2 - 2, left: buttonOffset.left + $button.outerWidth()});			
+			$("#insert_mask").outerWidth($block.width() - $button.outerWidth() - delta);
 			$("#insert_mask").outerHeight(5);
 			break;
 

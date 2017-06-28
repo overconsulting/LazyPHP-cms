@@ -157,9 +157,9 @@
                                             <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
 <?php
 
-echo '<div id="cms_page_widget_select">';
-
-echo '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="media" data-input-id="selected_media" data-media-type="image">Media</button>';
+echo
+    '<div id="cms_page_widget_select">
+        <button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="media">Media</button>';
 
 foreach ($widgets as $widget) {
     echo 
@@ -169,9 +169,11 @@ foreach ($widgets as $widget) {
 }
 
 echo 
-    '<div id="cms_page_widget_params_media" class="cms-page-widget-params">'.
-        '{% input_media name="selected_media multiple="0" mediaType="image" mediaCategory="page" %}'.
-    '</div>';
+        '<hr />'.
+        '<div id="cms_page_widget_params_media" class="cms-page-widget-params">'.
+            '{% input_media name="widget_selected_media" multiple="0" mediaType="image" mediaCategory="page" %}'.
+            // '{% input_checkbox name="widget_media_responsive" label="Adapter la taille au contenant (responsive)" %}'.
+        '</div>';
 
 foreach ($widgets as $widget) {
     echo '<div id="cms_page_widget_params_'.$widget['type'].'" class="cms-page-widget-params">';
@@ -195,6 +197,7 @@ foreach ($widgets as $widget) {
 }
 
 echo 
+        '<hr />'.
         '<button type="button" class="btn btn-success action action-insert-widget disabled" data-action="insertWidget">'.
             '<i class="fa fa-plus"></i> Insérer le widget'.
         '</button>'.
