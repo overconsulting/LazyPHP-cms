@@ -9,8 +9,16 @@ use Cms\models\Page;
 use Core\Router;
 use Core\Session;
 
+use Auth\models\Role;
+
 class PagesController extends CockpitController
 {
+    public function before()
+    {
+        if (!Role::checkAdministratorPermission($this->current_administrator, 'cms')) {
+            $this->redirect('/cockpit');
+        }
+    }
 
     public function indexAction()
     {
