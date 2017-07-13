@@ -133,7 +133,7 @@
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_heading">
                                 <div class="panel-body">
                                     <div class="pull-right">
-                                        <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-xs action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
+                                        <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
                                     </div>
                                     <div class="clear-fix">&nbsp;</div>
                                     <div id="cms_page_content">
@@ -162,13 +162,13 @@ echo
         <button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="media">Media</button>';
 
 foreach ($widgets as $widget) {
-    echo 
+    echo
         '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="'.$widget['type'].'">'.
             $widget['label'].
         '</button>';
 }
 
-echo 
+echo
         '<hr />'.
         '<div id="cms_page_widget_params_media" class="cms-page-widget-params">'.
             '{% input_media name="widget_selected_media" multiple="0" mediaType="image" mediaCategory="page" %}'.
@@ -196,7 +196,7 @@ foreach ($widgets as $widget) {
     echo '</div>';
 }
 
-echo 
+echo
         '<hr />'.
         '<button type="button" class="btn btn-success action action-insert-widget disabled" data-action="insertWidget">'.
             '<i class="fa fa-plus"></i> Insérer le widget'.

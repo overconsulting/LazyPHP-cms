@@ -5,7 +5,7 @@
         <h3 class="box-title">{{ boxTitle }}</h3>
 
         <div class="box-tools pull-right">
-            <a href="<?php echo url('cockpit_cms_pages_new'); ?>" class="btn btn-success btn-xs"><i class="fa fa-plus"></i></a>
+            <a href="<?php echo url('cockpit_cms_pages_new'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></a>
         </div>
     </div>
     <div class="box-body">
@@ -36,8 +36,8 @@ foreach ($params['pages'] as $page) {
         echo '<td>'.$label.'</td>';
         ?>
         <td>
-            {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="xs" icon="pencil" content="" %}
-            {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page?" %}
+            {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="sm" icon="pencil" content="" %}
+            {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page?" %}
         </td>
     </tr>
     <?php

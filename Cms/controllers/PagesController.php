@@ -19,7 +19,9 @@ class PagesController extends FrontController
         if ($page->layout != null) {
             $this->layout = $page->layout;
         }
-        
+
+        // var_dump($this->params);
+
         $this->render('cms::pages::show', array(
             'page'      => $page,
             'pageTitle' => $page->title

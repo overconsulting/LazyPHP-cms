@@ -4,9 +4,9 @@
     <div class="box-header">
         <h3 class="box-title">{{ titleBox }}</h3>
         <div class="box-tools pull-right">
-            {% button url="cockpit_cms_articles" type="default" icon="arrow-left" size="xs" %}
-            {% button url="cockpit_cms_articles_edit_<?php echo $params['article']->id; ?>" type="info" size="xs" icon="pencil" %}
-    		{% button url="cockpit_cms_articles_delete_<?php echo $params['article']->id; ?>" type="danger" size="xs" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article?" %}
+            {% button url="cockpit_cms_articles" type="secondary" icon="arrow-left" size="sm" %}
+            {% button url="cockpit_cms_articles_edit_<?php echo $params['article']->id; ?>" type="info" size="sm" icon="pencil" %}
+    		{% button url="cockpit_cms_articles_delete_<?php echo $params['article']->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article?" %}
         </div>
     </div>
 	<div class="box-body">

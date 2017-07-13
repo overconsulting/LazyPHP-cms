@@ -5,7 +5,7 @@
         <h3 class="box-title">{{ titleBox }}</h3>
 
         <div class="box-tools pull-right">
-            <a href="<?php echo url('cockpit_cms_menus_new'); ?>" class="btn btn-success btn-xs"><i class="fa fa-plus"></i></a>
+            <a href="<?php echo url('cockpit_cms_menus_new'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></a>
         </div>
     </div>
     <div class="box-body">
@@ -28,7 +28,7 @@ foreach ($params['menus'] as $menu) {
     } else {
         echo '<td>'.$menu->label.'</td>';
     }
-    
+
     if ($menu->active == 1) {
         $label = '<span class="label label-success">Activé</span>';
     } else {
@@ -36,9 +36,9 @@ foreach ($params['menus'] as $menu) {
     }
     echo '<td>'.$label.'</td>';
     echo '<td>';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_show', array('id' => $menu->id)).'" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a> ';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_edit', array('id' => $menu->id)).'" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a> ';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_delete', array('id' => $menu->id)).'" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></a>';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_show', array('id' => $menu->id)).'" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a> ';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_edit', array('id' => $menu->id)).'" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a> ';
+    echo '<a href="'.Core\Router::url('cockpit_cms_menus_delete', array('id' => $menu->id)).'" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></a>';
     echo '</td>';
     echo '</tr>';
 }

@@ -15,9 +15,10 @@ class PagesController extends CockpitController
 {
     public function before()
     {
+        var_dump($this->current_administrator);
         if (!Role::checkAdministratorPermission($this->current_administrator, 'cms')) {
             Session::addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
-            $this->redirect('/cockpit');
+            // $this->redirect('/cockpit');
         }
     }
 
@@ -67,7 +68,7 @@ class PagesController extends CockpitController
     {
         $this->page = Page::findById($id);
 
-        $contentJson = 
+        $contentJson =
             $this->page->content != '' ?
             $this->page->content :
             json_encode(array(

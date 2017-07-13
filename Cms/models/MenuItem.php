@@ -31,4 +31,18 @@ class MenuItem extends Model
             )
         );
     }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        if ($this->media !== null) {
+            return $this->media->getUrl();
+        } else {
+            return '';
+        }
+    }
 }
