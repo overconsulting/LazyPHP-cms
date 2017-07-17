@@ -672,7 +672,7 @@ CmsPage.prototype.doAddButtonMouseleaveEvent = function(event) {
 function _getAddSectionButton(position)
 {
 	html = 
-		'<button type="button" class="action action-add-section btn btn-success btn-xs" title="Ajouter une section" data-action="addSection" data-position="'+position+'">'+
+		'<button type="button" class="action action-add-section btn btn-success btn-sm" title="Ajouter une section" data-action="addSection" data-position="'+position+'">'+
 			'<i class="fa fa-plus"></i>'+
 		'</button>';
 	return html;
@@ -681,7 +681,7 @@ function _getAddSectionButton(position)
 function _getDelSectionButton(sectionIndex)
 {
 	html = 
-		'<button type="button" class="action action-del-section btn btn-danger btn-xs" title="Supprimer la section" data-action="delSection" data-section-index="'+sectionIndex+'">'+
+		'<button type="button" class="action action-del-section btn btn-danger btn-sm" title="Supprimer la section" data-action="delSection" data-section-index="'+sectionIndex+'">'+
 			'<i class="fa fa-remove"></i>'+
 		'</button>';
 	return html;
@@ -690,7 +690,7 @@ function _getDelSectionButton(sectionIndex)
 function _getAddRowButton(sectionIndex, position)
 {
 	html = 
-		'<button type="button" class="action action-add-row btn btn-success btn-xs" title="Ajouter une ligne" data-action="addRow" data-section-index="'+sectionIndex+'" data-position="'+position+'">'+
+		'<button type="button" class="action action-add-row btn btn-success btn-sm" title="Ajouter une ligne" data-action="addRow" data-section-index="'+sectionIndex+'" data-position="'+position+'">'+
 			'<i class="fa fa-plus"></i>'+
 		'</button>';
 	return html;
@@ -699,7 +699,7 @@ function _getAddRowButton(sectionIndex, position)
 function _getDelRowButton(sectionIndex, rowIndex)
 {
 	html = 
-		'<button type="button" class="action action-del-row btn btn-danger btn-xs" title="Supprimer la ligne" data-action="delRow" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'">'+
+		'<button type="button" class="action action-del-row btn btn-danger btn-sm" title="Supprimer la ligne" data-action="delRow" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'">'+
 			'<i class="fa fa-remove"></i>'+
 		'</button>';
 	return html;
@@ -708,7 +708,7 @@ function _getDelRowButton(sectionIndex, rowIndex)
 function _getAddColButton(sectionIndex, rowIndex, position)
 {
 	html = 
-		'<button type="button" class="action action-add-col btn btn-success btn-xs" title="Ajouter une colonne" data-action="addCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-position="'+position+'">'+
+		'<button type="button" class="action action-add-col btn btn-success btn-sm" title="Ajouter une colonne" data-action="addCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-position="'+position+'">'+
 			'<i class="fa fa-plus"></i>'+
 		'</button>';
 	return html;
@@ -717,7 +717,7 @@ function _getAddColButton(sectionIndex, rowIndex, position)
 function _getDelColButton(sectionIndex, rowIndex, colIndex)
 {
 	html = 
-		'<button type="button" class="action action-del-col btn btn-danger btn-xs" title="Supprimer la colonne" data-action="delCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-col-index="'+colIndex+'">'+
+		'<button type="button" class="action action-del-col btn btn-danger btn-sm" title="Supprimer la colonne" data-action="delCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-col-index="'+colIndex+'">'+
 			'<i class="fa fa-remove"></i>'+
 		'</button>';
 	return html;
