@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="box-body">
-		{% form_open id="formMenu" action="formAction" class="form-horizontal" %}
+		{% form_open id="formMenu" action="formAction" %}
 		    {% input_text name="label" model="menu.label" label="Nom" %}
             {% input_checkbox name="principal" model="menu.principal" label="Principal" %}
 		    {% input_checkbox name="active" model="menu.active" label="Actif" %}

@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="box-body">
-{% form_open id="formArticle" action="formAction" class="form-horizontal" %}
+{% form_open id="formArticle" action="formAction" %}
     {% input_select name="user_id" model="article.user_id" options="authorOptions" label="Auteur" %}
     {% input_text name="title" model="article.title" label="Titre" %}
     {% input_media name="media_id" model="article.media_id" label="Image" mediaType="image" mediaCategory="article" %}

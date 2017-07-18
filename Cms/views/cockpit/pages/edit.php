@@ -6,7 +6,7 @@
 <h1 class="page-title">{{ pageTitle }}</h1>
 <input type="hidden" class="config" name="content" value="" />
 <div class="box box-purple">
-    {% form_open id="formPage" action="formAction" class="form-horizontal" %}
+    {% form_open id="formPage" action="formAction" %}
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
         <div class="box-tools pull-right">
@@ -93,30 +93,30 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_paddingsmargins" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_paddingsmargins_heading">
                                 <div class="panel-body">
-                                    <div class="form-group form-group-sm">
-                                        <label for="paddings" class="control-label col-lg-12">Paddings</label>
+                                    <div class="form-group row">
+                                        <label for="paddings" class="form-control-label col-form-label-sm col-lg-12">Paddings</label>
                                         <div class="input-box-model-top">
-                                            <input id="padding-top" name="padding-top" value="" class="form-control" placeholder="top" data-property-type="style" data-property-name="padding-top" type="text">
+                                            <input id="padding-top" name="padding-top" value="" class="form-control form-control-sm" placeholder="top" data-property-type="style" data-property-name="padding-top" type="text">
                                         </div>
                                         <div class="input-box-model-left-right">
-                                            <input id="padding-left" name="padding-left" value="" class="form-control" placeholder="left" data-property-type="style" data-property-name="padding-left" type="text">
-                                            <input id="padding-right" name="padding-right" value="" class="form-control" placeholder="right" data-property-type="style" data-property-name="padding-right" type="text">
+                                            <input id="padding-left" name="padding-left" value="" class="form-control form-control-sm" placeholder="left" data-property-type="style" data-property-name="padding-left" type="text">
+                                            <input id="padding-right" name="padding-right" value="" class="form-control form-control-sm" placeholder="right" data-property-type="style" data-property-name="padding-right" type="text">
                                         </div>
                                         <div class="input-box-model-bottom">
-                                            <input id="padding-bottom" name="padding-bottom" value="" class="form-control" placeholder="bottom" data-property-type="style" data-property-name="padding-bottom" type="text">
+                                            <input id="padding-bottom" name="padding-bottom" value="" class="form-control form-control-sm placeholder="bottom" data-property-type="style" data-property-name="padding-bottom" type="text">
                                         </div>
                                     </div>
-                                    <div class="form-group form-group-sm">
+                                    <div class="form-group row">
                                         <label for="margins" class="control-label col-lg-12">Marges</label>
                                         <div class="input-box-model-top">
-                                            <input id="margin-top" name="margin-top" value="" class="form-control" placeholder="top" data-property-type="style" data-property-name="margin-top" type="text">
+                                            <input id="margin-top" name="margin-top" value="" class="form-control form-control-sm" placeholder="top" data-property-type="style" data-property-name="margin-top" type="text">
                                         </div>
                                         <div class="input-box-model-left-right">
-                                            <input id="margin-left" name="margin-left" value="" class="form-control" placeholder="left" data-property-type="style" data-property-name="margin-left" type="text">
-                                            <input id="margin-right" name="margin-right" value="" class="form-control" placeholder="right" data-property-type="style" data-property-name="margin-right" type="text">
+                                            <input id="margin-left" name="margin-left" value="" class="form-control form-control-sm" placeholder="left" data-property-type="style" data-property-name="margin-left" type="text">
+                                            <input id="margin-right" name="margin-right" value="" class="form-control form-control-sm" placeholder="right" data-property-type="style" data-property-name="margin-right" type="text">
                                         </div>
                                         <div class="input-box-model-bottom">
-                                            <input id="margin-bottom" name="margin-bottom" value="" class="form-control" placeholder="bottom" data-property-type="style" data-property-name="margin-bottom" type="text">
+                                            <input id="margin-bottom" name="margin-bottom" value="" class="form-control form-control-sm" placeholder="bottom" data-property-type="style" data-property-name="margin-bottom" type="text">
                                         </div>
                                     </div>
                                 </div>
