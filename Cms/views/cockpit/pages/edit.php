@@ -103,7 +103,7 @@
                                             <input id="padding-right" name="padding-right" value="" class="form-control form-control-sm" placeholder="right" data-property-type="style" data-property-name="padding-right" type="text">
                                         </div>
                                         <div class="input-box-model-bottom">
-                                            <input id="padding-bottom" name="padding-bottom" value="" class="form-control form-control-sm placeholder="bottom" data-property-type="style" data-property-name="padding-bottom" type="text">
+                                            <input id="padding-bottom" name="padding-bottom" value="" class="form-control form-control-sm" placeholder="bottom" data-property-type="style" data-property-name="padding-bottom" type="text">
                                         </div>
                                     </div>
                                     <div class="form-group row">
