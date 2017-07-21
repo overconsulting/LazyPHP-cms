@@ -171,3 +171,15 @@
 	left: 0;
 	z-index: 1010;
 }
+
+#cms_page_block_properties_container .card-header {
+	padding: 0.5rem 0.75rem;
+}
+
+#cms_page_block_properties_container .card-header h5 {
+	font-size: 1rem;
+}
+
+#cms_page_block_properties_container .card .panel-body {
+	padding: 10px;
+}

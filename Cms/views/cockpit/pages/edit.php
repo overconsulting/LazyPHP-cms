@@ -33,16 +33,16 @@
                 <div id="cms_page_block_name">
                 </div>
                 {% form_open id="formProperties" noBootstrapCol="1" %}
-                    <div class="panel-group" id="cms_page_block_properties_accordion" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cms_page_block_properties_accordion_box_heading">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_box" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_box">
+                    <div class="" id="cms_page_block_properties_accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="cms_page_block_properties_accordion_box_header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_box" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_box">
                                         Boîte
                                     </a>
-                                </h4>
+                                </h5>
                             </div>
-                            <div id="cms_page_block_properties_accordion_box" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_box_heading">
+                            <div id="cms_page_block_properties_accordion_box" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_box_header">
                                 <div class="panel-body">
                                     {% input_select name="fullwidth" label="Contenu pleine largeur" data-property-type="fullwidth" options="fullwidthOptions" %}
                                     {% input_text name="id" label="Id" data-property-type="attribute" data-property-name="id" %}
@@ -51,15 +51,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cms_page_block_properties_accordion_font_heading">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_font" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_font">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="cms_page_block_properties_accordion_font_header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_font" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_font">
                                         Police
                                     </a>
-                                </h4>
+                                </h5>
                             </div>
-                            <div id="cms_page_block_properties_accordion_font" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_font_heading">
+                            <div id="cms_page_block_properties_accordion_font" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_font_header">
                                 <div class="panel-body">
                                     {% input_text name="color" label="Couleur du texte" data-property-type="style" data-property-name="color" %}
                                     {% input_text name="font-size" label="Taille" data-property-type="style" data-property-name="font-size" %}
@@ -67,15 +67,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cms_page_block_properties_accordion_background_heading">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_background" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_background">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="cms_page_block_properties_accordion_background_header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_background" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_background">
                                         Fond
                                     </a>
-                                </h4>
+                                </h5>
                             </div>
-                            <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_heading">
+                            <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_header">
                                 <div class="panel-body">
                                     {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
@@ -83,15 +83,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cms_page_block_properties_accordion_paddingsmargins_heading">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_paddingsmargins" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_paddingsmargins">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="cms_page_block_properties_accordion_paddingsmargins_header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_paddingsmargins" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_paddingsmargins">
                                         Paddings et Marges
                                     </a>
-                                </h4>
+                                </h5>
                             </div>
-                            <div id="cms_page_block_properties_accordion_paddingsmargins" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_paddingsmargins_heading">
+                            <div id="cms_page_block_properties_accordion_paddingsmargins" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_paddingsmargins_header">
                                 <div class="panel-body">
                                     <div class="form-group row">
                                         <label for="paddings" class="form-control-label col-form-label-sm col-lg-12">Paddings</label>
@@ -122,15 +122,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="cms_page_block_properties_accordion_content_heading">
-                                <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_content" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_content">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="cms_page_block_properties_accordion_content_header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#cms_page_block_properties_accordion" href="#cms_page_block_properties_accordion_content" aria-expanded="false" aria-controls="cms_page_block_properties_accordion_content">
                                         Contenu
                                     </a>
-                                </h4>
+                                </h5>
                             </div>
-                            <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_heading">
+                            <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_header">
                                 <div class="panel-body">
                                     <div class="pull-right">
                                         <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
@@ -138,13 +138,13 @@
                                     <div class="clear-fix">&nbsp;</div>
                                     <div id="cms_page_content">
                                         <ul class="nav nav-tabs" role="tablist">
-                                            <li class="active" role="presentation">
-                                                <a href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
                                                     Contenu HTML
                                                 </a>
                                             </li>
-                                            <li role="presentation">
-                                                <a href="#cms_page_tab_content_widgets" aria-expanded="false" role="tab" data-toggle="tab">
+                                            <li calss="nav-item">
+                                                <a class="nav-link" href="#cms_page_tab_content_widgets" aria-expanded="false" role="tab" data-toggle="tab">
                                                     Widgets
                                                 </a>
                                             </li>

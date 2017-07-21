@@ -2,7 +2,7 @@
 
 $content = json_decode($page->content, true);
 
-if ($page->title != '' && $page->showPageTitle) {
+if ($page->title != '' && $page->show_page_title) {
     echo '<h1 class="page-title">'.$page->title.'</h1>';
 }
 

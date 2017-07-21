@@ -545,7 +545,7 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 		branding: false,
 		forced_root_block: false,
 		height: 400,
-		language: 'fr_FR',
+		/*language: 'fr_FR',*/
 		plugins: "code link lists visualblocks",
 		menubar: "edit format tools",
 		toolbar: [
