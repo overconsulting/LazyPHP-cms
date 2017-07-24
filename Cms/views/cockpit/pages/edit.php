@@ -136,25 +136,25 @@
                                         <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
                                     </div>
                                     <div class="clear-fix">&nbsp;</div>
-                                    <div id="cms_page_content">
+                                    <div id="cms_page_content" role="tabpanel">
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" href="#cms_page_tab_content_html" aria-expanded="true" role="tab" data-toggle="tab">
+                                                <a id="cms_page_tab_content_html_tab" class="nav-link active" href="#cms_page_tab_content_html" role="tab" data-toggle="tab" aria-controls="cms_page_tab_content_html" aria-expanded="true">
                                                     Contenu HTML
                                                 </a>
                                             </li>
                                             <li calss="nav-item">
-                                                <a class="nav-link" href="#cms_page_tab_content_widgets" aria-expanded="false" role="tab" data-toggle="tab">
+                                                <a id="cms_page_tab_content_widgets_tab" class="nav-link" href="#cms_page_tab_content_widgets" role="tab" data-toggle="tab" aria-controls="cms_page_tab_content_widgets" aria-expanded="false">
                                                     Widgets
                                                 </a>
                                             </li>
                                         </ul>
                                         <div class="tab-content">
-                                            <div id="cms_page_tab_content_html" class="tab-pane in active" role="tabpanel">
+                                            <div id="cms_page_tab_content_html" class="tab-pane show active" role="tabpanel" aria-labelledby="cms_page_tab_content_html_tab">
                                                 {% input_textarea name="content" data-property-type="content" rows="15" %}
                                                 <textarea id="cms_page_editor_content"></textarea>
                                             </div>
-                                            <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
+                                            <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel" aria-labelledby="cms_page_tab_content_widgets_tab">
 <?php
 
 echo
