@@ -2,7 +2,7 @@
 
 <div class="box box-success">
     <div class="box-header">
-        <h3 class="box-title">{{ titleBox }}</h3>
+        <h3 class="box-title">{{ boxTitle }}</h3>
 
         <div class="box-tools pull-right">
             <a href="<?php echo url('cockpit_cms_menus_new'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></a>
@@ -13,7 +13,8 @@
 			<thead>
 				<tr>
 					<th width="1%">ID</th>
-					<th>Label</th>
+                    <th>Label</th>
+                    <th>Position</th>
                     <th>Active</th>
 					<th width="10%">Actions</th>
 				</tr>
@@ -21,26 +22,33 @@
 			<tbody>
 <?php
 foreach ($params['menus'] as $menu) {
-    echo '<tr>';
-    echo '<td>'.$menu->id.'</td>';
-    if ($menu->principal == 1) {
-        echo '<td><b>'.$menu->label.'</b></td>';
+    if ($menu->active == 1) {
+        $active = '<span class="label label-success">Activé</span>';
     } else {
-        echo '<td>'.$menu->label.'</td>';
+        $active = '<span class="label label-danger">Désactivé</span>';
     }
 
-    if ($menu->active == 1) {
-        $label = '<span class="label label-success">Activé</span>';
-    } else {
-        $label = '<span class="label label-danger">Désactivé</span>';
+    $position = '';
+    foreach ($positionOptions as $option) {
+        if ($menu->position == $option['value']) {
+            $position = $option['label'];
+        }
     }
-    echo '<td>'.$label.'</td>';
-    echo '<td>';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_show', array('id' => $menu->id)).'" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a> ';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_edit', array('id' => $menu->id)).'" class="btn btn-sm btn-info"><i class="fa fa-pencil"></i></a> ';
-    echo '<a href="'.Core\Router::url('cockpit_cms_menus_delete', array('id' => $menu->id)).'" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></a>';
-    echo '</td>';
-    echo '</tr>';
+
+    echo
+        '<tr>'.
+            '<td>'.$menu->id.'</td>'.
+            '<td>'.$menu->label.'</td>'.
+            '<td>'.$position.'</td>'.
+            '<td>'.$active.'</td>'.
+            '<td>';?>
+    {% button url="cockpit_cms_menus_show_<?php echo $menu->id; ?>" type="primary" size="sm" icon="eye" %}
+    {% button url="cockpit_cms_menus_edit_<?php echo $menu->id; ?>" type="info" size="sm" icon="pencil" %}
+    {% button url="cockpit_cms_menus_delete_<?php echo $menu->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer ce partner ?" %}
+<?php
+    echo
+            '</td>'.
+        '</tr>';
 }
 ?>
 			</tbody>

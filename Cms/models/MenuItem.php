@@ -7,13 +7,13 @@ use Core\Model;
 class MenuItem extends Model
 {
     protected $permittedColumns = array(
+        'menu_id',
         'parent',
+        'position',
         'label',
         'link',
-        'position',
-        'active',
-        'menu_id',
-        'media_id'
+        'media_id',
+        'active'
     );
 
     public function getAssociations()

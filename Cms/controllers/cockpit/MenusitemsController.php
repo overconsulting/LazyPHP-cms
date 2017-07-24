@@ -17,23 +17,14 @@ class MenusitemsController extends CockpitController
             $this->menuitem->menu_id = $menu_id;
         }
 
-        $menusItemsOptions = MenuItem::findAll(
-            array(
-                'column'    => 'menu_id',
-                'operator'  => '=',
-                'value'     => $menu_id
-            )
-        );
-
-        $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
+        $parentOptions = $this->getParentOptions($menu_id);
 
         $this->render('cms::menusitems::edit', array(
-            'pageTitle'         => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'          => 'Ajouter un nouvel item au menu',
-            'menuitem'          => $this->menuitem,
-            'menusOptions'      => $menusOptions,
-            'menusItemsOptions' => $menusItemsOptions,
-            'formAction'        => url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
+            'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+            'boxTitle' => '['.$this->menuitem->menu->label.'] - Ajouter un nouvel item au menu',
+            'menuitem' => $this->menuitem,
+            'parentOptions' => $parentOptions,
+            'formAction' => url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
         ));
     }
 
@@ -43,15 +34,13 @@ class MenusitemsController extends CockpitController
             $this->request->post['active'] = 0;
         }
 
-        if (!isset($this->request->post['parent']) || $this->request->post['parent'] == "") {
-            $this->request->post['parent'] = null;
+        if (!isset($this->request->post['media_id']) || $this->request->post['media_id'] == "") {
+            $this->request->post['media_id'] = null;
         }
 
         $this->menuitem = new MenuItem();
-        $this->menuitem->setData($this->request->post);
 
-        // if ($this->menuitem->valid()) {
-        if ($this->menuitem->create((array)$this->menuitem)) {
+        if ($this->menuitem->save($this->request->post)) {
             Session::addFlash('Menu Item ajouté', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$menu_id);
         } else {
@@ -70,22 +59,18 @@ class MenusitemsController extends CockpitController
             $this->menuitem = MenuItem::findById($id);
         }
 
-        $menusItemsOptions = MenuItem::findAll(array(
-            'column'    => 'menu_id',
-            'operator'  => '=',
-            'value'     => $this->menuitem->menu_id
-        ));
+        $parentOptions = $this->getParentOptions($menu_id);
 
-        $menusOptions = Menu::findAll("site_id = ".Session::get('site_id'));
-
-        $this->render('cms::menusitems::edit', array(
-            'pageTitle'         => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'          => 'Modifier l\'item du menu',
-            'menuitem'          => $this->menuitem,
-            'menusOptions'      => $menusOptions,
-            'menusItemsOptions' => $menusItemsOptions,
-            'formAction'        => url('cockpit_cms_menu_'.$menu_id.'_menusitems_update_'.$id)
-        ));
+        $this->render(
+            'cms::menusitems::edit',
+            array(
+                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'boxTitle'=> '['.$this->menuitem->menu->label.'] - Modifier l\'item du menu',
+                'menuitem' => $this->menuitem,
+                'parentOptions' => $parentOptions,
+                'formAction' => url('cockpit_cms_menu_'.$menu_id.'_menusitems_update_'.$id)
+            )
+        );
     }
 
     public function updateAction($menu_id, $id)
@@ -94,15 +79,13 @@ class MenusitemsController extends CockpitController
             $this->request->post['active'] = 0;
         }
 
-        if (!isset($this->request->post['parent']) || $this->request->post['parent'] == "") {
-            $this->request->post['parent'] = null;
+        if (!isset($this->request->post['media_id']) || $this->request->post['media_id'] == "") {
+            $this->request->post['media_id'] = null;
         }
 
         $this->menuitem = MenuItem::findById($id);
-        $this->menuitem->setData($this->request->post);
 
-        // if ($this->category->valid()) {
-        if ($this->menuitem->update((array)$this->menuitem)) {
+        if ($this->menuitem->save($this->request->post)) {
             Session::addFlash('Item modifiée', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$this->menuitem->menu_id);
         } else {
@@ -121,5 +104,26 @@ class MenusitemsController extends CockpitController
         $menuitem->delete();
         Session::addFlash('Menu item supprimé', 'success');
         $this->redirect('cockpit_cms_menus_show_'.$menu_id);
+    }
+
+    private function getParentOptions($menu_id)
+    {
+        $options = array(
+            0 => array(
+                'value' => '',
+                'label' => '---'
+            )
+        );
+
+        $menuItems = MenuItem::getChildren(null, true, 0, true, 'menu_id='.$menu_id);
+
+        foreach ($menuItems as $menuItem) {
+            $options[$menuItem->id] = array(
+                'value' => $menuItem->id,
+                'label' => str_repeat('&nbsp;', $menuItem->level * 8).$menuItem->label
+            );
+        }
+
+        return $options;
     }
 }

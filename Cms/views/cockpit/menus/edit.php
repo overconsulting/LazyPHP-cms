@@ -2,7 +2,7 @@
 
 <div class="box box-success">
     <div class="box-header">
-        <h3 class="box-title">{{ titleBox }}</h3>
+        <h3 class="box-title">{{ boxTitle }}</h3>
 
         <div class="box-tools pull-right">
             <a href="<?php echo url('cockpit_cms_menus_index'); ?>" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-left"></i></a>
@@ -11,7 +11,7 @@
     <div class="box-body">
 		{% form_open id="formMenu" action="formAction" %}
 		    {% input_text name="label" model="menu.label" label="Nom" %}
-            {% input_checkbox name="principal" model="menu.principal" label="Principal" %}
+            {% input_select name="position" model="menu.position" options="positionOptions" label="Principal" %}
 		    {% input_checkbox name="active" model="menu.active" label="Actif" %}
 		    {% input_submit name="submit" value="save" formId="formMenu" class="btn-primary" icon="save" label="Enregistrer" %}
 		{% form_close %}

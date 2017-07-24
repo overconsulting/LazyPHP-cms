@@ -12,13 +12,24 @@ class MenusController extends CockpitController
 {
     public function indexAction()
     {
-        $menus = Menu::findAll("site_id = ".Session::get("site_id"));
+        if ($this->current_administrator->site_id !== null) {
+            $where = 'site_id = '.$this->current_administrator->site_id;
+        } else {
+            $where = '';
+        }
+        $menus = Menu::findAll($where);
 
-        $this->render('cms::menus::index', array(
-            'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'  => 'Liste des menus',
-            'menus'     => $menus
-        ));
+        $positionOptions = Menu::getPositionOptions();
+
+        $this->render(
+            'cms::menus::index',
+            array(
+                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'boxTitle' => 'Liste des menus',
+                'positionOptions' => $positionOptions,
+                'menus' => $menus
+            )
+        );
     }
 
     public function newAction()
@@ -27,9 +38,12 @@ class MenusController extends CockpitController
             $this->menu = new Menu();
         }
 
+        $positionOptions = Menu::getPositionOptions();
+
         $this->render('cms::menus::edit', array(
             'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'      => 'Ajouter un menu',
+            'boxTitle'      => 'Ajouter un menu',
+            'positionOptions' => $positionOptions,
             'formAction'    => Router::url('cockpit_cms_menus_create')
         ));
     }
@@ -40,7 +54,7 @@ class MenusController extends CockpitController
 
         $this->render('cms::menus::show', array(
             'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'      => 'Menu : '.$this->menu->label,
+            'boxTitle'      => 'Menu : '.$this->menu->label,
             'menu'          => $this->menu,
             'items'         => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
         ));
@@ -81,10 +95,13 @@ class MenusController extends CockpitController
             $this->menu = Menu::findById($id);
         }
 
+        $positionOptions = Menu::getPositionOptions();
+
         $this->render('cms::menus::edit', array(
             'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'titleBox'      => 'Modifier le menu',
+            'boxTitle'      => 'Modifier le menu',
             'menu'              => $this->menu,
+            'positionOptions' => $positionOptions,
             'formAction'        => url('cockpit_cms_menus_update_'.$id)
         ));
     }

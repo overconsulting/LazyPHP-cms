@@ -8,9 +8,9 @@ class Menu extends Model
 {
     protected $permittedColumns = array(
         'label',
-        'active',
-        'principal',
-        'site_id'
+        'site_id',
+        'position',
+        'active'
     );
 
     public function getAssociations()
@@ -21,6 +21,15 @@ class Menu extends Model
                 'model' => 'Cms\\models\\MenuItem',
                 'key' => 'menu_id'
             )
+        );
+    }
+
+    public static function getPositionOptions()
+    {
+        return array(
+            array('label' => 'Principal', 'value' => 'main'),
+            array('label' => 'Pied de page 1', 'value' => 'footer1'),
+            array('label' => 'Pied de page 2', 'value' => 'footer2')
         );
     }
 }
