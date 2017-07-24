@@ -21,6 +21,7 @@
             </thead>
             <tbody>
 <?php
+
 foreach ($params['pages'] as $page) {
     ?>
     <tr>

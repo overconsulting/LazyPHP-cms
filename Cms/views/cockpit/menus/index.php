@@ -13,6 +13,7 @@
 			<thead>
 				<tr>
 					<th width="1%">ID</th>
+                    <th>Site</th>
                     <th>Label</th>
                     <th>Position</th>
                     <th>Active</th>
@@ -38,6 +39,7 @@ foreach ($params['menus'] as $menu) {
     echo
         '<tr>'.
             '<td>'.$menu->id.'</td>'.
+            '<td>'.$menu->site->label.'</td>'.
             '<td>'.$menu->label.'</td>'.
             '<td>'.$position.'</td>'.
             '<td>'.$active.'</td>'.

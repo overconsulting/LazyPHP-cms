@@ -16,6 +16,11 @@ class Menu extends Model
     public function getAssociations()
     {
         return array(
+            'site' => array(
+                'type' => '1',
+                'model' => 'MultiSite\\models\\Site',
+                'key' => 'site_id'
+            ),
             'menuitems' => array(
                 'type' => '*',
                 'model' => 'Cms\\models\\MenuItem',
