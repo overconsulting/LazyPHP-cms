@@ -6,7 +6,7 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-			{% articles_list dataset="articles" title="Listes des articles" %}
+			{% articles_list dataset="articles" title="Liste des articles" %}
 		</div>
 	</div>
 </div>

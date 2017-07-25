@@ -19,7 +19,7 @@ class ArticlesController extends CockpitController
         $this->render('cms::articles::index', array(
             'articles'  => $articles,
             'titlePage' => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'  => 'Listes des articles',
+            'titleBox'  => 'Liste des articles',
         ));
     }
 
