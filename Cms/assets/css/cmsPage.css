@@ -89,11 +89,12 @@
 }
 
 #cms_page_block_properties_container {
+	padding-bottom: 5px;
 }
 
 #cms_page_block_properties .form-group, #cms_page_widget_select .form-group {
 	margin: 5px;
-} 
+}
 
 #cms_page_block_properties label, #cms_page_widget_select label {
 	font-size: 12px;

@@ -213,7 +213,15 @@ echo
                     </div>
                 {% form_close %}
             </div>
-            {% input_submit name="submit" value="save_and_stay" formId="formPage" class="btn-primary" icon="save" label="Enregistrer &amp; Rester" %}
+            <div class="form-group">
+<div class="col-sm-12">
+<button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
+<i class="fa fa-save"></i>
+ Enregistrer & Rester
+</button>
+</div>
+</div>
+<div class="clearfix"></div>
         </div>
     </div>
 
