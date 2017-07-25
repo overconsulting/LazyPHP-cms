@@ -2,10 +2,8 @@
 
 $content = json_decode($page->content, true);
 
-if ($page->show_page_title == 0) {
-    if ($page->title != '') {
-        echo '<h1 class="page-title">'.$page->title.'</h1>';
-    }
+if ($page->title != '' && $page->show_page_title) {
+    echo '<h1 class="page-title">'.$page->title.'</h1>';
 }
 
 if (isset($content['sections'])) {
