@@ -28,4 +28,11 @@ if ($article->media_id !== null) {
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="article-category">
+                Catégorie : <a href="/category/<?php echo $article->articlecategory->code; ?>"><?php echo $article->articlecategory->label; ?></a>
+            </div>
+        </div>
+    </div>
 </div>

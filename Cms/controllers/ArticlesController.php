@@ -4,7 +4,7 @@ namespace Cms\controllers;
 
 use app\controllers\FrontController;
 use Cms\models\Article;
-use Cms\Models\ArticleCategory;
+use Cms\models\ArticleCategory;
 
 class ArticlesController extends FrontController
 {
@@ -41,7 +41,13 @@ class ArticlesController extends FrontController
 
     public function categoryAction($id)
     {
-        $where = 'articlecategory_id = '.$id;
+        if (is_numeric($id)) {
+            $articlecategory_id = $id;
+        } else {
+            $articleCategory = ArticleCategory::findByCode($id);
+            $articlecategory_id = $articleCategory->id;
+        }
+        $where = 'articlecategory_id = '.$articlecategory_id;
 
         if ($this->site !== null) {
             $where .= ' and site_id = '.$this->site->id;
