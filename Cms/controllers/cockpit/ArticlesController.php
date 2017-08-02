@@ -5,33 +5,49 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 
 use Cms\models\Article;
+use Cms\models\ArticleCategory;
 use Auth\models\User;
+use Multisite\models\Site;
 
 use Core\Router;
 use Core\Session;
 
 class ArticlesController extends CockpitController
 {
+    private $article = null;
+    private $pageTitle = '<i class="fa fa-columns fa-red"></i> Gestion des articles';
+
     public function indexAction()
     {
-        $articles = Article::findAll("site_id = " . Session::get('site_id'));
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
+        } else {
+            $where = '';
+        }
+        $articles = Article::findAll($where);
 
-        $this->render('cms::articles::index', array(
-            'articles'  => $articles,
-            'titlePage' => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'  => 'Liste des articles',
-        ));
+        $this->render(
+            'cms::articles::index',
+            array(
+                'articles' => $articles,
+                'pageTitle' => $this->pageTitle,
+                'boxTitle' => 'Liste des articles'
+            )
+        );
     }
 
     public function showAction($id)
     {
-        $article = Article::findById($id);
+        $this->article = Article::findById($id);
 
-        $this->render('cms::articles::show', array(
-            'article'       => $article,
-            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'      => 'Article n°'.$article->title,
-        ));
+        $this->render(
+            'cms::articles::show',
+            array(
+                'article' => $this->article,
+                'pageTitle' => $this->pageTitle,
+                'boxTitle' => 'Article n° '.$article->id
+            )
+        );
     }
 
     public function newAction()
@@ -40,16 +56,23 @@ class ArticlesController extends CockpitController
             $this->article = new Article();
         }
 
-        $author = User::findAll();
+        $userOptions = User::findAll();
+        $articleCategoryOptions = ArticleCategory::getOptions();
+        $siteOptions = Site::getOptions();
 
-        $this->render('cms::articles::edit', array(
-            'id'            => 0,
-            'article'       => $this->article,
-            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'      => 'Ajouter un nouvel article',
-            'formAction'    => url('cockpit_cms_articles_create'),
-            'authorOptions' => $author
-        ));
+        $this->render(
+            'cms::articles::edit',
+            array(
+                'article' => $this->article,
+                'pageTitle' => $this->title,
+                'boxTitle' => 'Ajouter un nouvel article',
+                'formAction' => url('cockpit_cms_articles_create'),
+                'userOptions' => $userOptions,
+                'articleCategoryOptions' => $articleCategoryOptions,
+                'siteOptions' => $siteOptions,
+                'selectSite' => $this->current_administrator->site_id === null
+            )
+        );
     }
 
     public function editAction($id)
@@ -58,29 +81,36 @@ class ArticlesController extends CockpitController
             $this->article = Article::findById($id);
         }
 
-        $this->render('cms::articles::edit', array(
-            'id'            => $id,
-            'article'       => $this->article,
-            'titlePage'     => '<i class="fa fa-columns fa-red"></i> Gestion des articles',
-            'titleBox'      => 'Editer l\'article n°'.$id,
-            'formAction'    => url('cockpit_cms_articles_update', array('id' => $id)),
-            'authorOptions' => User::findAll()
-        ));
+        $userOptions = User::findAll();
+        $articleCategoryOptions = ArticleCategory::getOptions();
+        $siteOptions = Site::getOptions();
+
+        $this->render(
+            'cms::articles::edit',
+            array(
+                'article'=> $this->article,
+                'pageTitle' => $this->title,
+                'boxTitle' => 'Modifier l\'article n° '.$id,
+                'formAction' => url('cockpit_cms_articles_update', array('id' => $id)),
+                'userOptions' => $userOptions,
+                'articleCategoryOptions' => $articleCategoryOptions,
+                'siteOptions' => $siteOptions,
+                'selectSite' => $this->current_administrator->site_id === null
+            )
+        );
     }
 
     public function createAction()
     {
         $this->article = new Article();
-        $this->request->post['site_id'] = Session::get("site_id");
-        $this->article->setData($this->request->post);
 
-        if ($this->article->valid()) {
-            if ($this->article->create((array)$this->article)) {
-                Session::addFlash('Article ajouté', 'success');
-                $this->redirect('cockpit_cms_articles');
-            } else {
-                Session::addFlash('Erreur insertion base de données', 'danger');
-            };
+        if (!isset($this->request->post['site_id'])) {
+            $this->request->post['site_id'] = $this->site->id;
+        }
+
+        if ($this->article->save($this->request->post)) {
+            Session::addFlash('Article ajouté', 'success');
+            $this->redirect('cockpit_cms_articles');
         } else {
             Session::addFlash('Erreur(s) dans le formulaire', 'danger');
         }
@@ -91,16 +121,14 @@ class ArticlesController extends CockpitController
     public function updateAction($id)
     {
         $this->article = Article::findById($id);
-        $this->request->post['site_id'] = Session::get("site_id");
-        $this->article->setData($this->request->post);
 
-        if ($this->article->valid()) {
-            if ($this->article->update((array)$this->article)) {
-                Session::addFlash('Article modifié', 'success');
-                $this->redirect('cockpit_cms_articles');
-            } else {
-                Session::addFlash('Erreur mise à jour base de données', 'danger');
-            }
+        if (!isset($this->request->post['site_id'])) {
+            $this->request->post['site_id'] = $this->site->id;
+        }
+
+        if ($this->article->save($this->request->post)) {
+            Session::addFlash('Article modifié', 'success');
+            $this->redirect('cockpit_cms_articles');
         } else {
             Session::addFlash('Erreur(s) dans le formulaire', 'danger');
         }

@@ -508,7 +508,7 @@ CmsPage.prototype.contentMediaValidEvent = function() {
 
 	var editor = tinymce.get("cms_page_editor_content");
 	if (editor != null) {
-		editor.insertContent(widgetHtml);
+		editor.insertContent(imageHtml);
 	} else {
 		var content = $("textarea[name=content]")[0];
 		var contentValue = content.value;
