@@ -25,7 +25,7 @@ foreach ($params['articleCategories'] as $articleCategory) {
             '<td>'.$articleCategory->code.'</td>'.
             '<td>'.$articleCategory->label.'</td>'.
             '<td>';?>
-                {% button url="cockpit_cms_articleacategories_edit_<?php echo $articleCategory->id ?>" type="info" size="sm" icon="pencil" content="" %}
+                {% button url="cockpit_cms_articlecategories_edit_<?php echo $articleCategory->id ?>" type="info" size="sm" icon="pencil" content="" %}
                 {% button url="cockpit_cms_articlecategories_delete_<?php echo $articleCategory->id ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette catégorie d'article?" %}
 <?php
 echo

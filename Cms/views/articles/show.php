@@ -1,14 +1,22 @@
-<div class="container">
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header"><?php echo $params['pageTitle']; ?></h1>
-		</div>
-	</div>
+<?php
 
-	<div class="row">
-		<div class="col-lg-12">
-			<p><?php echo $params['article']->content; ?></p>
-			<p>Par <?php echo $params['article']->user->firstname ; ?> <?php echo $params['article']->user->lastname; ?></p>
-		</div>
-	</div>
+if ($article->title != '') {
+    echo '<h1 class="page-title article-title">'.$article->title.'</h1>';
+}
+
+?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 article-content">
+            <?php echo $article->content; ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="article-author">
+                Auteur : <span><?php echo $article->user->getFullName(); ?></span>
+            </div>
+        </div>
+    </div>
 </div>

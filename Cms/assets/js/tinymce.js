@@ -6,11 +6,11 @@ $(document).ready(function() {
             forced_root_block: "p",
             height: 400,
             /*language: 'fr_FR',*/
-            plugins: "code link lists visualblocks image",
+            plugins: "code textcolor link lists visualblocks image",
             menubar: "edit format insert tools",
             toolbar: [
                 "code | undo redo | styleselect | removeformat | visualblocks | " +
-                "bold italic underline strikethrough subscript superscript | " +
+                "bold italic underline strikethrough subscript superscript | forecolor backcolor | " +
                 "alignleft aligncenter alignright alignjustify alignnone | " +
                 "bullist numlist | link unlink | image"
             ],
