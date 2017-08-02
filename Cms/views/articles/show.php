@@ -1,11 +1,20 @@
 <?php
 
 if ($article->title != '') {
-    echo '<h1 class="page-title article-title">'.$article->title.'</h1>';
+    $title = $article->title;
+} else {
+    $title = 'Article n° '.$article->id;
+}
+
+if ($article->media_id !== null) {
+    $media = '<img src="'.$article->media->image->url.'" alt="" class="img-fluid" />';
+} else {
+    $media = '';
 }
 
 ?>
 
+<h1 class="page-title article-title"><?php echo $title; ?></h1>
 <div class="container">
     <div class="row">
         <div class="col-lg-12 article-content">

@@ -11,8 +11,8 @@
 			<thead>
 				<tr>
 					<th width="1%">ID</th>
-                    <th>Catégorie</th>
                     <th>Titre</th>
+                    <th>Catégorie</th>
                     <th>Auteur</th>
                     <th>Status</th>
 					<th width="10%">Actions</th>
@@ -45,10 +45,10 @@ foreach ($params['articles'] as $article) {
     echo
         '<tr>'.
             '<td>'.$article->id.'</td>'.
-            '<td>'.$category.'</td>'.
             '<td>'.$article->title.'</td>'.
-            '<td>'.$active.'</td>'.
+            '<td>'.$category.'</td>'.
             '<td>'.$article->user->getFullName().'</td>'.
+            '<td>'.$active.'</td>'.
             '<td>';?>
                 {% button url="cockpit_cms_articles_show_<?php echo $article->id; ?>" type="primary" size="sm" icon="eye" %}
                 {% button url="cockpit_cms_articles_edit_<?php echo $article->id; ?>" type="info" size="sm" icon="pencil" %}
