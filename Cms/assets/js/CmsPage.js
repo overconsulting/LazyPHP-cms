@@ -735,9 +735,7 @@ $(document).ready(function() {
 
 	$(".cms-page-maximize").on()
 
-	$(window).on("scroll", cmsPageScroll);
-
-	// $('.colorpicker').ColorPicker();
+	// $(window).on("scroll", cmsPageScroll);
 });
 
 function formPageSubmit(event) {
