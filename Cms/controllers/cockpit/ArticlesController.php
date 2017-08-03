@@ -45,7 +45,7 @@ class ArticlesController extends CockpitController
             array(
                 'article' => $this->article,
                 'pageTitle' => $this->pageTitle,
-                'boxTitle' => 'Article n° '.$article->id
+                'boxTitle' => 'Article n° '.$this->article->id
             )
         );
     }
