@@ -88,6 +88,22 @@
 	z-index: 1001;
 }
 
+#cms_page_container button.action-edit-col {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	z-index: 1001;
+}
+
+#cms_page_container button.action-del-col, #cms_page_container button.action-edit-col {
+	display: none;
+}
+
+#cms_page_container section .cms-page-row .cms-page-col:hover button.action-del-col,
+#cms_page_container section .cms-page-row .cms-page-col:hover button.action-edit-col {
+	display: block;
+}
+
 #cms_page_block_properties_container {
 	padding-bottom: 5px;
 }
@@ -183,4 +199,8 @@
 
 #cms_page_block_properties_container .card .panel-body {
 	padding: 10px;
+}
+
+#cms_page_block_properties_container .nav-link:focus {
+	outline: none;
 }

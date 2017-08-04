@@ -117,6 +117,14 @@ CmsPage.prototype.delCol = function(sectionIndex, rowIndex, colIndex) {
 	// this.selectBlockEvent(null);
 }
 
+CmsPage.prototype.editCol = function(sectionIndex, rowIndex, colIndex) {
+	var block = this.getBlock(sectionIndex, rowIndex, colIndex);
+	if (block != null) {
+		$(block).trigger("click");
+		$("#cms_page_content_maximize").trigger("click");
+	}
+}
+
 CmsPage.prototype.createHtml = function() {
 	// console.log("createHtml");
 	var html = "";
@@ -152,6 +160,7 @@ CmsPage.prototype.createHtml = function() {
 					'<div class="cms-page-col" data-block-type="col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' + ' data-default-class="cms-page-col"' +
 						this.attributesToHtml(this.sections[s].rows[r].cols[c].attributes)+
 						this.stylesToHtml(this.sections[s].rows[r].cols[c].styles) + '>' +
+					_getEditColButton(s, r, c) +
 					_getDelColButton(s, r, c) +
 					'<div class="cms-page-col-content">';
 
@@ -161,7 +170,7 @@ CmsPage.prototype.createHtml = function() {
 					html = html + "&nbsp;";
 				}
 
-				html = html + "</div></div>"
+				html = html + "</div></div>";
 			}
 			html = html + _getAddColButton(s, r, this.sections[s].rows[r].cols.length);
 
@@ -265,10 +274,10 @@ CmsPage.prototype.loadProperties = function(block) {
 					case "content":
 						if (blockType == "col") {
 							input.value = item.content != "" ? decodeURIComponent(item.content) : "";
-							$(input).parents(".panel").show();
+							$(input).parents(".card").show();
 						} else {
 							input.value = "";
-							$(input).parents(".panel").hide();
+							$(input).parents(".card").hide();
 						}
 						break;
 
@@ -419,6 +428,10 @@ CmsPage.prototype.doActionEvent = function(event) {
 			page.delCol(sectionIndex, rowIndex, colIndex);
 			break;
 
+		case "editCol":
+			page.editCol(sectionIndex, rowIndex, colIndex);
+			break;
+
 		case "selectWidget":
 			$(button).removeClass("btn-secondary").addClass("btn-warning selected");
 			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-secondary");
@@ -538,16 +551,16 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 		selector: '#cms_page_editor_content',
 		branding: false,
 		forced_root_block: false,
-		height: 400,
+		height: "100%",
 		/*language: 'fr_FR',*/
-		plugins: "code link lists visualblocks",
-		menubar: "edit format tools",
-		toolbar: [
-			"code | undo redo | styleselect | removeformat | visualblocks | " +
-			"bold italic underline strikethrough subscript superscript | " +
-			"alignleft aligncenter alignright alignjustify alignnone | " +
-			"bullist numlist | link unlink"
-		]
+        plugins: "code textcolor link lists visualblocks image",
+        menubar: "edit format insert tools",
+        toolbar: [
+            "code | undo redo | styleselect | removeformat | visualblocks | " +
+            "bold italic underline strikethrough subscript superscript | forecolor backcolor | " +
+            "alignleft aligncenter alignright alignjustify alignnone | " +
+            "bullist numlist | link unlink | image"
+        ],
 	});
 
 	var cmsPageContent = $("#cms_page_content")[0];
@@ -564,7 +577,7 @@ CmsPage.prototype.contentDialogCancelEvent = function() {
 	tinymce.remove("#cms_page_editor_content");
 
 	var cmsPageContent = $("#cms_page_content")[0];
-	$("#cms_page_block_properties_accordion_content .panel-body").append(cmsPageContent);
+	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
 	// var widgets = $("#cms_page_widget_select")[0];
 	// $('#cms_page_tab_content_widgets').append(widgets);
 
@@ -582,7 +595,7 @@ CmsPage.prototype.contentDialogValidEvent = function() {
 	tinymce.remove("#cms_page_editor_content");
 
 	var cmsPageContent = $("#cms_page_content")[0];
-	$("#cms_page_block_properties_accordion_content .panel-body").append(cmsPageContent);
+	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
 	// var widgets = $("#cms_page_widget_select")[0];
 	// $('#cms_page_tab_content_widgets').append(widgets);
 
@@ -717,6 +730,15 @@ function _getDelColButton(sectionIndex, rowIndex, colIndex)
 	return html;
 }
 
+function _getEditColButton(sectionIndex, rowIndex, colIndex)
+{
+	html = 
+		'<button type="button" class="action action-edit-col btn btn-info btn-sm" title="Modifier le contenu la colonne" data-action="editCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-col-index="'+colIndex+'">'+
+			'<i class="fa fa-edit"></i>'+
+		'</button>';
+	return html;
+}
+
 var page = null;
 
 $(document).ready(function() {
@@ -727,7 +749,9 @@ $(document).ready(function() {
 
 	$("#formPage").on("submit", formPageSubmit);
 
-	$(".cms-page-maximize").on()
+	$(".cms-page-maximize").on();
+
+	cms_page_editor_content_x
 
 	// $(window).on("scroll", cmsPageScroll);
 });
