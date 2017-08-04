@@ -529,16 +529,17 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 			'</div>' +
 		'</div>';
 
-	// var editorContent = $("#cms_page_editor_content")[0];
-	// var content = $("textarea[name=content]")[0];
-	// editorContent.value = content.value;
-	// $(content).hide();
+	var editorContent = $("#cms_page_editor_content")[0];
+	var content = $("textarea[name=content]")[0];
+	editorContent.value = content.value;
+	$(content).hide();
 
-	/*tinymce.init({
+	tinymce.init({
 		selector: '#cms_page_editor_content',
 		branding: false,
 		forced_root_block: false,
 		height: 400,
+		/*language: 'fr_FR',*/
 		plugins: "code link lists visualblocks",
 		menubar: "edit format tools",
 		toolbar: [
@@ -547,7 +548,7 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 			"alignleft aligncenter alignright alignjustify alignnone | " +
 			"bullist numlist | link unlink"
 		]
-	});*/
+	});
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_content_container").append(cmsPageContent);

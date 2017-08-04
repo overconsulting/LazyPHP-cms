@@ -152,9 +152,8 @@
                                         </ul>
                                         <div class="tab-content">
                                             <div id="cms_page_tab_content_html" class="tab-pane active" role="tabpanel">
-                                                <textarea id="cms_page_editor_content" name="content" data-property-type="content" rows="15" class="tinymce"></textarea>
-                                                {% inxxxput_textarea name="content" data-property-type="content" rows="15" class="tinymce" %}
-                                                <div style="display: none;" textarea idx="cms_page_editor_content"></div>
+                                                {% input_textarea name="content" data-property-type="content" rows="15" %} 
+                                                <textarea id="cms_page_editor_content"></textarea>
                                             </div>
                                             <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
 <?php
