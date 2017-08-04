@@ -420,8 +420,8 @@ CmsPage.prototype.doActionEvent = function(event) {
 			break;
 
 		case "selectWidget":
-			$(button).removeClass("btn-default").addClass("btn-warning selected");
-			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-default");
+			$(button).removeClass("btn-secondary").addClass("btn-warning selected");
+			$("#cms_page_widget_select button[data-action=selectWidget]").not(button).removeClass("btn-warning selected").addClass("btn-secondary");
 			$(".cms-page-widget-params").hide().removeClass("active");
 			$("#cms_page_widget_select button[data-action=insertWidget]").addClass("disabled");
 
@@ -523,29 +523,22 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 	var editorContainer = $("#cms_page_content_dialog .lazy-dialog-body")[0];
 	editorContainer.innerHTML = 
 		'<div id="cms_page_editor container-fluid">' +
-			'<div class="row">' +
-				// '<div class="col-md-8">' +
-				// '<textarea id="cms_page_editor_content"></textarea>' +
-				// '</div>' +
-				// '<div id="cms_page_editor_widgets" class="col-md-4">' +
-				// 	'<h3>Widgets</h3>'+
-				// '</div>' +
+			'<div class="row no-gutters">' +
 				'<div id="cms_page_content_container" class="col-md-12">' +
 				'</div>' +
 			'</div>' +
 		'</div>';
 
-	var editorContent = $("#cms_page_editor_content")[0];
-	var content = $("textarea[name=content]")[0];
-	editorContent.value = content.value;
-	$(content).hide();
+	// var editorContent = $("#cms_page_editor_content")[0];
+	// var content = $("textarea[name=content]")[0];
+	// editorContent.value = content.value;
+	// $(content).hide();
 
-	tinymce.init({
+	/*tinymce.init({
 		selector: '#cms_page_editor_content',
 		branding: false,
 		forced_root_block: false,
 		height: 400,
-		/*language: 'fr_FR',*/
 		plugins: "code link lists visualblocks",
 		menubar: "edit format tools",
 		toolbar: [
@@ -554,7 +547,7 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 			"alignleft aligncenter alignright alignjustify alignnone | " +
 			"bullist numlist | link unlink"
 		]
-	});
+	});*/
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_content_container").append(cmsPageContent);

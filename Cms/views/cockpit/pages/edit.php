@@ -132,38 +132,40 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_header">
                                 <div class="panel-body">
-                                    <div class="pull-right">
-                                        <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
+                                    <div class="clearfix">
+                                        <div class="float-right">
+                                            <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
+                                        </div>
                                     </div>
-                                    <div class="clear-fix">&nbsp;</div>
                                     <div id="cms_page_content" role="tabpanel">
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item">
-                                                <a id="cms_page_tab_content_html_tab" class="nav-link active" href="#cms_page_tab_content_html" role="tab" data-toggle="tab" aria-controls="cms_page_tab_content_html" aria-expanded="true">
+                                                <a id="cms_page_tab_content_html_tab" class="nav-link active" href="#cms_page_tab_content_html" role="tab" data-toggle="tab">
                                                     Contenu HTML
                                                 </a>
                                             </li>
-                                            <li calss="nav-item">
-                                                <a id="cms_page_tab_content_widgets_tab" class="nav-link" href="#cms_page_tab_content_widgets" role="tab" data-toggle="tab" aria-controls="cms_page_tab_content_widgets" aria-expanded="false">
+                                            <li class="nav-item">
+                                                <a id="cms_page_tab_content_widgets_tab" class="nav-link" href="#cms_page_tab_content_widgets" role="tab" data-toggle="tab">
                                                     Widgets
                                                 </a>
                                             </li>
                                         </ul>
                                         <div class="tab-content">
-                                            <div id="cms_page_tab_content_html" class="tab-pane show active" role="tabpanel" aria-labelledby="cms_page_tab_content_html_tab">
-                                                {% input_textarea name="content" data-property-type="content" rows="15" %}
-                                                <textarea id="cms_page_editor_content"></textarea>
+                                            <div id="cms_page_tab_content_html" class="tab-pane active" role="tabpanel">
+                                                <textarea id="cms_page_editor_content" name="content" data-property-type="content" rows="15" class="tinymce"></textarea>
+                                                {% inxxxput_textarea name="content" data-property-type="content" rows="15" class="tinymce" %}
+                                                <div style="display: none;" textarea idx="cms_page_editor_content"></div>
                                             </div>
-                                            <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel" aria-labelledby="cms_page_tab_content_widgets_tab">
+                                            <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
 <?php
 
 echo
     '<div id="cms_page_widget_select">
-        <button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="media">Media</button>';
+        <button type="button" class="btn btn-secondary action action-select-widget" data-action="selectWidget" data-widget-type="media">Media</button>';
 
 foreach ($widgets as $widget) {
     echo
-        '<button type="button" class="btn btn-default action action-select-widget" data-action="selectWidget" data-widget-type="'.$widget['type'].'">'.
+        '<button type="button" class="btn btn-secondary action action-select-widget" data-action="selectWidget" data-widget-type="'.$widget['type'].'">'.
             $widget['label'].
         '</button>';
 }
