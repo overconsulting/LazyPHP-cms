@@ -43,7 +43,7 @@
                                 </h5>
                             </div>
                             <div id="cms_page_block_properties_accordion_box" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_box_header">
-                                <div class="panel-body">
+                                <div class="card-block">
                                     {% input_select name="fullwidth" label="Contenu pleine largeur" data-property-type="fullwidth" options="fullwidthOptions" %}
                                     {% input_text name="id" label="Id" data-property-type="attribute" data-property-name="id" %}
                                     {% input_text name="class" label="Class" data-property-type="attribute" data-property-name="class" %}
@@ -60,7 +60,7 @@
                                 </h5>
                             </div>
                             <div id="cms_page_block_properties_accordion_font" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_font_header">
-                                <div class="panel-body">
+                                <div class="card-block">
                                     {% input_text name="color" label="Couleur du texte" data-property-type="style" data-property-name="color" %}
                                     {% input_text name="font-size" label="Taille" data-property-type="style" data-property-name="font-size" %}
                                     {% input_select name="font-weight" label="Graisse" options="fontWeightOptions" data-property-type="style" data-property-name="font-weight" %}
@@ -76,7 +76,7 @@
                                 </h5>
                             </div>
                             <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_header">
-                                <div class="panel-body">
+                                <div class="card-block">
                                     {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
                                     {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
                                     {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" mediaType="image" mediaCategory="page" %}
@@ -92,7 +92,7 @@
                                 </h5>
                             </div>
                             <div id="cms_page_block_properties_accordion_paddingsmargins" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_paddingsmargins_header">
-                                <div class="panel-body">
+                                <div class="card-block">
                                     <div class="form-group row">
                                         <label for="paddings" class="form-control-label col-form-label-sm col-lg-12">Paddings</label>
                                         <div class="input-box-model-top">
@@ -131,7 +131,7 @@
                                 </h5>
                             </div>
                             <div id="cms_page_block_properties_accordion_content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_content_header">
-                                <div class="panel-body">
+                                <div class="card-block">
                                     <div class="clearfix">
                                         <div class="float-right">
                                             <button type="button" id="cms_page_content_maximize" class="btn btn-info btn-sm action action-content-maximize" data-action="contentMaximize" title="Agrandir l'éditeur"><i class="fa fa-window-maximize"></i></button>
@@ -152,7 +152,7 @@
                                         </ul>
                                         <div class="tab-content">
                                             <div id="cms_page_tab_content_html" class="tab-pane active" role="tabpanel">
-                                                {% input_textarea name="content" data-property-type="content" rows="15" %} 
+                                                {% input_textarea id="cms_page_editor_content_x" name="content" data-property-type="content" rows="15" %} 
                                                 <textarea id="cms_page_editor_content"></textarea>
                                             </div>
                                             <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
