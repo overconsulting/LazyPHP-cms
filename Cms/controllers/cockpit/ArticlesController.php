@@ -7,8 +7,7 @@ use app\controllers\cockpit\CockpitController;
 use Cms\models\Article;
 use Cms\models\ArticleCategory;
 use Auth\models\User;
-use Multisite\models\Site;
-
+use Core\models\Site;
 use Core\Router;
 use Core\Session;
 
@@ -109,10 +108,10 @@ class ArticlesController extends CockpitController
         }
 
         if ($this->article->save($this->request->post)) {
-            Session::addFlash('Article ajouté', 'success');
+            $this->addFlash('Article ajouté', 'success');
             $this->redirect('cockpit_cms_articles');
         } else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->newAction();
@@ -127,10 +126,10 @@ class ArticlesController extends CockpitController
         }
 
         if ($this->article->save($this->request->post)) {
-            Session::addFlash('Article modifié', 'success');
+            $this->addFlash('Article modifié', 'success');
             $this->redirect('cockpit_cms_articles');
         } else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->editAction($id);
@@ -140,7 +139,7 @@ class ArticlesController extends CockpitController
     {
         $article = Article::findById($id);
         $article->delete();
-        Session::addFlash('Article supprimé', 'success');
+        $this->addFlash('Article supprimé', 'success');
         $this->redirect('cockpit_cms_articles');
     }
 }

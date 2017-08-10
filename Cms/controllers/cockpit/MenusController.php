@@ -70,20 +70,20 @@ class MenusController extends CockpitController
             $this->request->post['principal'] = 0;
         }
 
-        $this->request->post['site_id'] = Session::get("site_id");
+        $this->request->post['site_id'] = $this->site->id;
 
         $this->menu = new Menu();
         $this->menu->setData($this->request->post);
 
         // if ($this->menu->valid()) {
         if ($this->menu->create((array)$this->menu)) {
-            Session::addFlash('Menu ajouté', 'success');
+            $this->addFlash('Menu ajouté', 'success');
             $this->redirect('cockpit_cms_menus');
         } else {
-            Session::addFlash('Erreur insertion base de données', 'danger');
+            $this->addFlash('Erreur insertion base de données', 'danger');
         };
         /*} else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }*/
 
         $this->newAction();
@@ -97,13 +97,16 @@ class MenusController extends CockpitController
 
         $positionOptions = Menu::getPositionOptions();
 
-        $this->render('cms::menus::edit', array(
-            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'boxTitle'      => 'Modifier le menu',
-            'menu'              => $this->menu,
-            'positionOptions' => $positionOptions,
-            'formAction'        => url('cockpit_cms_menus_update_'.$id)
-        ));
+        $this->render(
+            'cms::menus::edit',
+            array(
+                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'boxTitle' => 'Modifier le menu',
+                'menu' => $this->menu,
+                'positionOptions' => $positionOptions,
+                'formAction' => url('cockpit_cms_menus_update_'.$id)
+            )
+        );
     }
 
     public function updateAction($id)
@@ -116,20 +119,20 @@ class MenusController extends CockpitController
             $this->request->post['principal'] = 0;
         }
 
-        $this->request->post['site_id'] = Session::get("site_id");
+        $this->request->post['site_id'] = $this->site->id;
 
         $this->menu = Menu::findById($id);
         $this->menu->setData($this->request->post);
 
         // if ($this->category->valid()) {
         if ($this->menu->update((array)$this->menu)) {
-            Session::addFlash('Menu modifié', 'success');
+            $this->addFlash('Menu modifié', 'success');
             $this->redirect('cockpit_cms_menus');
         } else {
-            Session::addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
         /*} else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }*/
 
         $this->editAction($id);
@@ -139,7 +142,7 @@ class MenusController extends CockpitController
     {
         $menu = Menu::findById($id);
         $menu->delete();
-        Session::addFlash('Menu supprimé', 'success');
+        $this->addFlash('Menu supprimé', 'success');
         $this->redirect('cockpit_cms_menus');
     }
 }

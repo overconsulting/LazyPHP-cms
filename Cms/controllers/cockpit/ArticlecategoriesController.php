@@ -5,7 +5,7 @@ namespace Cms\controllers\cockpit;
 use app\controllers\cockpit\CockpitController;
 use Cms\models\ArticleCategory;
 use Core\Session;
-use Multisite\models\Site;
+use Core\models\Site;
 
 class ArticlecategoriesController extends CockpitController
 {
@@ -82,10 +82,10 @@ class ArticlecategoriesController extends CockpitController
         }
 
         if ($this->articleCategory->save($this->request->post)) {
-            Session::addFlash('Catégorie d\'article modifiée', 'success');
+            $this->addFlash('Catégorie d\'article modifiée', 'success');
             $this->redirect('cockpit_cms_articlecategories');
         } else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->newAction();
@@ -100,10 +100,10 @@ class ArticlecategoriesController extends CockpitController
         }
 
         if ($this->articleCategory->save($this->request->post)) {
-            Session::addFlash('Catégorie d\'article modifiée', 'success');
+            $this->addFlash('Catégorie d\'article modifiée', 'success');
             $this->redirect('cockpit_cms_articlecategories');
         } else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->editAction($id);
@@ -113,7 +113,7 @@ class ArticlecategoriesController extends CockpitController
     {
         $articleCategory = ArticleCategory::findById($id);
         $articleCategory->delete();
-        Session::addFlash('Catégorie d\'article supprimée', 'success');
+        $this->addFlash('Catégorie d\'article supprimée', 'success');
         $this->redirect('cockpit_cms_articlecategories');
     }
 }

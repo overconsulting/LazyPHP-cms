@@ -18,7 +18,7 @@ class Menu extends Model
         return array(
             'site' => array(
                 'type' => '1',
-                'model' => 'MultiSite\\models\\Site',
+                'model' => 'Core\\models\\Site',
                 'key' => 'site_id'
             ),
             'menuitems' => array(

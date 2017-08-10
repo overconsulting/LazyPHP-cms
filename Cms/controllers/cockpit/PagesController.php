@@ -16,22 +16,26 @@ class PagesController extends CockpitController
     public function before()
     {
         if (!Role::checkAdministratorPermission($this->current_administrator, 'cms')) {
-            Session::addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
+            $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
             $this->redirect('/cockpit');
         }
     }
 
     public function indexAction()
     {
-        /* Récuperation des pages de la bdd */
-        $pages = Page::findAll("site_id = " . Session::get('site_id'));
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
+        } else {
+            $where = '';
+        }
+        $pages = Page::findAll($where);
 
         $this->render(
             'cms::pages::index',
             array(
-                'pageTitle'     => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
-                'boxTitle'      => 'Liste des pages',
-                'pages'         => $pages
+                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'boxTitle' => 'Liste des pages',
+                'pages' => $pages
             )
         );
     }
@@ -43,9 +47,9 @@ class PagesController extends CockpitController
         }
 
         $contentJson = json_encode(array(
-                'title' => $this->page->title,
-                'active' => $this->page->active,
-                'sections' => array()
+            'title' => $this->page->title,
+            'active' => $this->page->active,
+            'sections' => array()
         ));
 
         $this->render(
@@ -107,10 +111,10 @@ class PagesController extends CockpitController
         $post['site_id'] = Session::get('site_id');
 
         if ($this->page->save($post)) {
-            Session::addFlash('Page ajoutée', 'success');
+            $this->addFlash('Page ajoutée', 'success');
             $this->redirect('cockpit_cms_pages_index');
         } else {
-            Session::addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
 
         $this->editAction($id);
@@ -132,10 +136,10 @@ class PagesController extends CockpitController
         $post['site_id'] = Session::get('site_id');
 
         if ($this->page->save($post)) {
-            Session::addFlash('Page modifiée', 'success');
+            $this->addFlash('Page modifiée', 'success');
             $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
-            Session::addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
 
         $this->editAction($id);
@@ -145,7 +149,7 @@ class PagesController extends CockpitController
     {
         $page = Page::findById($id);
         $page->delete();
-        Session::addFlash('Page supprimée', 'success');
+        $this->addFlash('Page supprimée', 'success');
         $this->redirect('cockpit_cms_pages_index');
     }
 

@@ -41,13 +41,13 @@ class MenusitemsController extends CockpitController
         $this->menuitem = new MenuItem();
 
         if ($this->menuitem->save($this->request->post)) {
-            Session::addFlash('Menu Item ajouté', 'success');
+            $this->addFlash('Menu Item ajouté', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$menu_id);
         } else {
-            Session::addFlash('Erreur insertion base de données', 'danger');
+            $this->addFlash('Erreur insertion base de données', 'danger');
         };
         /*} else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }*/
 
         $this->newAction();
@@ -86,13 +86,13 @@ class MenusitemsController extends CockpitController
         $this->menuitem = MenuItem::findById($id);
 
         if ($this->menuitem->save($this->request->post)) {
-            Session::addFlash('Item modifiée', 'success');
+            $this->addFlash('Item modifiée', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$this->menuitem->menu_id);
         } else {
-            Session::addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
         /*} else {
-            Session::addFlash('Erreur(s) dans le formulaire', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }*/
 
         $this->editAction($id);
@@ -102,7 +102,7 @@ class MenusitemsController extends CockpitController
     {
         $menuitem = MenuItem::findById($id);
         $menuitem->delete();
-        Session::addFlash('Menu item supprimé', 'success');
+        $this->addFlash('Menu item supprimé', 'success');
         $this->redirect('cockpit_cms_menus_show_'.$menu_id);
     }
 
