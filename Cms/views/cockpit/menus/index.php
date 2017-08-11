@@ -5,7 +5,7 @@
         <h3 class="box-title">{{ boxTitle }}</h3>
 
         <div class="box-tools pull-right">
-            {% button url="cockpit_cms_menus_new" type="succes" size="sm" icon="plus" hint="Ajouter" %}
+            {% button url="cockpit_cms_menus_new" type="success" size="sm" icon="plus" hint="Ajouter" %}
         </div>
     </div>
     <div class="box-body">
