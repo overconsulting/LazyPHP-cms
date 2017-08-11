@@ -108,7 +108,7 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        $post['site_id'] = Session::get('site_id');
+        $post['site_id'] = $this->session->get('site_id');
 
         if ($this->page->save($post)) {
             $this->addFlash('Page ajoutée', 'success');
@@ -133,7 +133,7 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        $post['site_id'] = Session::get('site_id');
+        $post['site_id'] = $this->session->get('site_id');
 
         if ($this->page->save($post)) {
             $this->addFlash('Page modifiée', 'success');

@@ -3,9 +3,8 @@
 <div class="box box-purple">
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
-
         <div class="box-tools pull-right">
-            <a href="<?php echo url('cockpit_cms_pages_new'); ?>" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></a>
+            {% button url="cockpit_cms_pages_new" type="success" size="sm" icon="plus" hint="Nouvelle page" %}
         </div>
     </div>
     <div class="box-body">
@@ -22,27 +21,28 @@
             <tbody>
 <?php
 
-foreach ($params['pages'] as $page) {
-    ?>
-    <tr>
-        <td><?php echo $page->id; ?></td>
-        <td><?php echo $page->title; ?></td>
-        <td><?php echo $page->layout; ?></td>
-        <?php
-        if ($page->active == 1) {
-            $label = '<span class="label label-success">Activé</span>';
-        } else {
-            $label = '<span class="label label-danger">Désactivé</span>';
-        }
-        echo '<td>'.$label.'</td>';
-        ?>
-        <td>
-            {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="sm" icon="pencil" content="" %}
-            {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page?" %}
-        </td>
-    </tr>
-    <?php
+foreach ($pages as $page) {
+    if ($page->active == 1) {
+        $active = '<span class="badge badge-success">Activé</span>';
+    } else {
+        $active = '<span class="badge badge-danger">Désactivé</span>';
+    }
+
+    echo
+        '<tr>'.
+            '<td>'.$page->id.'</td>'.
+            '<td>'.$page->title.'</td>'.
+            '<td>'.$page->layout.'</td>'.
+            '<td>'.$active.'</td>'.
+            '<td>';?>
+                {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}
+                {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page ?" %}
+<?php
+    echo
+            '</td>'.
+        '</tr>';
 }
+
 ?>
             </tbody>
         </table>
