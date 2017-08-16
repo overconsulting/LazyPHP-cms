@@ -9,11 +9,11 @@
         </div>
     </div>
     <div class="box-body">
-		{% form_open id="formMenu" action="formAction" %}
-		    {% input_text name="label" model="menu.label" label="Nom" %}
+        {% form_open id="formMenu" action="formAction" %}
+            {% input_text name="label" model="menu.label" label="Nom" %}
             {% input_select name="position" model="menu.position" options="positionOptions" label="Position" %}
-		    {% input_checkbox name="active" model="menu.active" label="Actif" %}
-		    {% input_submit name="submit" value="save" formId="formMenu" class="btn-primary" icon="save" label="Enregistrer" %}
-		{% form_close %}
-	</div>
+            {% input_checkbox name="active" model="menu.active" label="Actif" %}
+            {% input_submit name="submit" value="save" formId="formMenu" class="btn-primary" icon="save" label="Enregistrer" %}
+        {% form_close %}
+    </div>
 </div>
