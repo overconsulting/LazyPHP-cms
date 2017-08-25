@@ -751,8 +751,6 @@ $(document).ready(function() {
 
 	$(".cms-page-maximize").on();
 
-	cms_page_editor_content_x
-
 	// $(window).on("scroll", cmsPageScroll);
 });
 
