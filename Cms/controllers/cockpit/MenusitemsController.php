@@ -24,7 +24,7 @@ class MenusitemsController extends CockpitController
             'boxTitle' => '['.$this->menuitem->menu->label.'] - Ajouter un nouvel item au menu',
             'menuitem' => $this->menuitem,
             'parentOptions' => $parentOptions,
-            'formAction' => url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
+            'formAction' => Router::url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
         ));
     }
 
@@ -68,7 +68,7 @@ class MenusitemsController extends CockpitController
                 'boxTitle'=> '['.$this->menuitem->menu->label.'] - Modifier l\'item du menu',
                 'menuitem' => $this->menuitem,
                 'parentOptions' => $parentOptions,
-                'formAction' => url('cockpit_cms_menu_'.$menu_id.'_menusitems_update_'.$id)
+                'formAction' => Router::url('cockpit_cms_menu_'.$menu_id.'_menusitems_update_'.$id)
             )
         );
     }

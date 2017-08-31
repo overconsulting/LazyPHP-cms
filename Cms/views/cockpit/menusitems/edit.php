@@ -1,11 +1,9 @@
 <h1 class="page-title">{{ pageTitle }}</h1>
-
 <div class="box box-success">
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
-
         <div class="box-tools pull-right">
-            <a href="<?php echo url('cockpit_cms_menus_show_'.$params["menuitem"]->menu_id); ?>" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-left"></i></a>
+            {% button url="cockpit_cms_menus_show_<?php echo $menuitem->menu_id; ?>" type="secondary" size="sm" icon="arrow-left" hint="Retour" %}
         </div>
     </div>
     <div class="box-body">

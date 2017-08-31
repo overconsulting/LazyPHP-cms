@@ -104,7 +104,7 @@ class MenusController extends CockpitController
                 'boxTitle' => 'Modifier le menu',
                 'menu' => $this->menu,
                 'positionOptions' => $positionOptions,
-                'formAction' => url('cockpit_cms_menus_update_'.$id)
+                'formAction' => Router::url('cockpit_cms_menus_update_'.$id)
             )
         );
     }

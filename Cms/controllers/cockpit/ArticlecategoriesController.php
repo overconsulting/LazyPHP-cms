@@ -47,7 +47,7 @@ class ArticlecategoriesController extends CockpitController
                 'articleCategory' => $this->articleCategory,
                 'selectSite' => $this->current_administrator->site_id === null,
                 'siteOptions' => $siteOptions,
-                'formAction' => url('cockpit_cms_articlecategories_create')
+                'formAction' => Router::url('cockpit_cms_articlecategories_create')
             )
         );
     }
@@ -68,7 +68,7 @@ class ArticlecategoriesController extends CockpitController
                 'articleCategory' => $this->articleCategory,
                 'siteOptions' => $siteOptions,
                 'selectSite' => $this->current_administrator->site_id === null,
-                'formAction' => url('cockpit_cms_articlecategories_update_'.$this->articleCategory->id)
+                'formAction' => Router::url('cockpit_cms_articlecategories_update_'.$this->articleCategory->id)
             )
         );
     }

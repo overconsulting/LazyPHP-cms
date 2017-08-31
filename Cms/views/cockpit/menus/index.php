@@ -22,7 +22,7 @@
 			</thead>
 			<tbody>
 <?php
-foreach ($params['menus'] as $menu) {
+foreach ($menus as $menu) {
     if ($menu->active == 1) {
         $active = '<span class="label label-success">Activé</span>';
     } else {
