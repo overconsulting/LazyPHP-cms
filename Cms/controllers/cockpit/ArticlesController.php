@@ -55,7 +55,7 @@ class ArticlesController extends CockpitController
             $this->article = new Article();
         }
 
-        $userOptions = User::findAll();
+        $userOptions = User::getOptions();
         $articleCategoryOptions = ArticleCategory::getOptions();
         $siteOptions = Site::getOptions();
 
@@ -80,7 +80,7 @@ class ArticlesController extends CockpitController
             $this->article = Article::findById($id);
         }
 
-        $userOptions = User::findAll();
+        $userOptions = User::getOptions();
         $articleCategoryOptions = ArticleCategory::getOptions();
         $siteOptions = Site::getOptions();
 

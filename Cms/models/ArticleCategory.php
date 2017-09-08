@@ -52,27 +52,6 @@ class ArticleCategory extends Model
         return $validations;
     }
 
-    public static function getOptions($where = null)
-    {
-        $options = array(
-            0 => array(
-                'value' => '',
-                'label' => '---'
-            )
-        );
-
-        $articleCategories = self::findAll();
-
-        foreach ($articleCategories as $articleCategorie) {
-            $options[$articleCategorie->id] = array(
-                'value' => $articleCategorie->id,
-                'label' => $articleCategorie->label
-            );
-        }
-
-        return $options;
-    }
-
     /**
      * Get an article category by code
      * @param string $code
