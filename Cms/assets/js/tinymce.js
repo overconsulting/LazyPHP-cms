@@ -45,6 +45,5 @@ function tinymceMediaCallback(field_name, url, type, win)
 }
 
 function tinymceMediaValidEvent() {
-
     return true;
 }

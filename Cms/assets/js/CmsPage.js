@@ -2,6 +2,7 @@ var CmsPage = function(title = '', active = 1, sections = []) {
 	this.title = title;
 	this.active = active;
 	this.sections = sections;
+	this.tinymceEditor = null;
 };
 
 CmsPage.prototype.getItem = function(sectionIndex, rowIndex, colIndex) {
