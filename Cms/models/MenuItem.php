@@ -13,6 +13,7 @@ class MenuItem extends Model
         'label',
         'link',
         'media_id',
+        'target',
         'active'
     );
 
