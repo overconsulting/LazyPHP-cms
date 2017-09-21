@@ -1,7 +1,12 @@
 $(document).ready(function() {
+    tinymceInit();
+});
+
+function tinymceInit()
+{
     $("textarea.tinymce").each(function(index, element) {
         tinymce.init({
-            selector: 'textarea#' + element.id,
+            selector: "textarea[name='" + element.name + "']",
             branding: false,
             forced_root_block: "p",
             height: 400,
@@ -18,7 +23,7 @@ $(document).ready(function() {
             file_browser_callback_types: "image"
         });
     });
-});
+}
 
 function tinymceMediaCallback(field_name, url, type, win)
 {

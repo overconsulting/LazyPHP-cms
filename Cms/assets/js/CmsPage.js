@@ -3,6 +3,7 @@ var CmsPage = function(title = '', active = 1, sections = []) {
 	this.active = active;
 	this.sections = sections;
 	this.tinymceEditor = null;
+	this.dialog = null;
 };
 
 CmsPage.prototype.getItem = function(sectionIndex, rowIndex, colIndex) {
@@ -119,10 +120,9 @@ CmsPage.prototype.delCol = function(sectionIndex, rowIndex, colIndex) {
 }
 
 CmsPage.prototype.editCol = function(sectionIndex, rowIndex, colIndex) {
-	alert("EditCol");
 	var block = this.getBlock(sectionIndex, rowIndex, colIndex);
 	if (block != null) {
-		$(block).trigger("click");
+		$(block).trigger("click");		
 		$("#cms_page_content_maximize").trigger("click");
 	}
 }
@@ -404,7 +404,6 @@ CmsPage.prototype.doActionEvent = function(event) {
 	var page = event.data.page;
 	var item = page.getItem(sectionIndex, rowIndex, colIndex);
 
-
 	switch (action) {
 		case "addSection":
 			page.addSection(position);
@@ -505,12 +504,15 @@ CmsPage.prototype.doActionEvent = function(event) {
 					load: page.contentDialogLoadEvent,
 					close: page.contentDialogCancelEvent,
 					cancel: page.contentDialogCancelEvent,
-					valid: page.contentDialogValidEvent
+					valid: page.contentDialogValidEvent,
+					context: this
 				}
 			};
 
-			var lazyDialog = new LazyDialog();
-			lazyDialog.open(params);
+			if (this.dialog != null) {
+				this.dialog = new LazyDialog();
+				this.dialog.open(params);
+			}
 			break;
 	}
 
@@ -535,6 +537,7 @@ CmsPage.prototype.contentMediaValidEvent = function() {
 }
 
 CmsPage.prototype.contentDialogLoadEvent = function() {
+	console.log("contentDialogLoadEvent");
 	var editorContainer = $("#cms_page_content_dialog .lazy-dialog-body")[0];
 	editorContainer.innerHTML = 
 		'<div id="cms_page_editor container-fluid">' +
@@ -578,6 +581,7 @@ CmsPage.prototype.contentDialogCancelEvent = function() {
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
+	this.dialog = null;
 
 	$("#cms_page_content_maximize").show();
 
@@ -594,8 +598,7 @@ CmsPage.prototype.contentDialogValidEvent = function() {
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
-	// var widgets = $("#cms_page_widget_select")[0];
-	// $('#cms_page_tab_content_widgets').append(widgets);
+	this.dialog = null;
 
 	$("#cms_page_content_maximize").show();
 
