@@ -157,6 +157,19 @@ class PagesController extends CockpitController
         $this->redirect('cockpit_cms_pages_index');
     }
 
+    public function renderAction()
+    {
+        $params = array(
+            'error' => false,
+            'message' => 0,
+            'renderType' => 'editor'
+        );
+
+        $html = isset($this->request->post['html']) ? $this->request->post['html'] : '';
+
+        $this->render($html, $params);
+    }
+
     private function getFullwidthOptions()
     {
         return array(

@@ -6,7 +6,6 @@ use app\controllers\FrontController;
 
 class PagesController extends FrontController
 {
-
     public function showAction($id)
     {
         $pageModel = $this->loadModel('Page');

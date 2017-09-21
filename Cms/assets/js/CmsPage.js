@@ -2,7 +2,6 @@ var CmsPage = function(title = '', active = 1, sections = []) {
 	this.title = title;
 	this.active = active;
 	this.sections = sections;
-	this.tinymceEditor = null;
 	this.dialog = null;
 };
 
@@ -128,8 +127,9 @@ CmsPage.prototype.editCol = function(sectionIndex, rowIndex, colIndex) {
 }
 
 CmsPage.prototype.createHtml = function() {
-	// console.log("createHtml");
 	var html = "";
+	var content = "";
+	var hasWidgetClass = "";	
 	var s = 0;
 	var r = 0;
 	var c = 0;
@@ -163,16 +163,24 @@ CmsPage.prototype.createHtml = function() {
 						this.attributesToHtml(this.sections[s].rows[r].cols[c].attributes)+
 						this.stylesToHtml(this.sections[s].rows[r].cols[c].styles) + '>' +
 					this._getEditColButton(s, r, c) +
-					this._getDelColButton(s, r, c) +
-					'<div class="cms-page-col-content">';
+					this._getDelColButton(s, r, c);
 
+				hasWidgetClass = "";
 				if (this.sections[s].rows[r].cols[c].content != null && this.sections[s].rows[r].cols[c].content != "") {
-					html = html + decodeURIComponent(this.sections[s].rows[r].cols[c].content);
+					content = decodeURIComponent(this.sections[s].rows[r].cols[c].content);
+					if (content.search(/{% *([^}{]*) *%}/) != -1) {
+						hasWidgetClass = " has-widget";
+					}
 				} else {
-					html = html + "&nbsp;";
+					content = "&nbsp;";
 				}
 
-				html = html + "</div></div>";
+				html = html +
+						'<div class="cms-page-col-content'+hasWidgetClass+'">' +
+							content +
+						'</div>' + 
+					'</div>';
+
 			}
 			html = html + this._getAddColButton(s, r, this.sections[s].rows[r].cols.length);
 
@@ -188,18 +196,18 @@ CmsPage.prototype.createHtml = function() {
 	if (cmsPageContainer != null) {
 		cmsPageContainer.innerHTML = html;
 
-		$(cmsPageContainer).find(".action").on("click", {page: this}, this.doActionEvent);
-		$("#cms_page_block_properties_container").find(".action").on("click", {page: this}, this.doActionEvent);
+		$(cmsPageContainer).find(".action").on("click", this.doActionEvent.bind(this));
+		$("#cms_page_block_properties_container").find(".action").on("click", this.doActionEvent.bind(this));
 
-		$(".action-del-section, .action-del-row, .action-del-col").on("mouseenter", {page: this}, this.doDelButtonMouseenterEvent);
-		$(".action-del-section, .action-del-row, .action-del-col").on("mouseleave", {page: this}, this.doDelButtonMouseleaveEvent);
+		$(".action-del-section, .action-del-row, .action-del-col").on("mouseenter", this.delButtonMouseenterEvent.bind(this));
+		$(".action-del-section, .action-del-row, .action-del-col").on("mouseleave", this.delButtonMouseleaveEvent.bind(this));
 
-		$(".action-add-section, .action-add-row, .action-add-col").on("mouseenter", {page: this}, this.doAddButtonMouseenterEvent);
-		$(".action-add-section, .action-add-row, .action-add-col").on("mouseleave", {page: this}, this.doAddButtonMouseleaveEvent);
+		$(".action-add-section, .action-add-row, .action-add-col").on("mouseenter", this.addButtonMouseenterEvent.bind(this));
+		$(".action-add-section, .action-add-row, .action-add-col").on("mouseleave", this.addButtonMouseleaveEvent.bind(this));
 
-		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", {page: this}, this.selectBlockEvent);
+		$(cmsPageContainer).find(".cms-page-section, .cms-page-row, .cms-page-col").on("click", this.selectBlockEvent.bind(this));
 
-		$("#formProperties").find("input[type=text], select, textarea").on("change", {page: this}, this.propertyChangeEvent);
+		$("#formProperties").find("input[type=text], select, textarea").on("change", this.propertyChangeEvent.bind(this));
 
 		var cols = null;
 		var buttons = null;
@@ -225,7 +233,34 @@ CmsPage.prototype.createHtml = function() {
 	$("#delete_mask").hide();
 	$("#insert_mask").hide();
 
+	this.renderWidgets();
+
 	return html;
+}
+
+CmsPage.prototype.renderWidgets = function() {
+	$contents = $(".cms-page-col-content.has-widget");
+	$contents.each(function(index, content) {
+		var postData = new FormData();
+		postData.append("html", content.innerHTML);
+
+		$.ajax({
+			url: "/cockpit/pages/render",
+			method: "post",
+			data: postData,
+			processData: false,
+			contentType: false,
+			dataType: 'text',
+			success: function(data, textStatus, jqXHR) {
+				content.innerHTML = data;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus, errorThrown);
+			},
+			context: this
+		});
+	});
+	$contents.removeClass("has-widget");
 }
 
 CmsPage.prototype.loadProperties = function(block) {
@@ -299,10 +334,8 @@ CmsPage.prototype.loadProperties = function(block) {
 }
 
 CmsPage.prototype.selectBlockEvent = function(event) {
-	// console.log("selectBlockEvent", event != null ? event.currentTarget : null);
 	if (event == null) {
 		$("#cms_page_block_properties").hide();
-		// console.log("hide");
 	} else {
 		var block = event.currentTarget;
 		var cmsPageContainer = document.getElementById("cms_page_container");
@@ -310,10 +343,9 @@ CmsPage.prototype.selectBlockEvent = function(event) {
 		$(cmsPageContainer).find(".cms-page-section.selected, .cms-page-row.selected, .cms-page-col.selected").removeClass("selected");
 		$(block).addClass("selected");
 
-		event.data.page.loadProperties(block);
+		this.loadProperties(block);
 
 		$("#cms_page_block_properties").show();
-		// console.log("show");
 
 		event.stopPropagation();
 		event.preventDefault();
@@ -331,7 +363,7 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 		var colIndex = block.hasAttribute("data-col-index") ? parseInt(block.getAttribute("data-col-index")) : null;
 		var defaultClass = block.hasAttribute("data-default-class") ? block.getAttribute("data-default-class") : null;
 
-		var item = event.data.page.getItem(sectionIndex, rowIndex, colIndex);
+		var item = this.getItem(sectionIndex, rowIndex, colIndex);
 
 		var input = event.currentTarget;
 		var propertyType = input.hasAttribute("data-property-type") ? input.getAttribute("data-property-type") : null;
@@ -364,9 +396,14 @@ CmsPage.prototype.propertyChangeEvent = function(event) {
 					break;
 
 				case "content":
+					var $content = $(block).find(".cms-page-col-content");
 					inputValue = input.value.trim();
-					$(block).find(".cms-page-col-content")[0].innerHTML = inputValue;
+					$content[0].innerHTML = inputValue;
 					item.content = encodeURIComponent(inputValue);
+					if (inputValue.search(/{% *([^}{]*) *%}/) != -1) {
+						$content.addClass("has-widget");
+						this.renderWidgets();
+					}
 					break;
 
 				case "fullwidth":
@@ -401,36 +438,35 @@ CmsPage.prototype.doActionEvent = function(event) {
 	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
 	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
 	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
-	var page = event.data.page;
-	var item = page.getItem(sectionIndex, rowIndex, colIndex);
+	var item = this.getItem(sectionIndex, rowIndex, colIndex);
 
 	switch (action) {
 		case "addSection":
-			page.addSection(position);
+			this.addSection(position);
 			break;
 
 		case "delSection":
-			page.delSection(sectionIndex);
+			this.delSection(sectionIndex);
 			break;
 
 		case "addRow":
-			page.addRow(sectionIndex, position);
+			this.addRow(sectionIndex, position);
 			break;
 
 		case "delRow":
-			page.delRow(sectionIndex, rowIndex);
+			this.delRow(sectionIndex, rowIndex);
 			break;
 
 		case "addCol":
-			page.addCol(sectionIndex, rowIndex, position);
+			this.addCol(sectionIndex, rowIndex, position);
 			break;
 
 		case "delCol":
-			page.delCol(sectionIndex, rowIndex, colIndex);
+			this.delCol(sectionIndex, rowIndex, colIndex);
 			break;
 
 		case "editCol":
-			page.editCol(sectionIndex, rowIndex, colIndex);
+			this.editCol(sectionIndex, rowIndex, colIndex);
 			break;
 
 		case "selectWidget":
@@ -474,7 +510,7 @@ CmsPage.prototype.doActionEvent = function(event) {
 						var contentValue = content.value;
 						// content.value = contentValue.substring(0, content.selectionStart) + widgetHtml + contentValue.substr(content.selectionStart);
 						content.value = widgetHtml;
-						$(content).trigger("change", {page: page});
+						$(content).trigger("change");
 					}
 				}
 			} else  {
@@ -491,7 +527,7 @@ CmsPage.prototype.doActionEvent = function(event) {
 				"<em>" + contentValue.substring(content.selectionStart, content.selectionEnd) + "</em>" +
 				 contentValue.substr(content.selectionEnd);
 
-			$(content).trigger("change", {page: page});
+			$(content).trigger("change");
 			break;
 
 		case "contentMaximize":
@@ -501,15 +537,14 @@ CmsPage.prototype.doActionEvent = function(event) {
 				title: "Modifier le contenu de la colonne",
 				url: "",
 				actions: {
-					load: page.contentDialogLoadEvent,
-					close: page.contentDialogCancelEvent,
-					cancel: page.contentDialogCancelEvent,
-					valid: page.contentDialogValidEvent,
-					context: this
+					load: this.contentDialogLoadEvent.bind(this),
+					close: this.contentDialogCancelEvent.bind(this),
+					cancel: this.contentDialogCancelEvent.bind(this),
+					valid: this.contentDialogValidEvent.bind(this)
 				}
 			};
 
-			if (this.dialog != null) {
+			if (this.dialog == null) {
 				this.dialog = new LazyDialog();
 				this.dialog.open(params);
 			}
@@ -530,14 +565,13 @@ CmsPage.prototype.contentMediaValidEvent = function() {
 		var content = $("textarea[name=content]")[0];
 		var contentValue = content.value;
 		content.value = contentValue.substring(0, content.selectionStart) + imageHtml + contentValue.substr(content.selectionStart);
-		$(content).trigger("change", {page: this});
+		$(content).trigger("change");
 	}
 
 	return true;
 }
 
 CmsPage.prototype.contentDialogLoadEvent = function() {
-	console.log("contentDialogLoadEvent");
 	var editorContainer = $("#cms_page_content_dialog .lazy-dialog-body")[0];
 	editorContainer.innerHTML = 
 		'<div id="cms_page_editor container-fluid">' +
@@ -547,41 +581,20 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 			'</div>' +
 		'</div>';
 
-	// var editorContent = $("#cms_page_editor_content")[0];
-	// var content = $("textarea[name=content]")[0];
-	// editorContent.value = content.value;
-	// $(content).hide();
-
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_content_container").append(cmsPageContent);
 
 	$("#cms_page_content_maximize").hide();
 
-	/*tinymce.init({
-		selector: '#cms_page_editor_content',
-		branding: false,
-		forced_root_block: false,
-		height: "100%",
-		// language: 'fr_FR',
-        plugins: "code textcolor link lists visualblocks image",
-        menubar: "edit format insert tools",
-        toolbar: [
-            "code | undo redo | styleselect | removeformat | visualblocks | " +
-            "bold italic underline strikethrough subscript superscript | forecolor backcolor | " +
-            "alignleft aligncenter alignright alignjustify alignnone | " +
-            "bullist numlist | link unlink | image"
-        ],
-	});*/
+	tinymceInit("cms_page_editor_content");
 }
 
 CmsPage.prototype.contentDialogCancelEvent = function() {
-	var content = $("textarea[name=content]")[0];
-	$(content).show();
-	tinymce.remove("#cms_page_editor_content");
+	tinymceRemove("cms_page_editor_content");
+	this.dialog = null;
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
-	this.dialog = null;
 
 	$("#cms_page_content_maximize").show();
 
@@ -589,29 +602,26 @@ CmsPage.prototype.contentDialogCancelEvent = function() {
 }
 
 CmsPage.prototype.contentDialogValidEvent = function() {
-	var editor = tinymce.get("cms_page_editor_content");
-	var content = $("textarea[name=content]")[0];
-	content.value = editor.getContent();
-	$(content).show();
-	$(content).trigger("change", {page: this});
-	tinymce.remove("#cms_page_editor_content");
+	tinymceRemove("cms_page_editor_content");
+	this.dialog = null;
+
+	$("#cms_page_editor_content").trigger("change");
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
-	this.dialog = null;
 
 	$("#cms_page_content_maximize").show();
 
 	return true;
 }
 
-CmsPage.prototype.doDelButtonMouseenterEvent = function(event) {
+CmsPage.prototype.delButtonMouseenterEvent = function(event) {
 	var button = event.currentTarget;
 	var sectionIndex = button.hasAttribute("data-section-index") ? parseInt(button.getAttribute("data-section-index")) : null;
 	var rowIndex = button.hasAttribute("data-row-index") ? parseInt(button.getAttribute("data-row-index")) : null;
 	var colIndex = button.hasAttribute("data-col-index") ? parseInt(button.getAttribute("data-col-index")) : null;
 
-	var $block = $(event.data.page.getBlock(sectionIndex, rowIndex, colIndex));
+	var $block = $(this.getBlock(sectionIndex, rowIndex, colIndex));
 	$("#delete_mask").show();
 	$("#delete_mask").offset($block.offset());
 	$("#delete_mask").outerWidth($block.outerWidth());
@@ -621,14 +631,14 @@ CmsPage.prototype.doDelButtonMouseenterEvent = function(event) {
 	event.preventDefault();
 }
 
-CmsPage.prototype.doDelButtonMouseleaveEvent = function(event) {
+CmsPage.prototype.delButtonMouseleaveEvent = function(event) {
 	$("#delete_mask").hide();
 
 	event.stopPropagation();
 	event.preventDefault();
 }
 
-CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
+CmsPage.prototype.addButtonMouseenterEvent = function(event) {
 	var button = event.currentTarget;
 	var action = button.getAttribute("data-action");
 
@@ -670,7 +680,7 @@ CmsPage.prototype.doAddButtonMouseenterEvent = function(event) {
 	event.preventDefault();
 }
 
-CmsPage.prototype.doAddButtonMouseleaveEvent = function(event) {
+CmsPage.prototype.addButtonMouseleaveEvent = function(event) {
 	$("#insert_mask").hide();
 
 	event.stopPropagation();
