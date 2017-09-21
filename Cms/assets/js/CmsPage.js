@@ -119,6 +119,7 @@ CmsPage.prototype.delCol = function(sectionIndex, rowIndex, colIndex) {
 }
 
 CmsPage.prototype.editCol = function(sectionIndex, rowIndex, colIndex) {
+	alert("EditCol");
 	var block = this.getBlock(sectionIndex, rowIndex, colIndex);
 	if (block != null) {
 		$(block).trigger("click");
@@ -137,32 +138,32 @@ CmsPage.prototype.createHtml = function() {
 		this.sections[s].blockType = "section";
 
 		html = html +
-			_getAddSectionButton(s) +
+			this._getAddSectionButton(s) +
 			'<section class="cms-page-section" data-block-type="section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +
 				this.attributesToHtml(this.sections[s].attributes) +
 				this.stylesToHtml(this.sections[s].styles) + '>' +
-			_getDelSectionButton(s);
+			this._getDelSectionButton(s);
 
 		for (r = 0; r < this.sections[s].rows.length; r = r + 1) {
 			this.sections[s].rows[r].blockType = "row";
 
 			html = html +
-				_getAddRowButton(s, r) +
+				this._getAddRowButton(s, r) +
 				'<div class="cms-page-row" data-block-type="row" data-section-index="' + s + '" data-row-index="' + r + '"' + ' data-default-class="cms-page-row"' +
 					this.attributesToHtml(this.sections[s].rows[r].attributes) +
 					this.stylesToHtml(this.sections[s].rows[r].styles) + '>' +
-				_getDelRowButton(s, r);
+				this._getDelRowButton(s, r);
 
 			for (c = 0; c < this.sections[s].rows[r].cols.length; c = c + 1) {
 				this.sections[s].rows[r].cols[c].blockType = "row";
 
 				html = html +
-					_getAddColButton(s, r, c) +
+					this._getAddColButton(s, r, c) +
 					'<div class="cms-page-col" data-block-type="col" data-section-index="' + s + '" data-row-index="' + r + '" data-col-index="' + c + '"' + ' data-default-class="cms-page-col"' +
 						this.attributesToHtml(this.sections[s].rows[r].cols[c].attributes)+
 						this.stylesToHtml(this.sections[s].rows[r].cols[c].styles) + '>' +
-					_getEditColButton(s, r, c) +
-					_getDelColButton(s, r, c) +
+					this._getEditColButton(s, r, c) +
+					this._getDelColButton(s, r, c) +
 					'<div class="cms-page-col-content">';
 
 				if (this.sections[s].rows[r].cols[c].content != null && this.sections[s].rows[r].cols[c].content != "") {
@@ -173,15 +174,15 @@ CmsPage.prototype.createHtml = function() {
 
 				html = html + "</div></div>";
 			}
-			html = html + _getAddColButton(s, r, this.sections[s].rows[r].cols.length);
+			html = html + this._getAddColButton(s, r, this.sections[s].rows[r].cols.length);
 
 			html = html + "</div>";
 		}
-		html = html + _getAddRowButton(s, this.sections[s].rows.length);
+		html = html + this._getAddRowButton(s, this.sections[s].rows.length);
 
 		html = html + "</section>";
 	}
-	html = html + _getAddSectionButton(this.sections.length);
+	html = html + this._getAddSectionButton(this.sections.length);
 
 	var cmsPageContainer = document.getElementById("cms_page_container");
 	if (cmsPageContainer != null) {
@@ -543,17 +544,22 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
 			'</div>' +
 		'</div>';
 
-	var editorContent = $("#cms_page_editor_content")[0];
-	var content = $("textarea[name=content]")[0];
-	editorContent.value = content.value;
-	$(content).hide();
+	// var editorContent = $("#cms_page_editor_content")[0];
+	// var content = $("textarea[name=content]")[0];
+	// editorContent.value = content.value;
+	// $(content).hide();
 
-	tinymce.init({
+	var cmsPageContent = $("#cms_page_content")[0];
+	$("#cms_page_content_container").append(cmsPageContent);
+
+	$("#cms_page_content_maximize").hide();
+
+	/*tinymce.init({
 		selector: '#cms_page_editor_content',
 		branding: false,
 		forced_root_block: false,
 		height: "100%",
-		/*language: 'fr_FR',*/
+		// language: 'fr_FR',
         plugins: "code textcolor link lists visualblocks image",
         menubar: "edit format insert tools",
         toolbar: [
@@ -562,14 +568,7 @@ CmsPage.prototype.contentDialogLoadEvent = function() {
             "alignleft aligncenter alignright alignjustify alignnone | " +
             "bullist numlist | link unlink | image"
         ],
-	});
-
-	var cmsPageContent = $("#cms_page_content")[0];
-	$("#cms_page_content_container").append(cmsPageContent);
-	// var widgets = $("#cms_page_widget_select")[0];
-	// $("#cms_page_editor_widgets").append(widgets);
-
-	$("#cms_page_content_maximize").hide();
+	});*/
 }
 
 CmsPage.prototype.contentDialogCancelEvent = function() {
@@ -579,8 +578,6 @@ CmsPage.prototype.contentDialogCancelEvent = function() {
 
 	var cmsPageContent = $("#cms_page_content")[0];
 	$("#cms_page_block_properties_accordion_content .card-block").append(cmsPageContent);
-	// var widgets = $("#cms_page_widget_select")[0];
-	// $('#cms_page_tab_content_widgets').append(widgets);
 
 	$("#cms_page_content_maximize").show();
 
@@ -677,7 +674,7 @@ CmsPage.prototype.doAddButtonMouseleaveEvent = function(event) {
 	event.preventDefault();
 }
 
-function _getAddSectionButton(position)
+CmsPage.prototype._getAddSectionButton = function(position)
 {
 	html = 
 		'<button type="button" class="action action-add-section btn btn-success btn-sm" title="Ajouter une section" data-action="addSection" data-position="'+position+'">'+
@@ -686,7 +683,7 @@ function _getAddSectionButton(position)
 	return html;
 }
 
-function _getDelSectionButton(sectionIndex)
+CmsPage.prototype._getDelSectionButton = function(sectionIndex)
 {
 	html = 
 		'<button type="button" class="action action-del-section btn btn-danger btn-sm" title="Supprimer la section" data-action="delSection" data-section-index="'+sectionIndex+'">'+
@@ -695,7 +692,7 @@ function _getDelSectionButton(sectionIndex)
 	return html;
 }
 
-function _getAddRowButton(sectionIndex, position)
+CmsPage.prototype._getAddRowButton = function(sectionIndex, position)
 {
 	html = 
 		'<button type="button" class="action action-add-row btn btn-success btn-sm" title="Ajouter une ligne" data-action="addRow" data-section-index="'+sectionIndex+'" data-position="'+position+'">'+
@@ -704,7 +701,7 @@ function _getAddRowButton(sectionIndex, position)
 	return html;
 }
 
-function _getDelRowButton(sectionIndex, rowIndex)
+CmsPage.prototype._getDelRowButton = function(sectionIndex, rowIndex)
 {
 	html = 
 		'<button type="button" class="action action-del-row btn btn-danger btn-sm" title="Supprimer la ligne" data-action="delRow" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'">'+
@@ -713,7 +710,7 @@ function _getDelRowButton(sectionIndex, rowIndex)
 	return html;
 }
 
-function _getAddColButton(sectionIndex, rowIndex, position)
+CmsPage.prototype._getAddColButton = function(sectionIndex, rowIndex, position)
 {
 	html = 
 		'<button type="button" class="action action-add-col btn btn-success btn-sm" title="Ajouter une colonne" data-action="addCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-position="'+position+'">'+
@@ -722,7 +719,7 @@ function _getAddColButton(sectionIndex, rowIndex, position)
 	return html;
 }
 
-function _getDelColButton(sectionIndex, rowIndex, colIndex)
+CmsPage.prototype._getDelColButton = function(sectionIndex, rowIndex, colIndex)
 {
 	html = 
 		'<button type="button" class="action action-del-col btn btn-danger btn-sm" title="Supprimer la colonne" data-action="delCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-col-index="'+colIndex+'">'+
@@ -731,7 +728,7 @@ function _getDelColButton(sectionIndex, rowIndex, colIndex)
 	return html;
 }
 
-function _getEditColButton(sectionIndex, rowIndex, colIndex)
+CmsPage.prototype._getEditColButton = function(sectionIndex, rowIndex, colIndex)
 {
 	html = 
 		'<button type="button" class="action action-edit-col btn btn-info btn-sm" title="Modifier le contenu la colonne" data-action="editCol" data-section-index="'+sectionIndex+'" data-row-index="'+rowIndex+'" data-col-index="'+colIndex+'">'+
