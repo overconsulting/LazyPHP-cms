@@ -69,7 +69,7 @@ class ArticlesController extends CockpitController
                 'userOptions' => $userOptions,
                 'articleCategoryOptions' => $articleCategoryOptions,
                 'siteOptions' => $siteOptions,
-                'selectSite' => $this->current_administrator->site_id === null
+                'selectSite' => $this->current_user->site_id === null
             )
         );
     }
@@ -94,7 +94,7 @@ class ArticlesController extends CockpitController
                 'userOptions' => $userOptions,
                 'articleCategoryOptions' => $articleCategoryOptions,
                 'siteOptions' => $siteOptions,
-                'selectSite' => $this->current_administrator->site_id === null
+                'selectSite' => $this->current_user->site_id === null
             )
         );
     }

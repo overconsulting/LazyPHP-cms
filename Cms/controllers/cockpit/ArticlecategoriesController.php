@@ -45,7 +45,7 @@ class ArticlecategoriesController extends CockpitController
                 'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Nouvellle catégorie d\'article',
                 'articleCategory' => $this->articleCategory,
-                'selectSite' => $this->current_administrator->site_id === null,
+                'selectSite' => $this->current_user->site_id === null,
                 'siteOptions' => $siteOptions,
                 'formAction' => Router::url('cockpit_cms_articlecategories_create')
             )
@@ -67,7 +67,7 @@ class ArticlecategoriesController extends CockpitController
                 'boxTitle' => 'Modification de la catégorie d\'article',
                 'articleCategory' => $this->articleCategory,
                 'siteOptions' => $siteOptions,
-                'selectSite' => $this->current_administrator->site_id === null,
+                'selectSite' => $this->current_user->site_id === null,
                 'formAction' => Router::url('cockpit_cms_articlecategories_update_'.$this->articleCategory->id)
             )
         );

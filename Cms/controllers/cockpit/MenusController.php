@@ -12,8 +12,8 @@ class MenusController extends CockpitController
 {
     public function indexAction()
     {
-        if ($this->current_administrator->site_id !== null) {
-            $where = 'site_id = '.$this->current_administrator->site_id;
+        if ($this->current_user->site_id !== null) {
+            $where = 'site_id = '.$this->current_user->site_id;
         } else {
             $where = '';
         }
