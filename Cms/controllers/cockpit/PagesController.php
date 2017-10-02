@@ -15,7 +15,7 @@ class PagesController extends CockpitController
 {
     public function before()
     {
-        if (!Role::checkUserPermission($this->current_user, 'cms')) {
+        if (!Role::checkPermission($this->current_user, 'cms')) {
             $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
             $this->redirect('/cockpit');
         }
