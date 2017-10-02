@@ -8,14 +8,13 @@ use Widget\widgets\Widget;
 use Cms\models\Page;
 use Core\Router;
 use Core\Session;
-
-use Auth\models\Role;
+use Auth\models\User;
 
 class PagesController extends CockpitController
 {
     public function before()
     {
-        if (!Role::checkPermission($this->current_user, 'cms')) {
+        if (!User::checkPermission($this->current_user, 'cms')) {
             $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
             $this->redirect('/cockpit');
         }
