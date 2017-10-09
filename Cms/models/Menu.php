@@ -40,7 +40,7 @@ class Menu extends Model
 
     public function getHtml()
     {
-        $html = '<ul id="menu_'.$this->id.'" class="menu menu-'.$this->poistion.' navbar-nav mr-auto">';
+        $html = '<ul id="menu_'.$this->id.'" class="menu menu-'.$this->position.' navbar-nav mr-auto">';
 
         $items = $this->menuitems;
         if (!empty($items)) {
