@@ -79,8 +79,9 @@
                                 <div class="card-block">
                                     <!-- {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %} -->
                                     {% input_text name="background-color" label="Couleur" data-property-type="style" data-property-name="background-color" %}
-                                    {% input_media name="background-image-input" label="Image" mediaType="image" mediaCategory="page" onValid="validBackgroundImage" %}
+                                    {% input_media name="background-image-input" label="Image" mediaType="image" mediaCategory="page" onValid="cmsPageValidBackgroundImage" clearButton="1" onClear="cmsPageClearBackgroundImage" %}
                                     {% input_hidden id="background-image" name="background-image" data-property-type="style" data-property-name="background" %}
+                                    {% input_hidden id="background-size" name="background-size" data-property-type="style" data-property-name="background-size" %}
                                 </div>
                             </div>
                         </div>

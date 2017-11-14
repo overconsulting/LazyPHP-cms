@@ -788,10 +788,23 @@ function cmsPageScroll(event) {
 	}
 }
 
-function validBackgroundImage() {
+function cmsPageValidBackgroundImage() {
 	var url = $("#background-image-input_url")[0].value;
 	var input = $("#background-image")[0];
-	input.value = "transparent url(\""+url+"\") no-repeat";
+	input.value = "transparent url(\""+url+"\") top center no-repeat";
+	page.propertyChangeEvent({currentTarget: input})
+	input = $("#background-size")[0];
+	input.value = "cover";
+	page.propertyChangeEvent({currentTarget: input})
+	return true;
+}
+
+function cmsPageClearBackgroundImage() {
+	var input = $("#background-image")[0];
+	input.value = "";
+	page.propertyChangeEvent({currentTarget: input})
+	input = $("#background-size")[0];
+	input.value = "";
 	page.propertyChangeEvent({currentTarget: input})
 	return true;
 }
