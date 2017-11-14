@@ -136,7 +136,7 @@ CmsPage.prototype.createHtml = function() {
 
 	for (s = 0; s < this.sections.length; s = s + 1) {
 		this.sections[s].blockType = "section";
-
+console.log("s["+s+"] = ", this.sections[s].styles);
 		html = html +
 			this._getAddSectionButton(s) +
 			'<section class="cms-page-section" data-block-type="section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +
@@ -791,7 +791,7 @@ function cmsPageScroll(event) {
 function cmsPageValidBackgroundImage() {
 	var url = $("#background-image-input_url")[0].value;
 	var input = $("#background-image")[0];
-	input.value = "transparent url(\""+url+"\") top center no-repeat";
+	input.value = "url(\'"+url+"\') transparent top center no-repeat";
 	page.propertyChangeEvent({currentTarget: input})
 	input = $("#background-size")[0];
 	input.value = "cover";
