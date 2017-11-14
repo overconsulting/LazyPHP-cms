@@ -289,7 +289,7 @@ CmsPage.prototype.loadProperties = function(block) {
 	var propertyType = null;
 	var propertyName = null;
 	if (item != null) {
-		$("#formProperties").find("input[type=text], select, textarea").each(function(index, input) {
+		$("#formProperties").find("input[type=text], input[type=hidden], select, textarea").each(function(index, input) {
 			propertyType = input.hasAttribute("data-property-type") ? input.getAttribute("data-property-type") : null;
 			propertyName = input.hasAttribute("data-property-name") ? input.getAttribute("data-property-name") : null;
 
@@ -786,4 +786,12 @@ function cmsPageScroll(event) {
 		$cmsPageBlockPropertiesContainer.css("position", "static");
 		$cmsPageBlockPropertiesContainer.width(cmsPageBlockPropertiesContainerWidth);
 	}
+}
+
+function validBackgroundImage() {
+	var url = $("#background-image-input_url")[0].value;
+	var input = $("#background-image")[0];
+	input.value = "transparent url(\""+url+"\") no-repeat";
+	page.propertyChangeEvent({currentTarget: input})
+	return true;
 }

@@ -77,9 +77,10 @@
                             </div>
                             <div id="cms_page_block_properties_accordion_background" class="panel-collapse collapse" role="tabpanel" aria-labelledby="cms_page_block_properties_accordion_background_header">
                                 <div class="card-block">
-                                    {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %}
-                                    {% input_text name="background-color" label="Couleur" data-property-type="" data-property-name="" %}
-                                    {% input_media name="background-image" label="Image" data-property-type="" data-property-name="" mediaType="image" mediaCategory="page" %}
+                                    <!-- {% input_text name="background" label="Couleur / Image" data-property-type="style" data-property-name="background" %} -->
+                                    {% input_text name="background-color" label="Couleur" data-property-type="style" data-property-name="background-color" %}
+                                    {% input_media name="background-image-input" label="Image" mediaType="image" mediaCategory="page" onValid="validBackgroundImage" %}
+                                    {% input_hidden id="background-image" name="background-image" data-property-type="style" data-property-name="background" %}
                                 </div>
                             </div>
                         </div>
