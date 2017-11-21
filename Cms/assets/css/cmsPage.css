@@ -106,6 +106,7 @@
 
 #cms_page_block_properties_container {
 	padding-bottom: 5px;
+	min-width: 70px;
 }
 
 #cms_page_block_properties .form-group, #cms_page_widget_select .form-group {
@@ -134,15 +135,15 @@
 
 .input-box-model-top input, .input-box-model-left-right input, .input-box-model-bottom input {
 	display: inline-block;
-	width: 90px;
+	width: 70px;
 }
 
 .input-box-model-top input, .input-box-model-bottom input {
-	margin-left: 90px;
+	margin-left: 70px;
 }
 
 .input-box-model-left-right input + input {
-	margin-left: 86px;
+	margin-left: 66px;
 }
 
 #cms_page_widget_select {

@@ -7,48 +7,48 @@ if ($page->title != '' && $page->show_page_title) {
 }
 
 if (isset($content['sections'])) {
-  foreach ($content['sections'] as $s => $section) {
-      if ($section['fullwidth']) {
-          $containerClass = 'container-fluid';
-      } else {
-          $containerClass = 'container';
-      }
+    foreach ($content['sections'] as $s => $section) {
+        if ($section['fullwidth']) {
+            $containerClass = 'container-fluid';
+        } else {
+            $containerClass = 'container';
+        }
 
-      echo
-          '<section'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>'.
-              '<div class="'.$containerClass.'">';
+        echo
+            '<section'.attributesToHtml($section['attributes']).stylesToHtml($section['styles']).'>'.
+                '<div class="'.$containerClass.'">';
 
-      foreach ($section['rows'] as $r => $row) {
-          $attributesToMerge = array(
-              'class' => 'row'
-          );
+        foreach ($section['rows'] as $r => $row) {
+            $attributesToMerge = array(
+                'class' => 'row'
+            );
 
-          echo '<div'.attributesToHtml($row['attributes'], $attributesToMerge).stylesToHtml($row['styles']).'>';
+            echo '<div'.attributesToHtml($row['attributes'], $attributesToMerge).stylesToHtml($row['styles']).'>';
 
-          if (count($row['cols']) > 0) {
-              $colSize = intval(12 / count($row['cols']));
-          } else {
-              $colSize = 12;
-          }
+            if (count($row['cols']) > 0) {
+                $colSize = intval(12 / count($row['cols']));
+            } else {
+                $colSize = 12;
+            }
 
-          foreach ($row['cols'] as $c => $col) {
-              $attributesToMerge = array(
-                  'class' => 'col-md-'.$colSize
-              );
+            foreach ($row['cols'] as $c => $col) {
+                $attributesToMerge = array(
+                    'class' => 'col-md-'.$colSize
+                );
 
-              echo
-                  '<div'.attributesToHtml($col['attributes'], $attributesToMerge).stylesToHtml($col['styles']).'>'.
-                      rawurldecode($col['content']).
-                  '</div>';
-          }
+               echo
+                    '<div'.attributesToHtml($col['attributes'], $attributesToMerge).stylesToHtml($col['styles']).'>'.
+                        rawurldecode($col['content']).
+                    '</div>';
+            }
 
-          echo '</div>';
-      }
+            echo '</div>';
+        }
 
-      echo
-              '</div>'.
-          '</section>';
-  }
+        echo
+                '</div>'.
+            '</section>';
+    }
 }
 
 function attributesToHtml($attributes, $attributesToMerge = array()) {
