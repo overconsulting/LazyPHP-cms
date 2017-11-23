@@ -29,6 +29,11 @@ class MenuItem extends Model
                 'type' => '1',
                 'model' => 'Media\\models\\Media',
                 'key' => 'media_id'
+            ),
+            'menuitems' => array(
+                'type' => '*',
+                'model' => 'Cms\\models\\MenuItem',
+                'key' => 'parent'
             )
         );
     }
@@ -45,5 +50,52 @@ class MenuItem extends Model
         } else {
             return '';
         }
+    }
+
+    /**
+     * Get HTML code for the item
+     * @return string
+     **/
+    public function getHtml($level = 0)
+    {
+        $html = '';
+
+        $url = $this->media !== null ? $this->media->getUrl() : '';
+        if ($url != '') {
+            $icon = '<img src="'.$url.'" />';
+        } else {
+            $icon = '';
+        }
+
+        $where = 'parent = '.$this->id;
+        $order = 'position';
+        $items = MenuItem::findAll($where, $order);
+
+        if (!empty($items)) {
+            $html .=
+                '<li class="nav-item dropdown menu-item">'.
+                    '<a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">'.
+                        $icon.$this->label.
+                    '</a>'.
+                    '<div class="dropdown-menu">';
+            foreach ($items as $item) {
+                $html .= $item->getHtml($level + 1);
+            }
+            $html .=
+                    '</div>'.
+                '</li>';
+        } else {
+            if ($level == 0) {
+                $html .= 
+                    '<li class="nav-item menu-item">'.
+                        '<a class="nav-link" href="'.$this->link.'">'.$icon.$this->label.'</a>'.
+                    '</li>';
+            } else {
+                $html .= 
+                    '<a class="dropdown-item menu-item" href="'.$this->link.'">'.$icon.$this->label.'</a>';
+            }
+        }
+
+        return $html;
     }
 }
