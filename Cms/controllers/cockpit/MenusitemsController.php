@@ -7,9 +7,20 @@ use Cms\models\Menu;
 use Cms\models\MenuItem;
 use Core\Router;
 use Core\Session;
+use Auth\models\Group;
 
 class MenusitemsController extends CockpitController
 {
+    /**
+     * @var string
+     */
+    private $pageTitle = '<i class="fa fa-bars fa-green"></i> Gestion des menus';
+
+    /**
+     * @var \Cms\models\MenuItems
+     */
+    private $menuitem = null;
+
     public function newAction($menu_id)
     {
         if (!isset($this->menuitem)) {
@@ -18,20 +29,50 @@ class MenusitemsController extends CockpitController
         }
 
         $parentOptions = $this->getParentOptions($menu_id);
+        $groupOptions = Group::getOptions();
 
-        $this->render('cms::menusitems::edit', array(
-            'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'boxTitle' => '['.$this->menuitem->menu->label.'] - Ajouter un nouvel item au menu',
-            'menuitem' => $this->menuitem,
-            'parentOptions' => $parentOptions,
-            'formAction' => Router::url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
-        ));
+        if ($this->menuitem->groups == '') {
+            $this->menuitem->groups = array();
+            foreach ($groupOptions as $groupOption) {
+                $this->menuitem->groups[] = $groupOption['value'];
+            }
+        }
+
+        $this->render(
+            'cms::menusitems::edit',
+            array(
+                'pageTitle' => $this->pageTitle,
+                'boxTitle' => '['.$this->menuitem->menu->label.'] - Ajouter un nouvel item au menu',
+                'menuitem' => $this->menuitem,
+                'parentOptions' => $parentOptions,
+                'groupOptions' => $groupOptions,
+                'formAction' => Router::url('cockpit_cms_menu_'.$menu_id.'_menusitems_create')
+            )
+        );
     }
 
     public function createAction($menu_id)
     {
+        if (!isset($this->request->post['groups'])) {
+            $this->request->post['groups'] = '';
+        } else {
+            $this->request->post['groups'] = implode(';', $this->request->post['groups']);
+        }
+
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
+        }
+
+        if (!isset($this->request->post['show_label'])) {
+            $this->request->post['show_label'] = 0;
+        }
+
+        if (!isset($this->request->post['show_icon'])) {
+            $this->request->post['show_icon'] = 0;
+        }
+
+        if (!isset($this->request->post['new_window'])) {
+            $this->request->post['new_window'] = 0;
         }
 
         if (!isset($this->request->post['media_id']) || $this->request->post['media_id'] == "") {
@@ -44,11 +85,8 @@ class MenusitemsController extends CockpitController
             $this->addFlash('Menu Item ajouté', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$menu_id);
         } else {
-            $this->addFlash('Erreur insertion base de données', 'danger');
-        };
-        /*} else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
-        }*/
+        }
 
         $this->newAction();
     }
@@ -60,14 +98,23 @@ class MenusitemsController extends CockpitController
         }
 
         $parentOptions = $this->getParentOptions($menu_id);
+        $groupOptions = Group::getOptions();
+
+        if ($this->menuitem->groups == '') {
+            $this->menuitem->groups = array();
+            foreach ($groupOptions as $groupOption) {
+                $this->menuitem->groups[] = $groupOption['value'];
+            }
+        }
 
         $this->render(
             'cms::menusitems::edit',
             array(
-                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle'=> '['.$this->menuitem->menu->label.'] - Modifier l\'item du menu',
                 'menuitem' => $this->menuitem,
                 'parentOptions' => $parentOptions,
+                'groupOptions' => $groupOptions,
                 'formAction' => Router::url('cockpit_cms_menu_'.$menu_id.'_menusitems_update_'.$id)
             )
         );
@@ -75,8 +122,26 @@ class MenusitemsController extends CockpitController
 
     public function updateAction($menu_id, $id)
     {
+        if (!isset($this->request->post['groups'])) {
+            $this->request->post['groups'] = '';
+        } else {
+            $this->request->post['groups'] = implode(';', $this->request->post['groups']);
+        }
+
         if (!isset($this->request->post['active'])) {
             $this->request->post['active'] = 0;
+        }
+
+        if (!isset($this->request->post['show_label'])) {
+            $this->request->post['show_label'] = 0;
+        }
+
+        if (!isset($this->request->post['show_icon'])) {
+            $this->request->post['show_icon'] = 0;
+        }
+
+        if (!isset($this->request->post['new_window'])) {
+            $this->request->post['new_window'] = 0;
         }
 
         if (!isset($this->request->post['media_id']) || $this->request->post['media_id'] == "") {
@@ -89,11 +154,8 @@ class MenusitemsController extends CockpitController
             $this->addFlash('Item modifiée', 'success');
             $this->redirect('cockpit_cms_menus_show_'.$this->menuitem->menu_id);
         } else {
-            $this->addFlash('Erreur mise à jour base de données', 'danger');
-        }
-        /*} else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
-        }*/
+        }
 
         $this->editAction($id);
     }
