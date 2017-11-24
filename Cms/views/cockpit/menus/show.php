@@ -14,37 +14,70 @@
         <table class="table table-hover table-sm">
             <thead>
                 <tr>
-                    <th width="1%">ID</th>
-                    <th width="10%">Item</th>
-                    <th width="60%">Label</th>
-                    <th width="20%">URL</th>
-                    <th>Status</th>
+                    <th>Id</th>
+                    <th>Libellé</th>
+                    <th>Icone</th>
+                    <th>URL</th>
+                    <th>Afficher libellé</th>
+                    <th>Afficher icone</th>
+                    <th>Visible pour?</th>
+                    <th>Actif</th>
                     <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
 <?php
 foreach ($items as $item) {
-    if ($menu->active == 1) {
+    if ($item->active == 1) {
         $active = '<span class="badge badge-success">Activé</span>';
     } else {
         $active = '<span class="badge badge-danger">Désactivé</span>';
     }
 
-    $image = '';
-    $imageUrl = $item->getImageUrl();
-    if ($imageUrl != '') {
-        $image = '<img src="'.$imageUrl.'" width="25" height="25" />';
+    if ($item->show_label == 1) {
+        $showLabel = '<i class="fa fa-check text-success"></i>';
+    } else {
+        $showLabel = '<i class="fa fa-remove text-danger"></i>';
+    }
+
+    if ($item->show_icon == 1) {
+        $showIcon = '<i class="fa fa-check text-success"></i>';
+    } else {
+        $showIcon = '<i class="fa fa-remove text-danger"></i>';
+    }
+
+    $icon = '';
+    $url = $item->media != null ? $item->media->getUrl() : '';
+    if ($url!= '') {
+        $icon = '<img src="'.$url.'" width="25" height="25" />';
     }
 
     $indent = '<span style="font-family: monospace;">'.str_repeat('&nbsp;', $item->level * 4).'|__</span>&nbsp;&nbsp;';
 
+    if ($item->groups == '') {
+        $groups = '<span class="badge badge-success">Tout le monde</span>&nbsp;';;
+    } else {
+        $groups = '';
+        $itemGroups = explode(';', $item->groups);
+        foreach ($groupOptions as $groupOption) {
+            if (in_array($groupOption['value'], $itemGroups)) {
+                $groups .= '<span class="badge badge-warning">'.$groupOption['label'].'</span>&nbsp;';
+            }
+        }
+        if (count($itemGroups) == count($groupOptions)) {
+            $groups = '<span class="badge badge-success">Tout le monde</span>&nbsp;';;
+        }
+    }
+
     echo
         '<tr>'.
             '<td>'.$item->id.'</td>'.
-            '<td>'.$image.'</td>'.
             '<td>'.$indent.$item->label.'</td>'.
+            '<td>'.$icon.'</td>'.
             '<td>'.$item->link.'</td>'.
+            '<td>'.$showLabel.'</td>'.
+            '<td>'.$showIcon.'</td>'.
+            '<td>'.$groups.'</td>'.
             '<td>'.$active.'</td>'.
             '<td>';?>
                 {% button url="cockpit_cms_menu_<?php echo $menu->id; ?>_menusitems_edit_<?php echo $item->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}

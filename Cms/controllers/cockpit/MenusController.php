@@ -7,9 +7,20 @@ use Cms\models\Menu;
 use Cms\models\MenuItem;
 use Core\Session;
 use Core\Router;
+use Auth\models\Group;
 
 class MenusController extends CockpitController
 {
+    /**
+     * @var string
+     */
+    private $pageTitle = '<i class="fa fa-bars fa-green"></i> Gestion des menus';
+
+    /**
+     * @var \Cms\models\Menu
+     */
+    private $menu = null;
+
     public function indexAction()
     {
         if ($this->current_user->site_id !== null) {
@@ -24,7 +35,7 @@ class MenusController extends CockpitController
         $this->render(
             'cms::menus::index',
             array(
-                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Liste des menus',
                 'positionOptions' => $positionOptions,
                 'menus' => $menus
@@ -40,24 +51,34 @@ class MenusController extends CockpitController
 
         $positionOptions = Menu::getPositionOptions();
 
-        $this->render('cms::menus::edit', array(
-            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'boxTitle'      => 'Ajouter un menu',
-            'positionOptions' => $positionOptions,
-            'formAction'    => Router::url('cockpit_cms_menus_create')
-        ));
+        $this->render(
+            'cms::menus::edit',
+            array(
+                'pageTitle' => $this->pageTitle,
+                'boxTitle' => 'Ajouter un menu',
+                'menu' => $this->menu,
+                'positionOptions' => $positionOptions,
+                'formAction' => Router::url('cockpit_cms_menus_create')
+            )
+        );
     }
 
     public function showAction($id)
     {
         $this->menu = Menu::findById($id);
 
-        $this->render('cms::menus::show', array(
-            'pageTitle'     => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
-            'boxTitle'      => 'Menu : '.$this->menu->label,
-            'menu'          => $this->menu,
-            'items'         => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
-        ));
+        $groupOptions = Group::getOptions();
+
+        $this->render(
+            'cms::menus::show',
+            array(
+                'pageTitle' => $this->pageTitle,
+                'boxTitle' => 'Menu : '.$this->menu->label,
+                'menu' => $this->menu,
+                'groupOptions' => $groupOptions,
+                'items' => MenuItem::getFlat(null, "menu_id = ".$this->menu->id)
+            )
+        );
     }
 
     public function createAction()
@@ -73,18 +94,13 @@ class MenusController extends CockpitController
         $this->request->post['site_id'] = $this->site->id;
 
         $this->menu = new Menu();
-        $this->menu->setData($this->request->post);
 
-        // if ($this->menu->valid()) {
-        if ($this->menu->create((array)$this->menu)) {
+        if ($this->menu->save($this->request->post)) {
             $this->addFlash('Menu ajouté', 'success');
             $this->redirect('cockpit_cms_menus');
         } else {
-            $this->addFlash('Erreur insertion base de données', 'danger');
-        };
-        /*} else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
-        }*/
+        }
 
         $this->newAction();
     }
@@ -100,7 +116,7 @@ class MenusController extends CockpitController
         $this->render(
             'cms::menus::edit',
             array(
-                'pageTitle' => '<i class="fa fa-bars fa-green"></i> Gestion des menus',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Modifier le menu',
                 'menu' => $this->menu,
                 'positionOptions' => $positionOptions,
@@ -122,18 +138,13 @@ class MenusController extends CockpitController
         $this->request->post['site_id'] = $this->site->id;
 
         $this->menu = Menu::findById($id);
-        $this->menu->setData($this->request->post);
 
-        // if ($this->category->valid()) {
-        if ($this->menu->update((array)$this->menu)) {
+        if ($this->menu->save($this->request->post)) {
             $this->addFlash('Menu modifié', 'success');
             $this->redirect('cockpit_cms_menus');
         } else {
-            $this->addFlash('Erreur mise à jour base de données', 'danger');
-        }
-        /*} else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
-        }*/
+        }
 
         $this->editAction($id);
     }

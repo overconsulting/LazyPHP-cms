@@ -14,6 +14,12 @@ class Menu extends Model
         'active'
     );
 
+    public function setDefaultProperties() {
+        parent::setDefaultProperties();
+
+        $this->position = 'main';
+    }
+
     public function getAssociations()
     {
         return array(
@@ -30,6 +36,19 @@ class Menu extends Model
         );
     }
 
+    public function getValidations()
+    {
+        return array_merge(
+            parent::getValidations(),
+            array(
+                'label' => array(
+                    'type' => 'required',
+                    'error' => 'Nom obligatoire'
+                )
+            )
+        );
+    }
+
     public static function getPositionOptions()
     {
         return array(
@@ -38,7 +57,6 @@ class Menu extends Model
             array('label' => 'Pied de page 2', 'value' => 'footer2')
         );
     }
-
 
     /**
      * Get HTML code for the menu
