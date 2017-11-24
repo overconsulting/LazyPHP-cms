@@ -232,7 +232,7 @@ echo
             <div class="box-header">
                 <h3 class="box-title">Editeur de page</h3>
                 <div class="box-tools pull-right">
-                    {% button url="/pages/$page.id$" new_window="1" type="warning" icon="eye" content="Aperçu" %}
+                    {% button url="/pages/$page.id$" newWindow="1" type="warning" icon="eye" content="Aperçu" %}
                 </div>
             </div>
             <div id="cms_page_container" class="box-body">
