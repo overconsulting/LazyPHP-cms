@@ -64,7 +64,7 @@ class Menu extends Model
      **/
     public function getHtml()
     {
-        $html = '<ul id="menu_'.$this->id.'" class="menu menu-'.$this->position.' navbar-nav justify-content mr-auto">';
+        $html = '<ul id="menu_'.$this->id.'" class="menu menu-'.$this->position.' navbar-nav">';
 
         $where = 'menu_id = '.$this->id.' and parent is null and active = 1';
         $order = 'position';
