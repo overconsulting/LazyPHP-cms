@@ -136,7 +136,7 @@ CmsPage.prototype.createHtml = function() {
 
 	for (s = 0; s < this.sections.length; s = s + 1) {
 		this.sections[s].blockType = "section";
-console.log("s["+s+"] = ", this.sections[s].styles);
+
 		html = html +
 			this._getAddSectionButton(s) +
 			'<section class="cms-page-section" data-block-type="section" data-section-index="' + s + '"' + ' data-default-class="cms-page-section"' +

@@ -204,7 +204,6 @@ class PagesController extends CockpitController
         $widgets = array();
         foreach ($widgetList as $wl) {
             $widgets[$wl->type] = (array)$wl;
-
             $class = Widget::$widgetTypes[$wl->type];
             if (method_exists($class, 'getDbModel')) {
                 $dbModel = $class::getDbModel();
