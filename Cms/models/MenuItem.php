@@ -84,7 +84,7 @@ class MenuItem extends Model
                 }
             }
 
-            $label = $this->show_label == 1 ? $this->label : '';
+            $label = $this->show_label == 1 ? '<div class="menu-item-label">'.$this->label.'</div>' : '';
 
             $target  = $this->new_window == 1 ? ' target="_blank"' : '';
 
