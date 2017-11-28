@@ -778,6 +778,7 @@ function cmsPageScroll(event) {
 	if (cmsPageBlockPropertiesContainerWidth == null) {
 		cmsPageBlockPropertiesContainerWidth = $cmsPageBlockPropertiesContainer.width();
 	}
+	console.log($(window).scrollTop());
 	if ($(window).scrollTop() > 340) {
 		$cmsPageBlockPropertiesContainer.css("position", "fixed");
 		$cmsPageBlockPropertiesContainer.css("top", "60px");

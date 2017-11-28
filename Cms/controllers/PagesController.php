@@ -8,22 +8,23 @@ class PagesController extends FrontController
 {
     public function showAction($id)
     {
-        $pageModel = $this->loadModel('Page');
-        $page = $pageModel::findById($id);
+        $pageClass = $this->loadModel('Page');
+        $page = $pageClass::getLastRevision($id, 'published');
 
-        if ($page->active != 1 or $page->content == null) {
+        if ($page === null) {
             $this->redirect("/");
         }
 
-        if ($page->layout != null) {
+        if ($page->layout != '') {
             $this->layout = $page->layout;
         }
 
-        // var_dump($this->params);
-
-        $this->render('cms::pages::show', array(
-            'page'      => $page,
-            'pageTitle' => $page->title
-        ));
+        $this->render(
+            'cms::pages::show',
+            array(
+                'page'      => $page,
+                'pageTitle' => $page->title
+            )
+        );
     }
 }

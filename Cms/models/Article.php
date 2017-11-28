@@ -7,10 +7,10 @@ use Core\Model;
 class Article extends Model
 {
     protected $permittedColumns = array(
+        'site_id',
+        'user_id',
         'title',
         'content',
-        'user_id',
-        'site_id',
         'media_id',
         'articlecategory_id',
         'active'
@@ -24,6 +24,11 @@ class Article extends Model
     public function getAssociations()
     {
         return array(
+            'site' => array(
+                'type' => '1',
+                'model' => 'Core\\models\\Site',
+                'key' => 'site_id'
+            ),
             'user' => array(
                 'type' => '1',
                 'model' => 'Auth\\models\\User',

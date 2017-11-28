@@ -10,7 +10,10 @@
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
         <div class="box-tools pull-right">
-            {% input_submit name="submit" value="save_and_stay" formId="formPage" class="btn-primary" icon="save" label="Enregistrer &amp; Rester" %}
+            <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
+                <i class="fa fa-save"></i> Enregistrer & Rester
+            </button>
+            {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
         </div>
     </div>
     <div class="box-body">
@@ -19,6 +22,11 @@
         {% input_checkbox name="show_page_title" model="page.show_page_title" label="Afficher le titre" %}
         {% input_text name="layout" model="page.layout" label="Layout de la page" placeholder="Layout de la page" %}
         {% input_checkbox name="active" model="page.active" label="Afficher la page" %}
+<?php if ($selectStatus): ?>
+        {% input_select name="status" model="page.status" options="statusOptions" label="Etat" %}
+<?php else: ?>    
+        <span>Status : </span><span class="badge badge-<?php echo $statusOptions[$page->status]['badge']; ?>"><?php echo $statusOptions[$page->status]['label']; ?></span>
+<?php endif; ?>
     </div>
     {% form_close %}
 </div>
@@ -216,14 +224,14 @@ echo
                 {% form_close %}
             </div>
             <div class="form-group">
-<div class="col-sm-12">
-<button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
-<i class="fa fa-save"></i>
- Enregistrer & Rester
-</button>
-</div>
-</div>
-<div class="clearfix"></div>
+                <div class="col-sm-12">
+                    <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
+                        <i class="fa fa-save"></i> Enregistrer & Rester
+                    </button>
+                    {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
+                </div>
+            </div>
+            <div class="clearfix"></div>
         </div>
     </div>
 
@@ -232,7 +240,9 @@ echo
             <div class="box-header">
                 <h3 class="box-title">Editeur de page</h3>
                 <div class="box-tools pull-right">
+<?php if ($page->id !== null): ?>
                     {% button url="/pages/$page.id$" newWindow="1" type="warning" icon="eye" content="Aperçu" %}
+<?php endif; ?>
                 </div>
             </div>
             <div id="cms_page_container" class="box-body">

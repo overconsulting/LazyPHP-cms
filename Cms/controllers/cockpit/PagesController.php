@@ -12,9 +12,19 @@ use Auth\models\User;
 
 class PagesController extends CockpitController
 {
+    /**
+     * @var string
+     */
+    private $pageTitle = '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages';
+
+    /**
+     * @var Cms\models\Page
+     */
+    private $page = null;
+
     public function before()
     {
-        if (!User::checkPermission($this->current_user, 'cms')) {
+        if (!User::checkPermission($this->current_user, 'cms_page_write')) {
             $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
             $this->redirect('/cockpit');
         }
@@ -27,22 +37,28 @@ class PagesController extends CockpitController
         } else {
             $where = '';
         }
-        $pages = Page::findAll($where);
+
+        $pageClass = $this->loadModel('page');
+        $pages = $pageClass::getAll($where);
+
+        $statusOptions = $pageClass::getCmsStatusOptions();
 
         $this->render(
             'cms::pages::index',
             array(
-                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Liste des pages',
-                'pages' => $pages
+                'pages' => $pages,
+                'statusOptions' => $statusOptions
             )
         );
     }
 
     public function newAction()
     {
+        $pageClass = $this->loadModel('page');
         if (!isset($this->page)) {
-            $this->page = new Page();
+            $this->page = new $pageClass();
         }
 
         $contentJson = json_encode(array(
@@ -51,14 +67,19 @@ class PagesController extends CockpitController
             'sections' => array()
         ));
 
+        $selectStatus = User::checkPermission($this->current_user, 'cms_page_publish');
+        $statusOptions = $pageClass::getCmsStatusOptions();
+
         $this->render(
             'cms::pages::edit',
             array(
                 'page' => $this->page,
                 'contentJson' => $contentJson,
-                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Nouvelle page',
                 'formAction' => Router::url('cockpit_cms_pages_create'),
+                'selectStatus' => $selectStatus,
+                'statusOptions' => $statusOptions,
                 'fullwidthOptions' => $this->getFullwidthOptions(),
                 'fontWeightOptions' => $this->getFontWeightOptions(),
                 'widgets' => $this->getWidgets()
@@ -68,7 +89,8 @@ class PagesController extends CockpitController
 
     public function editAction($id)
     {
-        $this->page = Page::findById($id);
+        $pageClass = $this->loadModel('page');
+        $this->page = $pageClass::getLastRevision($id);
 
         $contentJson =
             $this->page->content != '' ?
@@ -79,14 +101,19 @@ class PagesController extends CockpitController
                 'sections' => array()
             ));
 
+        $selectStatus = true;//User::checkPermission($this->current_user, 'cms_page_publish');
+        $statusOptions = $pageClass::getCmsStatusOptions();
+
         $this->render(
             'cms::pages::edit',
             array(
                 'page' => $this->page,
                 'contentJson' => $contentJson,
-                'pageTitle' => '<i class="fa fa-file-text fa-purple"></i> Gestion des Pages',
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Nouvelle page',
                 'formAction' => Router::url('cockpit_cms_pages_update_'.$id),
+                'selectStatus' => $selectStatus,
+                'statusOptions' => $statusOptions,
                 'fullwidthOptions' => $this->getFullwidthOptions(),
                 'fontWeightOptions' => $this->getFontWeightOptions(),
                 'widgets' => $this->getWidgets()
@@ -96,9 +123,15 @@ class PagesController extends CockpitController
 
     public function createAction()
     {
-        $this->page = new Page();
+        $pageClass = $this->loadModel('page');
+        $this->page = new $pageClass();
 
         $post = $this->request->post;
+
+        if (!isset($post['site_id'])) {
+            $post['site_id'] = $this->site->id;
+        }
+
         if (!isset($post['active'])) {
             $post['active'] = 0;
         }
@@ -107,13 +140,22 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        if (!isset($post['site_id'])) {
-            $post['site_id'] = $this->site->id;
+        if ($post['submit'] == 'publish') {
+            $post['status'] = 'published';
+        } else if (!isset($post['status'])) {
+            $post['status'] = 'draft';
         }
 
+        $post['user_id'] = $this->current_user->id;
+
         if ($this->page->save($post)) {
+            $revision = new $pageClass();
+            $revision->page_id = $this->page->id;
+            $revision->save($post);
+
             $this->addFlash('Page ajoutée', 'success');
-            $this->redirect('cockpit_cms_pages_index');
+            // $this->redirect('cockpit_cms_pages_index');
+            $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
             $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
@@ -123,9 +165,16 @@ class PagesController extends CockpitController
 
     public function updateAction($id)
     {
-        $this->page = Page::findById($id);
+        $pageClass = $this->loadModel('page');
+        $this->page = $pageClass::findById($id);
+        $this->revision = $pageClass::getLastRevision($id);
 
         $post = $this->request->post;
+
+        if (!isset($post['site_id'])) {
+            $post['site_id'] = $this->site->id;
+        }
+
         if (!isset($post['active'])) {
             $post['active'] = 0;
         }
@@ -134,11 +183,27 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        if (!isset($post['site_id'])) {
-            $post['site_id'] = $this->site->id;
+        if ($post['submit'] == 'publish') {
+            $post['status'] = 'published';
+        } else if (!isset($post['status'])) {
+            $post['status'] = 'draft';
+        } else {
+            $post['status'] = 'draft';
         }
 
+        $post['user_id'] = $this->current_user->id;
+
+        $isContentModified = $post['content'] != $this->page->content || $post['title'] != $this->page->title;
+
         if ($this->page->save($post)) {
+            if ($isContentModified) {
+                $revision = new $pageClass();
+                $revision->page_id = $this->page->id;
+            } else {
+                $revision = $pageClass::getLastRevision($this->page->id);
+            }
+            $revision->save($post);
+
             $this->addFlash('Page modifiée', 'success');
             $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
@@ -150,7 +215,8 @@ class PagesController extends CockpitController
 
     public function deleteAction($id)
     {
-        $page = Page::findById($id);
+        $pageClass = $this->loadModel('page');
+        $page = $pageClass::findById($id);
         $page->delete();
         $this->addFlash('Page supprimée', 'success');
         $this->redirect('cockpit_cms_pages_index');
@@ -167,6 +233,24 @@ class PagesController extends CockpitController
         $html = isset($this->request->post['html']) ? $this->request->post['html'] : '';
 
         $this->render($html, $params);
+    }
+
+    public function publishAction($id)
+    {
+        $pageClass = $this->loadModel('page');
+        $page = $pageClass::findById($id);
+
+        $page->status = 'published';
+        $page->user_id = $this->current_user->id;
+        $page->save();
+
+        $revision = $page->revisions[0];
+        $revision->status = 'published';
+        $revision->save();
+    }
+
+    public function deleteAction($id)
+    {
     }
 
     private function getFullwidthOptions()
