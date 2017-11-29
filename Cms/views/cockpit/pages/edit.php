@@ -10,10 +10,13 @@
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
         <div class="box-tools pull-right">
+            {% button url="cockpit_cms_pages_index" type="secondary" size="sm" icon="arrow-left" hint="Retour" %}
             <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
                 <i class="fa fa-save"></i> Enregistrer & Rester
             </button>
+<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
             {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
+<?php endif; ?>
         </div>
     </div>
     <div class="box-body">
@@ -228,7 +231,9 @@ echo
                     <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
                         <i class="fa fa-save"></i> Enregistrer & Rester
                     </button>
+<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
                     {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
+<?php endif; ?>
                 </div>
             </div>
             <div class="clearfix"></div>

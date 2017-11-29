@@ -67,7 +67,7 @@ class PagesController extends CockpitController
             'sections' => array()
         ));
 
-        $selectStatus = User::checkPermission($this->current_user, 'cms_page_publish');
+        $selectStatus = $this->checkPermission('cms_page_publish');
         $statusOptions = $pageClass::getCmsStatusOptions();
 
         $this->render(
@@ -90,7 +90,7 @@ class PagesController extends CockpitController
     public function editAction($id)
     {
         $pageClass = $this->loadModel('page');
-        $this->page = $pageClass::getLastRevision($id);
+        $this->page = $pageClass::findById($id);
 
         $contentJson =
             $this->page->content != '' ?
@@ -101,7 +101,7 @@ class PagesController extends CockpitController
                 'sections' => array()
             ));
 
-        $selectStatus = true;//User::checkPermission($this->current_user, 'cms_page_publish');
+        $selectStatus = $this->checkPermission('cms_page_publish');
         $statusOptions = $pageClass::getCmsStatusOptions();
 
         $this->render(
@@ -110,7 +110,7 @@ class PagesController extends CockpitController
                 'page' => $this->page,
                 'contentJson' => $contentJson,
                 'pageTitle' => $this->pageTitle,
-                'boxTitle' => 'Nouvelle page',
+                'boxTitle' => 'Modification page',
                 'formAction' => Router::url('cockpit_cms_pages_update_'.$id),
                 'selectStatus' => $selectStatus,
                 'statusOptions' => $statusOptions,
@@ -155,7 +155,7 @@ class PagesController extends CockpitController
 
             $this->addFlash('Page ajoutée', 'success');
             // $this->redirect('cockpit_cms_pages_index');
-            $this->redirect('cockpit_cms_pages_edit_'.$id);
+            $this->redirect('cockpit_cms_pages_edit_'.$this->page->id);
         } else {
             $this->addFlash('Erreur mise à jour base de données', 'danger');
         }
@@ -167,7 +167,6 @@ class PagesController extends CockpitController
     {
         $pageClass = $this->loadModel('page');
         $this->page = $pageClass::findById($id);
-        $this->revision = $pageClass::getLastRevision($id);
 
         $post = $this->request->post;
 
@@ -247,10 +246,13 @@ class PagesController extends CockpitController
         $revision = $page->revisions[0];
         $revision->status = 'published';
         $revision->save();
+
+        $this->redirect('cockpit_cms_pages_index');
     }
 
-    public function deleteAction($id)
+    public function revisionsAction($id)
     {
+        $this->redirect('cockpit_cms_pages_index');
     }
 
     private function getFullwidthOptions()

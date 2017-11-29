@@ -52,7 +52,7 @@ class Page extends Model
         if ($where != '') {
             $where .= ' and ';
         }
-        $where = 'page_id is null';
+        $where .= 'page_id is null';
         return self::findAll($where, 'updated_at desc');
     }
 

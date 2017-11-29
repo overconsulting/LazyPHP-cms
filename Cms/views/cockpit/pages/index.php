@@ -41,7 +41,7 @@ foreach ($pages as $page) {
             '<td>'.$status.' '.$active.'</td>'.
             '<td>'.count($page->revisions).'</td>'.
             '<td>';?>
-<?php if ($page->status != 'published'): ?>
+<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
                 {% button url="cockpit_cms_pages_publish_<?php echo $page->id; ?>" type="success" size="sm" icon="share" hint="Publier" %}
 <?php endif; ?>
                 {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}
