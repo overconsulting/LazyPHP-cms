@@ -56,7 +56,7 @@ class ArticleCategory extends Model
      * Get an article category by code
      * @param string $code
      *
-     * @return \Media\models\ArticleCategory
+     * @return Cms\models\ArticleCategory
      */
     public static function findByCode($code)
     {

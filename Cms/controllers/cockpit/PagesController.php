@@ -24,7 +24,7 @@ class PagesController extends CockpitController
 
     public function before()
     {
-        if (!User::checkPermission($this->current_user, 'cms_page_write')) {
+        if (!$this->checkPermission('cms_page_write')) {
             $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
             $this->redirect('/cockpit');
         }
@@ -38,7 +38,7 @@ class PagesController extends CockpitController
             $where = '';
         }
 
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $pages = $pageClass::getAll($where);
 
         $statusOptions = $pageClass::getCmsStatusOptions();
@@ -56,13 +56,13 @@ class PagesController extends CockpitController
 
     public function newAction()
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         if (!isset($this->page)) {
             $this->page = new $pageClass();
         }
 
         $contentJson = json_encode(array(
-            'title' => $this->page->title,
+            'title' => $this->page->pageTitle,
             'active' => $this->page->active,
             'sections' => array()
         ));
@@ -89,14 +89,14 @@ class PagesController extends CockpitController
 
     public function editAction($id)
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $this->page = $pageClass::findById($id);
 
         $contentJson =
             $this->page->content != '' ?
             $this->page->content :
             json_encode(array(
-                'title' => $this->page->title,
+                'title' => $this->page->pageTitle,
                 'active' => $this->page->active,
                 'sections' => array()
             ));
@@ -123,7 +123,7 @@ class PagesController extends CockpitController
 
     public function createAction()
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $this->page = new $pageClass();
 
         $post = $this->request->post;
@@ -157,7 +157,7 @@ class PagesController extends CockpitController
             // $this->redirect('cockpit_cms_pages_index');
             $this->redirect('cockpit_cms_pages_edit_'.$this->page->id);
         } else {
-            $this->addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->editAction($id);
@@ -165,7 +165,7 @@ class PagesController extends CockpitController
 
     public function updateAction($id)
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $this->page = $pageClass::findById($id);
 
         $post = $this->request->post;
@@ -206,7 +206,7 @@ class PagesController extends CockpitController
             $this->addFlash('Page modifiée', 'success');
             $this->redirect('cockpit_cms_pages_edit_'.$id);
         } else {
-            $this->addFlash('Erreur mise à jour base de données', 'danger');
+            $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
 
         $this->editAction($id);
@@ -214,7 +214,7 @@ class PagesController extends CockpitController
 
     public function deleteAction($id)
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $page = $pageClass::findById($id);
         $page->delete();
         $this->addFlash('Page supprimée', 'success');
@@ -236,7 +236,7 @@ class PagesController extends CockpitController
 
     public function publishAction($id)
     {
-        $pageClass = $this->loadModel('page');
+        $pageClass = $this->loadModel('Page');
         $page = $pageClass::findById($id);
 
         $page->status = 'published';

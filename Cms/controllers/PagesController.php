@@ -22,7 +22,7 @@ class PagesController extends FrontController
         $this->render(
             'cms::pages::show',
             array(
-                'page'      => $page,
+                'page' => $page,
                 'pageTitle' => $page->title
             )
         );

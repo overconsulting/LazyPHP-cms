@@ -10,11 +10,12 @@
 		<table class="table table-hover table-sm">
 			<thead>
 				<tr>
-					<th width="1%">ID</th>
+					<th width="10%">#</th>
                     <th>Titre</th>
                     <th>Catégorie</th>
                     <th>Auteur</th>
-                    <th>Status</th>
+                    <th>Etat</th>
+                    <th>Révisions</th>
 					<th width="10%">Actions</th>
 				</tr>
 			</thead>
@@ -36,6 +37,8 @@ foreach ($params['articles'] as $article) {
         $category = '';
     }
 
+    $status = '<span class="badge badge-'.$statusOptions[$article->status]['badge'].'">'.$statusOptions[$article->status]['label'].'</span>';
+
     if ($article->active == 1) {
         $active = '<span class="badge badge-success">Activé</span>';
     } else {
@@ -48,8 +51,12 @@ foreach ($params['articles'] as $article) {
             '<td>'.$article->title.'</td>'.
             '<td>'.$category.'</td>'.
             '<td>'.$article->user->getFullName().'</td>'.
-            '<td>'.$active.'</td>'.
+            '<td>'.$status.' '.$active.'</td>'.
+            '<td>'.count($article->revisions).'</td>'.
             '<td>';?>
+<?php if ($this->checkPermission('cms_article_publish') && $article->status != 'published'): ?>
+                {% button url="cockpit_cms_articles_publish_<?php echo $article->id; ?>" type="success" size="sm" icon="share" hint="Publier" %}
+<?php endif; ?>
                 {% button url="cockpit_cms_articles_show_<?php echo $article->id; ?>" type="primary" size="sm" icon="eye" hint="Voir" %}
                 {% button url="cockpit_cms_articles_edit_<?php echo $article->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}
                 {% button url="cockpit_cms_articles_delete_<?php echo $article->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article ?" hint="Supprimer" %}

@@ -15,7 +15,8 @@ class ArticlesController extends FrontController
         } else {
             $where = '';
         }
-        $articles = Article::findAll($where);
+        $articleClass = $this->loadModel('Article');
+        $articles = $articleClass::getAll($where);
 
         $this->render(
             'cms::articles::index',
@@ -28,7 +29,12 @@ class ArticlesController extends FrontController
 
     public function showAction($id)
     {
-        $article = Article::findById($id);
+        $articleClass = $this->loadModel('Article');
+        $article = $articleClass::getLastRevision($id, 'published');
+
+        if ($article === null) {
+            $this->redirect("/");
+        }
         
         $this->render(
             'cms::articles::show',
@@ -41,10 +47,13 @@ class ArticlesController extends FrontController
 
     public function categoryAction($id)
     {
+        $articleClass = $this->loadModel('Article');
+        $articleCategoryClass = $this->loadModel('ArticleCategory');
+
         if (is_numeric($id)) {
             $articlecategory_id = $id;
         } else {
-            $articleCategory = ArticleCategory::findByCode($id);
+            $articleCategory = $articleCategoryClass::findByCode($id);
             $articlecategory_id = $articleCategory->id;
         }
         $where = 'articlecategory_id = '.$articlecategory_id;
@@ -53,7 +62,7 @@ class ArticlesController extends FrontController
             $where .= ' and site_id = '.$this->site->id;
         }
 
-        $articles = Article::findAll($where);
+        $articles = $articleClass::findAll($where);
 
         $this->render(
             'cms::articles::index',

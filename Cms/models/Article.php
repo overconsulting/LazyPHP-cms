@@ -8,11 +8,13 @@ class Article extends Model
 {
     protected $permittedColumns = array(
         'site_id',
+        'article_id',
         'user_id',
         'title',
         'content',
         'media_id',
         'articlecategory_id',
+        'status',
         'active'
     );
 
@@ -43,6 +45,12 @@ class Article extends Model
                 'type' => '1',
                 'model' => 'Cms\\models\\ArticleCategory',
                 'key' => 'articlecategory_id'
+            ),
+            'revisions' => array(
+                'type' => '*',
+                'model' => 'Cms\\models\\Article',
+                'key' => 'article_id',
+                'order' => 'id desc'
             )
         );
     }
@@ -63,5 +71,30 @@ class Article extends Model
         ));
 
         return $validations;
+    }
+
+    public static function getAll($where = '')
+    {
+        if ($where != '') {
+            $where .= ' and ';
+        }
+        $where .= 'article_id is null';
+        return self::findAll($where, 'updated_at desc');
+    }
+
+    public static function getLastRevision($article_id, $status = '')
+    {
+        $whereStatus = $status != '' ? ' and status = \''.$status.'\'' : '';
+        $articleClass = self::loadModel('Article');
+        $articles = $articleClass::findAll(
+            '(article_id = '.$article_id.')'.$whereStatus.' and active = 1',
+            'created_at desc, updated_at desc'
+        );
+
+        if (!empty($articles)) {
+            return $articles[0];
+        } else {
+            return null;
+        }
     }
 }

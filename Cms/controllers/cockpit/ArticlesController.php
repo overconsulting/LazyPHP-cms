@@ -13,8 +13,23 @@ use Core\Session;
 
 class ArticlesController extends CockpitController
 {
+    /**
+     * @var Cms\models\Article
+     */
     private $article = null;
+
+    /**
+     * @var string
+     */
     private $pageTitle = '<i class="fa fa-columns fa-red"></i> Gestion des articles';
+
+    public function before()
+    {
+        if (!$this->checkPermission('cms_article_write')) {
+            $this->addFlash('Vous n\'avez pas l\'autorisation d\'accéder à cette page', 'danger');
+            $this->redirect('/cockpit');
+        }
+    }
 
     public function indexAction()
     {
@@ -23,21 +38,27 @@ class ArticlesController extends CockpitController
         } else {
             $where = '';
         }
-        $articles = Article::findAll($where);
+
+        $articleClass = $this->loadModel('Article');
+        $articles = $articleClass::getAll($where);
+
+        $statusOptions = $articleClass::getCmsStatusOptions();
 
         $this->render(
             'cms::articles::index',
             array(
                 'articles' => $articles,
                 'pageTitle' => $this->pageTitle,
-                'boxTitle' => 'Liste des articles'
+                'boxTitle' => 'Liste des articles',
+                'statusOptions' => $statusOptions
             )
         );
     }
 
     public function showAction($id)
     {
-        $this->article = Article::findById($id);
+        $articleClass = $this->loadModel('Article');
+        $this->article = $articleClass::findById($id);
 
         $this->render(
             'cms::articles::show',
@@ -51,23 +72,30 @@ class ArticlesController extends CockpitController
 
     public function newAction()
     {
+        $articleClass = $this->loadModel('Article');
+        $articleCategoryClass = $this->loadModel('ArticleCategory');
+
         if (!isset($this->article)) {
-            $this->article = new Article();
+            $this->article = new $articleClass();
         }
 
+        $articleCategoryOptions = $articleCategoryClass::getOptions();
+        $selectStatus = $this->checkPermission('cms_article_publish');
+        $statusOptions = $articleClass::getCmsStatusOptions();
         $userOptions = User::getOptions();
-        $articleCategoryOptions = ArticleCategory::getOptions();
         $siteOptions = Site::getOptions();
 
         $this->render(
             'cms::articles::edit',
             array(
                 'article' => $this->article,
-                'pageTitle' => $this->title,
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Ajouter un nouvel article',
                 'formAction' => Router::url('cockpit_cms_articles_create'),
                 'userOptions' => $userOptions,
                 'articleCategoryOptions' => $articleCategoryOptions,
+                'selectStatus' => $selectStatus,
+                'statusOptions' => $statusOptions,
                 'siteOptions' => $siteOptions,
                 'selectSite' => $this->current_user->site_id === null
             )
@@ -76,23 +104,30 @@ class ArticlesController extends CockpitController
 
     public function editAction($id)
     {
+        $articleClass = $this->loadModel('Article');
+        $articleCategoryClass = $this->loadModel('ArticleCategory');
+
         if (!isset($this->article)) {
-            $this->article = Article::findById($id);
+            $this->article = $articleClass::findById($id);
         }
 
+        $articleCategoryOptions = $articleCategoryClass::getOptions();
+        $selectStatus = $this->checkPermission('cms_article_publish');
+        $statusOptions = $articleClass::getCmsStatusOptions();
         $userOptions = User::getOptions();
-        $articleCategoryOptions = ArticleCategory::getOptions();
         $siteOptions = Site::getOptions();
 
         $this->render(
             'cms::articles::edit',
             array(
                 'article'=> $this->article,
-                'pageTitle' => $this->title,
+                'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Modifier l\'article n° '.$id,
                 'formAction' => Router::url('cockpit_cms_articles_update', array('id' => $id)),
                 'userOptions' => $userOptions,
                 'articleCategoryOptions' => $articleCategoryOptions,
+                'selectStatus' => $selectStatus,
+                'statusOptions' => $statusOptions,
                 'siteOptions' => $siteOptions,
                 'selectSite' => $this->current_user->site_id === null
             )
@@ -101,13 +136,32 @@ class ArticlesController extends CockpitController
 
     public function createAction()
     {
-        $this->article = new Article();
+        $articleClass = $this->loadModel('Article');
+        $this->article = new $articleClass();
 
-        if (!isset($this->request->post['site_id'])) {
-            $this->request->post['site_id'] = $this->site->id;
+        $post = $this->request->post;
+
+        if (!isset($post['site_id'])) {
+            $post['site_id'] = $this->site->id;
         }
 
-        if ($this->article->save($this->request->post)) {
+        if (!isset($post['active'])) {
+            $post['active'] = 0;
+        }
+
+        if ($post['submit'] == 'publish') {
+            $post['status'] = 'published';
+        } else if (!isset($post['status'])) {
+            $post['status'] = 'draft';
+        }
+
+        $post['user_id'] = $this->current_user->id;
+
+        if ($this->article->save($post)) {
+            $revision = new $articleClass();
+            $revision->article_id = $this->article->id;
+            $revision->save($post);
+
             $this->addFlash('Article ajouté', 'success');
             $this->redirect('cockpit_cms_articles');
         } else {
@@ -119,13 +173,40 @@ class ArticlesController extends CockpitController
 
     public function updateAction($id)
     {
-        $this->article = Article::findById($id);
+        $articleClass = $this->loadModel('Article');
+        $this->article = $articleClass::findById($id);
 
-        if (!isset($this->request->post['site_id'])) {
-            $this->request->post['site_id'] = $this->site->id;
+        $post = $this->request->post;
+
+        if (!isset($post['site_id'])) {
+            $post['site_id'] = $this->site->id;
         }
 
-        if ($this->article->save($this->request->post)) {
+        if (!isset($post['active'])) {
+            $post['active'] = 0;
+        }
+
+        if ($post['submit'] == 'publish') {
+            $post['status'] = 'published';
+        } else if (!isset($post['status'])) {
+            $post['status'] = 'draft';
+        } else {
+            $post['status'] = 'draft';
+        }
+
+        $post['user_id'] = $this->current_user->id;
+
+        $isContentModified = $post['content'] != $this->article->content || $post['title'] != $this->article->title;
+
+        if ($this->article->save($post)) {
+            if ($isContentModified) {
+                $revision = new $articleClass();
+                $revision->article_id = $this->article->id;
+            } else {
+                $revision = $articleClass::getLastRevision($this->article->id);
+            }
+            $revision->save($post);
+
             $this->addFlash('Article modifié', 'success');
             $this->redirect('cockpit_cms_articles');
         } else {
@@ -137,9 +218,26 @@ class ArticlesController extends CockpitController
 
     public function deleteAction($id)
     {
-        $article = Article::findById($id);
+        $articleClass = $this->loadModel('Article');
+        $article = $articleClass::findById($id);
         $article->delete();
         $this->addFlash('Article supprimé', 'success');
         $this->redirect('cockpit_cms_articles');
+    }
+
+    public function publishAction($id)
+    {
+        $articleClass = $this->loadModel('Article');
+        $article = $articleClass::findById($id);
+
+        $article->status = 'published';
+        $article->user_id = $this->current_user->id;
+        $article->save();
+
+        $revision = $article->revisions[0];
+        $revision->status = 'published';
+        $revision->save();
+
+        $this->redirect('cockpit_cms_articles_index');
     }
 }
