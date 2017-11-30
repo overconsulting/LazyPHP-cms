@@ -59,7 +59,7 @@ class Page extends Model
     public static function getLastRevision($page_id, $status = '')
     {
         $whereStatus = $status != '' ? ' and status = \''.$status.'\'' : '';
-        $pageClass = self::loadModel('page');
+        $pageClass = self::loadModel('Page');
         $pages = $pageClass::findAll(
             '(page_id = '.$page_id.')'.$whereStatus.' and active = 1',
             'created_at desc, updated_at desc'
