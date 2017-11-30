@@ -23,14 +23,6 @@
 <?php
 
 foreach ($params['articles'] as $article) {
-    if ($article->media_id !== null) {
-        if ($article->media->image->url != '') {
-            $thumbnail = '<img src="'.$article->media->image->url.'" width="25" height="25" />';
-        }
-    } else {
-        $thumbnail = '';
-    }
-
     if ($article->articlecategory_id != null) {
         $category = $article->articlecategory->label;
     } else {
