@@ -11,11 +11,18 @@
         <h3 class="box-title">{{ boxTitle }}</h3>
         <div class="box-tools pull-right">
             {% button url="cockpit_cms_pages_index" type="secondary" size="sm" icon="arrow-left" hint="Retour" %}
-            <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
-                <i class="fa fa-save"></i> Enregistrer & Rester
+            <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save" form="formPage">
+                <i class="fa fa-save"></i> Enregistrer
             </button>
-<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
-            {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
+<?php if (!$this->checkPermission('cms_page_publish') && $page->status == 'draft'): ?>
+            <button id="submit" class="btn btn-warning" name="submit" type="submit" value="save_pending" form="formPage">
+                <i class="fa fa-flag-o"></i> À valider
+            </button>
+<?php endif; ?>
+<?php if ($this->checkPermission('cms_page_publish') && ($page->status == 'draft' || $page->status == 'pending')): ?>
+            <button id="submit" class="btn btn-success" name="submit" type="submit" value="save_published" form="formPage">
+                <i class="fa fa-share"></i> Publier
+            </button>
 <?php endif; ?>
         </div>
     </div>
@@ -28,6 +35,7 @@
 <?php if ($selectStatus): ?>
         {% input_select name="status" model="page.status" options="statusOptions" label="Etat" %}
 <?php else: ?>    
+        {% input_hidden name="status" model="page.status" %}
         <span>Status : </span><span class="badge badge-<?php echo $statusOptions[$page->status]['badge']; ?>"><?php echo $statusOptions[$page->status]['label']; ?></span>
 <?php endif; ?>
     </div>
@@ -228,11 +236,18 @@ echo
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save_and_stay" form="formPage">
-                        <i class="fa fa-save"></i> Enregistrer & Rester
+                    <button id="submit" class="btn btn-primary" name="submit" type="submit" value="save" form="formPage">
+                        <i class="fa fa-save"></i> Enregistrer
                     </button>
-<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
-                    {% button url="cockpit_cms_pages_publish_<?php echo $page->id ?>" type="success" icon="share" content="Publier" %}
+<?php if (!$this->checkPermission('cms_page_publish') && $page->status == 'draft'): ?>
+                    <button id="submit" class="btn btn-warning" name="submit" type="submit" value="save_pending" form="formPage">
+                        <i class="fa fa-flag-o"></i> À valider
+                    </button>
+<?php endif; ?>
+<?php if ($this->checkPermission('cms_page_publish') && ($page->status == 'draft' || $page->status == 'pending')): ?>
+                    <button id="submit" class="btn btn-success" name="submit" type="submit" value="save_published" form="formPage">
+                        <i class="fa fa-share"></i> Publier
+                    </button>
 <?php endif; ?>
                 </div>
             </div>
@@ -246,7 +261,7 @@ echo
                 <h3 class="box-title">Editeur de page</h3>
                 <div class="box-tools pull-right">
 <?php if ($page->id !== null): ?>
-                    {% button url="/pages/$page.id$" newWindow="1" type="warning" icon="eye" content="Aperçu" %}
+                    {% button url="/pages/$page.id$" newWindow="1" type="primary" icon="eye" content="Aperçu" %}
 <?php endif; ?>
                 </div>
             </div>

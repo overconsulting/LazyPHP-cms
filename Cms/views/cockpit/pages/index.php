@@ -14,7 +14,7 @@
                     <th width="10%">#</th>
                     <th>Titre</th>
                     <th>Auteur</th>
-                    <th>Layout</th>
+                    <th>Dernière modification</th>
                     <th>Etat</th>
                     <th>Révisions</th>
                     <th width="10%">Actions</th>
@@ -37,15 +37,21 @@ foreach ($pages as $page) {
             '<td>'.$page->id.'</td>'.
             '<td>'.$page->title.'</td>'.
             '<td>'.$page->user->getFullName().'</td>'.
-            '<td>'.$page->layout.'</td>'.
+            '<td>'.$page->formatDatetime($page->updated_at, Helper\Datetime::FORMAT_DATETIME).'</td>'.
             '<td>'.$status.' '.$active.'</td>'.
             '<td>'.count($page->revisions).'</td>'.
             '<td>';?>
-<?php if ($this->checkPermission('cms_page_publish') && $page->status != 'published'): ?>
-                {% button url="cockpit_cms_pages_publish_<?php echo $page->id; ?>" type="success" size="sm" icon="share" hint="Publier" %}
+<?php if ($this->checkPermission('cms_page_publish') && ($page->status == 'draft' || $page->status == 'pending')): ?>
+                {% button url="cockpit_cms_pages_setstatus_<?php echo $page->id ?>_published" type="success" size="sm" icon="share" hint="Publier" %}
+<?php endif; ?>
+<?php if ($this->checkPermission('cms_page_write') && $page->status == 'draft'): ?>
+                {% button url="cockpit_cms_pages_setstatus_<?php echo $page->id ?>_pending" type="warning" size="sm" icon="flag-o" hint="À valider" %}
 <?php endif; ?>
                 {% button url="cockpit_cms_pages_edit_<?php echo $page->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}
+<?php if ($page->status != 'published'): ?>
                 {% button url="cockpit_cms_pages_delete_<?php echo $page->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cette page ?" hint="Supprimer" %}
+<?php endif; ?>
+
 <?php
     echo
             '</td>'.

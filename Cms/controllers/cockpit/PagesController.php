@@ -59,6 +59,7 @@ class PagesController extends CockpitController
         $pageClass = $this->loadModel('Page');
         if (!isset($this->page)) {
             $this->page = new $pageClass();
+            $this->page->status = 'draft';
         }
 
         $contentJson = json_encode(array(
@@ -140,13 +141,21 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        if ($post['submit'] == 'publish') {
-            $post['status'] = 'published';
-        } else if (!isset($post['status'])) {
-            $post['status'] = 'draft';
-        }
-
         $post['user_id'] = $this->current_user->id;
+
+        switch ($post['submit']) {
+            case 'save_draft':
+                $post['status'] = 'draft';
+                break;
+            case 'save_pending':
+                $post['status'] = 'pending';
+                break;
+            case 'save_published':
+                $post['status'] = 'published';
+                break;
+            default:
+                break;
+        }
 
         if ($this->page->save($post)) {
             $revision = new $pageClass();
@@ -154,8 +163,11 @@ class PagesController extends CockpitController
             $revision->save($post);
 
             $this->addFlash('Page ajoutée', 'success');
-            // $this->redirect('cockpit_cms_pages_index');
-            $this->redirect('cockpit_cms_pages_edit_'.$this->page->id);
+            if ($post['submit'] == 'save_published' || $post['submit'] == 'save_pending') {
+                $this->redirect('cockpit_cms_pages_index');
+            } else {
+                $this->redirect('cockpit_cms_pages_edit_'.$id);
+            }
         } else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
@@ -182,20 +194,33 @@ class PagesController extends CockpitController
             $post['show_page_title'] = 0;
         }
 
-        if ($post['submit'] == 'publish') {
-            $post['status'] = 'published';
-        } else if (!isset($post['status'])) {
-            $post['status'] = 'draft';
-        } else {
-            $post['status'] = 'draft';
-        }
-
         $post['user_id'] = $this->current_user->id;
 
         $isContentModified = $post['content'] != $this->page->content || $post['title'] != $this->page->title;
+        $createRevision = $isContentModified;
+
+        switch ($post['submit']) {
+            case 'save':
+                if ($this->page->status == 'published' && !$this->checkPermission('cms_page_publish')) {
+                    $createRevision = true;
+                    $post['status'] = 'draft';
+                }
+                break;
+            case 'save_draft':
+                $post['status'] = 'draft';
+                break;
+            case 'save_pending':
+                $post['status'] = 'pending';
+                break;
+            case 'save_published':
+                $post['status'] = 'published';
+                break;
+            default:
+                break;
+        }
 
         if ($this->page->save($post)) {
-            if ($isContentModified) {
+            if ($createRevision) {
                 $revision = new $pageClass();
                 $revision->page_id = $this->page->id;
             } else {
@@ -204,7 +229,11 @@ class PagesController extends CockpitController
             $revision->save($post);
 
             $this->addFlash('Page modifiée', 'success');
-            $this->redirect('cockpit_cms_pages_edit_'.$id);
+            if ($post['submit'] == 'save_published' || $post['submit'] == 'save_pending') {
+                $this->redirect('cockpit_cms_pages_index');
+            } else {
+                $this->redirect('cockpit_cms_pages_edit_'.$id);
+            }
         } else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
         }
@@ -218,7 +247,7 @@ class PagesController extends CockpitController
         $page = $pageClass::findById($id);
         $page->delete();
         $this->addFlash('Page supprimée', 'success');
-        $this->redirect('cockpit_cms_pages_index');
+        $this->redirect('cockpit_cms_pages');
     }
 
     public function renderAction()
@@ -234,25 +263,25 @@ class PagesController extends CockpitController
         $this->render($html, $params);
     }
 
-    public function publishAction($id)
+    public function setstatusAction($id, $status)
     {
         $pageClass = $this->loadModel('Page');
         $page = $pageClass::findById($id);
 
-        $page->status = 'published';
+        $page->status = $status;
         $page->user_id = $this->current_user->id;
         $page->save();
 
         $revision = $page->revisions[0];
-        $revision->status = 'published';
+        $revision->status = $status;
         $revision->save();
 
-        $this->redirect('cockpit_cms_pages_index');
+        $this->redirect('cockpit_cms_pages');
     }
 
     public function revisionsAction($id)
     {
-        $this->redirect('cockpit_cms_pages_index');
+        $this->redirect('cockpit_cms_pages');
     }
 
     private function getFullwidthOptions()

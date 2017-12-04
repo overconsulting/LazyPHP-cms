@@ -149,13 +149,21 @@ class ArticlesController extends CockpitController
             $post['active'] = 0;
         }
 
-        if ($post['submit'] == 'publish') {
-            $post['status'] = 'published';
-        } else if (!isset($post['status'])) {
-            $post['status'] = 'draft';
-        }
-
         $post['user_id'] = $this->current_user->id;
+
+        switch ($post['submit']) {
+            case 'save_draft':
+                $post['status'] = 'draft';
+                break;
+            case 'save_pending':
+                $post['status'] = 'pending';
+                break;
+            case 'save_published':
+                $post['status'] = 'published';
+                break;
+            default:
+                break;
+        }
 
         if ($this->article->save($post)) {
             $revision = new $articleClass();
@@ -197,9 +205,30 @@ class ArticlesController extends CockpitController
         $post['user_id'] = $this->current_user->id;
 
         $isContentModified = $post['content'] != $this->article->content || $post['title'] != $this->article->title;
+        $createRevision = $isContentModified;
+
+        switch ($post['submit']) {
+            case 'save':
+                if ($this->article->status == 'published' && !$this->checkPermission('cms_article_publish')) {
+                    $createRevision = true;
+                    $post['status'] = 'draft';
+                }
+                break;
+            case 'save_draft':
+                $post['status'] = 'draft';
+                break;
+            case 'save_pending':
+                $post['status'] = 'pending';
+                break;
+            case 'save_published':
+                $post['status'] = 'published';
+                break;
+            default:
+                break;
+        }
 
         if ($this->article->save($post)) {
-            if ($isContentModified) {
+            if ($createRevision) {
                 $revision = new $articleClass();
                 $revision->article_id = $this->article->id;
             } else {
@@ -225,19 +254,19 @@ class ArticlesController extends CockpitController
         $this->redirect('cockpit_cms_articles');
     }
 
-    public function publishAction($id)
+    public function setstatusAction($id, $status)
     {
         $articleClass = $this->loadModel('Article');
         $article = $articleClass::findById($id);
 
-        $article->status = 'published';
+        $article->status = $status;
         $article->user_id = $this->current_user->id;
         $article->save();
 
         $revision = $article->revisions[0];
-        $revision->status = 'published';
+        $revision->status = $status;
         $revision->save();
 
-        $this->redirect('cockpit_cms_articles_index');
+        $this->redirect('cockpit_cms_articles');
     }
 }
