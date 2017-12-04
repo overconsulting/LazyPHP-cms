@@ -8,6 +8,7 @@ use Widget\widgets\Widget;
 use Cms\models\Page;
 use Core\Router;
 use Core\Session;
+use Helper\Email;
 use Auth\models\User;
 
 class PagesController extends CockpitController
@@ -157,6 +158,8 @@ class PagesController extends CockpitController
                 break;
         }
 
+        $sendEmailPending = $this->page->status != 'pending' && $post['status'] == 'pending';
+
         if ($this->page->save($post)) {
             $revision = new $pageClass();
             $revision->page_id = $this->page->id;
@@ -166,7 +169,7 @@ class PagesController extends CockpitController
             if ($post['submit'] == 'save_published' || $post['submit'] == 'save_pending') {
                 $this->redirect('cockpit_cms_pages_index');
             } else {
-                $this->redirect('cockpit_cms_pages_edit_'.$id);
+                $this->redirect('cockpit_cms_pages_edit_'.$this->page->$id);
             }
         } else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
@@ -196,7 +199,10 @@ class PagesController extends CockpitController
 
         $post['user_id'] = $this->current_user->id;
 
+        $sendEmailPending = $this->page->status != 'pending' && $post['status'] == 'pending';
+
         $isContentModified = $post['content'] != $this->page->content || $post['title'] != $this->page->title;
+
         $createRevision = $isContentModified;
 
         switch ($post['submit']) {
@@ -228,11 +234,15 @@ class PagesController extends CockpitController
             }
             $revision->save($post);
 
+            if ($sendEmailPending) {
+                $this->sendEmailPending($this->page);
+            }
+
             $this->addFlash('Page modifiée', 'success');
             if ($post['submit'] == 'save_published' || $post['submit'] == 'save_pending') {
                 $this->redirect('cockpit_cms_pages_index');
             } else {
-                $this->redirect('cockpit_cms_pages_edit_'.$id);
+                $this->redirect('cockpit_cms_pages_edit_'.$this->page->id);
             }
         } else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
@@ -268,20 +278,77 @@ class PagesController extends CockpitController
         $pageClass = $this->loadModel('Page');
         $page = $pageClass::findById($id);
 
+        $sendEmailPending = $page->status != 'pending' && $status == 'pending';
+
         $page->status = $status;
         $page->user_id = $this->current_user->id;
-        $page->save();
+        // $page->save();
 
         $revision = $page->revisions[0];
         $revision->status = $status;
-        $revision->save();
+        // $revision->save();
 
-        $this->redirect('cockpit_cms_pages');
+        if ($sendEmailPending) {
+            $this->sendEmailPending($page);
+        }
+
+        // $this->redirect('cockpit_cms_pages');
     }
 
     public function revisionsAction($id)
     {
         $this->redirect('cockpit_cms_pages');
+    }
+
+    private function sendEmailPending($page)
+    {
+        $groupClass = $this->loadModel('Group');
+        $groupAdminsCe = $groupClass::findBy('code', 'admins_ce');
+
+        $userClass = $this->loadModel('User');
+        $adminsCe = $userClass::findAll('site_id = '.$page->site_id.' and group_id = '.$groupAdminsCe->id);
+        $to = array();
+        if (!empty($adminsCe)) {
+            foreach ($adminsCe as $admin) {
+                $to[] = $admin->email;
+            }
+
+            $pageLink = 'http://'.$this->site->host.'/cockpit/cms/pages/edit/'.$page->id;
+
+            $tpl =
+                '<html>'.
+                    '<head>'.
+                    '</head>'.
+                    '<body>'.
+                        '<p style="">Il y a une nouvelle page à valider</p>'.
+                        '<p><a href="{{pageLink}}">Voir la page</a>'.
+                    '</body>'.
+                '</html>';
+            $tpl = str_replace(
+                array(
+                    '{{pageLink}}'
+                ),
+                array(
+                    $pageLink
+                ),
+                $tpl
+            );
+
+            $resEmail = Email::send(
+                array(
+                    'from' => 'No reply <noreply@test.com>',
+                    'replyTo' => 'No reply <noreply@test.com>',
+                    'to' => $to,
+                    'subject' => 'Page à valider',
+                    'html' => $tpl
+                )
+            );
+            if ($resEmail) {
+                $mailStatus = 'OK';
+            } else {
+                $mailStatus = Email::$lastError;
+            }
+        }
     }
 
     private function getFullwidthOptions()
