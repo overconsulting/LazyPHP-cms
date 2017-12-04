@@ -5,11 +5,19 @@
         <h3 class="box-title">{{ boxTitle }}</h3>
         <div class="box-tools pull-right">
             {% button url="cockpit_cms_articles" type="secondary" size="sm" icon="arrow-left" hint="Retour" %}
+<?php if ($this->checkPermission('cms_page_publish') && ($article->status == 'draft' || $article->status == 'pending')): ?>
+            {% button url="cockpit_cms_articles_setstatus_<?php echo $article->id ?>_published" type="success" size="sm" icon="share" hint="Publier" %}
+<?php endif; ?>
+<?php if ($this->checkPermission('cms_page_write') && $article->status == 'draft'): ?>
+            {% button url="cockpit_cms_articles_setstatus_<?php echo $article->id ?>_pending" type="warning" size="sm" icon="flag-o" hint="À valider" %}
+<?php endif; ?>
             {% button url="cockpit_cms_articles_edit_<?php echo $article->id; ?>" type="info" size="sm" icon="pencil" hint="Modifier" %}
-    		{% button url="cockpit_cms_articles_delete_<?php echo $article->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article ?" hint="Supprimer" %}
+<?php if ($article->status != 'published'): ?>
+            {% button url="cockpit_cms_articles_delete_<?php echo $article->id; ?>" type="danger" size="sm" icon="trash-o" confirmation="Vous confirmer vouloir supprimer cet article ?" hint="Supprimer" %}
+<?php endif; ?>
         </div>
     </div>
-	<div class="box-body">
+    <div class="box-body">
 <?php
 
 if ($article->title != '') {
