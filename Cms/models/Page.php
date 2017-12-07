@@ -71,4 +71,20 @@ class Page extends Model
             return null;
         }
     }
+
+    public function getPageOptions($site_id)
+    {
+        $where = 'site_id = '.$site_id;
+        $pages = self::getAll($where);
+
+        $themeOptions = array();
+
+        foreach ($pages as $key => $value) {
+            $themeOptions[$key] = array(
+                'value' => "/pages/".$value->id,
+                'label' => $value->title
+            );
+        }
+        return $themeOptions;
+    }
 }
