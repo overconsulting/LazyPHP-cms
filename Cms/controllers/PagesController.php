@@ -11,8 +11,8 @@ class PagesController extends FrontController
         $pageClass = $this->loadModel('Page');
         $page = $pageClass::getLastRevision($id, 'published');
 
-        if ($page === null) {
-            $this->redirect("/");
+        if ($page === null || $page->site_id != $this->site->id) {
+            $this->redirect('/');
         }
 
         if ($page->layout != '') {
