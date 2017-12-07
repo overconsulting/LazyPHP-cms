@@ -37,7 +37,7 @@ foreach ($pages as $page) {
             '<td>'.$page->id.'</td>'.
             '<td>'.$page->title.'</td>'.
             '<td>'.$page->user->getFullName().'</td>'.
-            '<td>'.$page->formatDatetime($page->updated_at, Helper\Datetime::FORMAT_DATETIME).'</td>'.
+            '<td>'.$page->formatDatetime($page->updated_at).'</td>'.
             '<td>'.$status.' '.$active.'</td>'.
             '<td>'.count($page->revisions).'</td>'.
             '<td>';?>
