@@ -24,7 +24,8 @@ function tinymceInit(id = null)
             "bullist numlist | link unlink | image"
         ],
         file_browser_callback: tinymceMediaCallback,
-        file_browser_callback_types: "image"
+        file_browser_callback_types: "image",
+        valid_children: "+h1[hr]"
     });
 }
 
