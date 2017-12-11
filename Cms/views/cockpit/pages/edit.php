@@ -204,8 +204,10 @@ foreach ($widgets as $widget) {
             echo '<div class="cms-page-widget-param">';
             if ($wp == 'id') {
                 $widgetParamIdOptions = '';
-                foreach ($widget['items'] as $item) {
-                    $widgetParamIdOptions .= $item->id.':'.$item->id.';';
+                if (!empty($widget['items'])) {
+                    foreach ($widget['items'] as $item) {
+                        $widgetParamIdOptions .= $item->id.':'.$item->id.';';
+                    }
                 }
                 echo '{% input_select name="'.$wp.'" label="'.$wp.'" options="['.trim($widgetParamIdOptions, ';').']" %}';
             } else {

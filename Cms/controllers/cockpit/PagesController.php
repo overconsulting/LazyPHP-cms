@@ -386,11 +386,17 @@ class PagesController extends CockpitController
         $widgets = array();
         foreach ($widgetList as $wl) {
             $widgets[$wl->type] = (array)$wl;
-            $class = Widget::$widgetTypes[$wl->type];
-            if (method_exists($class, 'getDbModel')) {
-                $dbModel = $class::getDbModel();
+            $widgetClass = Widget::$widgetTypes[$wl->type];
+            if (method_exists($widgetClass, 'getDbModel')) {
+                $dbModel = $widgetClass::getDbModel();
+                if (strpos($dbModel, '\\') !== false) {
+                    $dbModelClass = $dbModel;
+                } else {
+                    $dbModelClass = self::loadModel($dbModel);
+                }
+
                 if ($dbModel !== null) {
-                    $widgets[$wl->type]['items'] = $dbModel::findAll();
+                    $widgets[$wl->type]['items'] = $dbModelClass::findAll();
                 }
             }
         }
