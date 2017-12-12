@@ -2,6 +2,9 @@ $(document).ready(function() {
     tinymceInit();
 });
 
+var tinymceSelectMediasDialog = null;
+var tinymceSelectMediasInputId = null;
+
 function tinymceInit(id = null)
 {
     var selector = "textarea.tinymce";
@@ -39,7 +42,7 @@ function tinymceMediaCallback(field_name, url, type, win)
     if (type == "image") {
         var inputId = null;
         var inputDisplayId = null;
-        var multiple = "0";
+        var multiple = false;
         var mediaType = "image";
         var mediaCategory = "";
 
@@ -49,15 +52,42 @@ function tinymceMediaCallback(field_name, url, type, win)
             multiple: multiple,
             mediaType: mediaType,
             mediaCategory: mediaCategory,
-            validEvent: tinymceMediaValidEvent
+            loadEvent: tinymceSelectMediasLoadEvent,
+            validEvent: tinymceSelectMediasValidEvent
         };
 
-        //$('#mce-modal-block').css("z-index");
-        var selectMediasDialog = new SelectMediasDialog();
-        selectMediasDialog.selectMedias(params);
+        tinymceSelectMediasInputId = field_name;
+
+        tinymceSelectMediasDialog = new SelectMediasDialog();
+        tinymceSelectMediasDialog.selectMedias(params);
     }
 }
 
-function tinymceMediaValidEvent() {
+function tinymceSelectMediasLoadEvent()
+{
+    $("#select_medias_dialog").css("z-index", 100000);
+    $("#select_medias_dialog .lazy-dialog-close-button").css("z-index", 110000);
+}
+
+function tinymceSelectMediasValidEvent()
+{
+    var mediaId = tinymceSelectMediasDialog.selectedMedias[0];
+
+    var element = $("#select_medias_dialog .media[data-media-id="+mediaId+"]");
+    var media = JSON.parse(decodeURIComponent($(element).data("media")));
+
+    var mediaFormat = $("#select_medias_dialog input[name=media_format]:checked").val();
+
+    var mediaUrl = "";
+    if (mediaFormat == "") {
+        mediaUrl = media.image.url;
+    } else {
+        mediaUrl = media.infos.formats_urls[mediaFormat];
+    }
+
+    $("#"+tinymceSelectMediasInputId).val(mediaUrl);
+
+    $("#select_medias_dialog").css("z-index", 10000);
+    $("#select_medias_dialog .lazy-dialog-close-button").css("z-index", 11000);
     return true;
 }
