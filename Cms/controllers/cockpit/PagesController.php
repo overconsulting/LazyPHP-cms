@@ -282,17 +282,17 @@ class PagesController extends CockpitController
 
         $page->status = $status;
         $page->user_id = $this->current_user->id;
-        // $page->save();
+        $page->save();
 
         $revision = $page->revisions[0];
         $revision->status = $status;
-        // $revision->save();
+        $revision->save();
 
         if ($sendEmailPending) {
             $this->sendEmailPending($page);
         }
 
-        // $this->redirect('cockpit_cms_pages');
+        $this->redirect('cockpit_cms_pages');
     }
 
     public function revisionsAction($id)
