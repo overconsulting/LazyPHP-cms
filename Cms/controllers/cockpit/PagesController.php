@@ -3,7 +3,6 @@
 namespace Cms\controllers\cockpit;
 
 use app\controllers\cockpit\CockpitController;
-use Widget\models\Widget as WidgetList;
 use Widget\widgets\Widget;
 use Cms\models\Page;
 use Core\Router;
@@ -381,22 +380,28 @@ class PagesController extends CockpitController
 
     private function getWidgets()
     {
-        $widgetList = WidgetList::findAll();
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
+        } else {
+            $where = '';
+        }
 
         $widgets = array();
-        foreach ($widgetList as $wl) {
-            $widgets[$wl->type] = (array)$wl;
-            $widgetClass = Widget::$widgetTypes[$wl->type];
-            if (method_exists($widgetClass, 'getDbModel')) {
-                $dbModel = $widgetClass::getDbModel();
-                if (strpos($dbModel, '\\') !== false) {
-                    $dbModelClass = $dbModel;
-                } else {
-                    $dbModelClass = self::loadModel($dbModel);
-                }
 
-                if ($dbModel !== null) {
-                    $widgets[$wl->type]['items'] = $dbModelClass::findAll();
+        foreach(Widget::$widgetTypes as $widgetType => $widget) {
+            $widgets[$widgetType] = $widget;
+            $widgetClass = $widget['class'];
+
+            if (isset($widget['params']) && !empty($widget['params'])) {
+                foreach ($widget['params'] as $paramName => $param) {
+                    if ($param['type'] == 'table') {
+                        if (strpos($param['model'], '\\') !== false) {
+                            $class = $param['model'];
+                        } else {
+                            $class = $this->loadModel($param['model']);
+                        }
+                        $widgets[$widgetType]['params'][$paramName]['options'] = $class::getOptions(array('where' => $where));
+                    }
                 }
             }
         }

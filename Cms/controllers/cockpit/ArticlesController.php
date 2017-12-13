@@ -79,10 +79,16 @@ class ArticlesController extends CockpitController
             $this->article = new $articleClass();
         }
 
-        $articleCategoryOptions = $articleCategoryClass::getOptions();
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
+        } else {
+            $where = '';
+        }
+
+        $articleCategoryOptions = $articleCategoryClass::getOptions(array('where' => $where));
         $selectStatus = $this->checkPermission('cms_article_publish');
         $statusOptions = $articleClass::getCmsStatusOptions();
-        $userOptions = User::getOptions();
+        $userOptions = User::getOptions(array('where' => $where));
         $siteOptions = Site::getOptions();
 
         $this->render(
@@ -111,10 +117,16 @@ class ArticlesController extends CockpitController
             $this->article = $articleClass::findById($id);
         }
 
-        $articleCategoryOptions = $articleCategoryClass::getOptions();
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
+        } else {
+            $where = '';
+        }
+
+        $articleCategoryOptions = $articleCategoryClass::getOptions(array('where' => $where));
         $selectStatus = $this->checkPermission('cms_article_publish');
         $statusOptions = $articleClass::getCmsStatusOptions();
-        $userOptions = User::getOptions();
+        $userOptions = User::getOptions(array('where' => $where));
         $siteOptions = Site::getOptions();
 
         $this->render(

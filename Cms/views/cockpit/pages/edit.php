@@ -197,21 +197,23 @@ echo
         '</div>';
 
 foreach ($widgets as $widget) {
+    $widgetClass = $widget['class'];
     echo '<div id="cms_page_widget_params_'.$widget['type'].'" class="cms-page-widget-params">';
-    $widgetParams = explode(';', $widget['params']);
-    if (!empty($widgetParams) && $widgetParams[0] != '') {
+    $widgetParams = isset($widget['params']) ? $widget['params'] : array();
+    if (!empty($widgetParams)) {
         foreach ($widgetParams as $wp) {
             echo '<div class="cms-page-widget-param">';
-            if ($wp == 'id') {
-                $widgetParamIdOptions = '';
-                if (!empty($widget['items'])) {
-                    foreach ($widget['items'] as $item) {
-                        $widgetParamIdOptions .= $item->id.':'.$item->id.';';
-                    }
-                }
-                echo '{% input_select name="'.$wp.'" label="'.$wp.'" options="['.trim($widgetParamIdOptions, ';').']" %}';
-            } else {
-                echo '{% input_text name="'.$wp.'" label="'.$wp.'" %}';
+            switch ($wp['type']) {
+                case 'table':
+                    $key = 'widgetParamOptions_'.$widget['type'].'_'.$wp['name'];
+                    $params[$key] = $wp['options'];
+                    echo '{% input_select name="'.$wp['name'].'" label="'.$wp['label'].'" options="'.$key.'" %}';
+                    break;
+                case 'string':
+                case 'int':
+                default:
+                    echo '{% input_text name="'.$wp['name'].'" label="'.$wp['label'].'" %}';
+                    break;
             }
             echo '</div>';
         }
