@@ -383,12 +383,6 @@ class PagesController extends CockpitController
 
     private function getWidgets()
     {
-        /*if ($this->site !== null) {
-            $where = 'site_id = '.$this->site->id;
-        } else {
-            $where = '';
-        }*/
-
         $widgets = array();
 
         foreach(Widget::$widgetTypes as $widgetType => $widget) {
