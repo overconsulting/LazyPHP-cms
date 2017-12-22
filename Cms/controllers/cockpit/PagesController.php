@@ -62,11 +62,14 @@ class PagesController extends CockpitController
             $this->page->status = 'draft';
         }
 
+
+
         $contentJson = json_encode(array(
             'title' => $this->page->pageTitle,
             'active' => $this->page->active,
             'sections' => array()
         ));
+
 
         $selectStatus = $this->checkPermission('cms_page_publish');
         $statusOptions = $pageClass::getCmsStatusOptions();
@@ -380,11 +383,11 @@ class PagesController extends CockpitController
 
     private function getWidgets()
     {
-        if ($this->site !== null) {
+        /*if ($this->site !== null) {
             $where = 'site_id = '.$this->site->id;
         } else {
             $where = '';
-        }
+        }*/
 
         $widgets = array();
 
@@ -400,7 +403,7 @@ class PagesController extends CockpitController
                         } else {
                             $class = $this->loadModel($param['model']);
                         }
-                        $widgets[$widgetType]['params'][$paramName]['options'] = $class::getOptions(array('where' => $where));
+                        $widgets[$widgetType]['params'][$paramName]['options'] = $class::getOptions();
                     }
                 }
             }

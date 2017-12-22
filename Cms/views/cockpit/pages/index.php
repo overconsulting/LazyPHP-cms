@@ -1,5 +1,7 @@
 <h1 class="page-title">{{ pageTitle }}</h1>
 
+
+
 <div class="box box-purple">
     <div class="box-header">
         <h3 class="box-title">{{ boxTitle }}</h3>
