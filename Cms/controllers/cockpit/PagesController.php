@@ -380,12 +380,6 @@ class PagesController extends CockpitController
 
     private function getWidgets()
     {
-        if ($this->site !== null) {
-            $where = 'site_id = '.$this->site->id;
-        } else {
-            $where = '';
-        }
-
         $widgets = array();
 
         foreach(Widget::$widgetTypes as $widgetType => $widget) {
@@ -400,7 +394,7 @@ class PagesController extends CockpitController
                         } else {
                             $class = $this->loadModel($param['model']);
                         }
-                        $widgets[$widgetType]['params'][$paramName]['options'] = $class::getOptions(array('where' => $where));
+                        $widgets[$widgetType]['params'][$paramName]['options'] = $class::getOptions();
                     }
                 }
             }
