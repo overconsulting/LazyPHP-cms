@@ -46,7 +46,7 @@ class ArticlecategoriesController extends CockpitController
                 'pageTitle' => $this->pageTitle,
                 'boxTitle' => 'Nouvellle catégorie d\'article',
                 'articleCategory' => $this->articleCategory,
-                'selectSite' => $this->current_user->site_id === null,
+                'selectSite' => $this->current_user->site_id,
                 'siteOptions' => $siteOptions,
                 'formAction' => Router::url('cockpit_cms_articlecategories_create')
             )

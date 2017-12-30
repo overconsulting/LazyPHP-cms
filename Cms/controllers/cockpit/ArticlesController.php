@@ -88,7 +88,7 @@ class ArticlesController extends CockpitController
         $articleCategoryOptions = $articleCategoryClass::getOptions(array('where' => $where));
         $selectStatus = $this->checkPermission('cms_article_publish');
         $statusOptions = $articleClass::getCmsStatusOptions();
-        $userOptions = User::getOptions(array('where' => $where));
+        $userOptions = User::getOptions(array('where' => 'group_id = 1'));
         $siteOptions = Site::getOptions();
 
         $this->render(
@@ -126,7 +126,7 @@ class ArticlesController extends CockpitController
         $articleCategoryOptions = $articleCategoryClass::getOptions(array('where' => $where));
         $selectStatus = $this->checkPermission('cms_article_publish');
         $statusOptions = $articleClass::getCmsStatusOptions();
-        $userOptions = User::getOptions(array('where' => $where));
+        $userOptions = User::getOptions(array('where' => 'group_id = 1'));
         $siteOptions = Site::getOptions();
 
         $this->render(
