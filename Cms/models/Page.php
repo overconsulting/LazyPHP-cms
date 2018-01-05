@@ -15,6 +15,8 @@ class Page extends Model
         'show_page_title',
         'layout',
         'status',
+        'meta_description',
+        'meta_keywords',
         'active'
     );
 

@@ -32,10 +32,12 @@
         {% input_text name="title" model="page.title" label="Titre de la page" placeholder="Nom de la page" %}
         {% input_checkbox name="show_page_title" model="page.show_page_title" label="Afficher le titre" %}
         {% input_text name="layout" model="page.layout" label="Layout de la page" placeholder="Layout de la page" %}
+        {% input_text name="meta_keywords" model="page.meta_keywords" label="Mots clés de la page" placeholder="Mots clés de la page" %}
+        {% input_textarea name="meta_description" model="page.meta_description" label="Méta description de la page" placeholder="Méta description de la page" %}
         {% input_checkbox name="active" model="page.active" label="Afficher la page" %}
 <?php if ($selectStatus): ?>
         {% input_select name="status" model="page.status" options="statusOptions" label="Etat" %}
-<?php else: ?>    
+<?php else: ?>
         {% input_hidden name="status" model="page.status" %}
         <span>Status : </span><span class="badge badge-<?php echo $statusOptions[$page->status]['badge']; ?>"><?php echo $statusOptions[$page->status]['label']; ?></span>
 <?php endif; ?>
@@ -174,7 +176,7 @@
                                         </ul>
                                         <div class="tab-content">
                                             <div id="cms_page_tab_content_html" class="tab-pane active" role="tabpanel">
-                                                {% input_textarea id="cms_page_editor_content" name="content" data-property-type="content" rows="15" %} 
+                                                {% input_textarea id="cms_page_editor_content" name="content" data-property-type="content" rows="15" %}
                                             </div>
                                             <div id="cms_page_tab_content_widgets" class="tab-pane" role="tabpanel">
 <?php
