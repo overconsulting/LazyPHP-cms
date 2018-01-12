@@ -23,11 +23,12 @@ class MenusController extends CockpitController
 
     public function indexAction()
     {
-        if ($this->current_user->site_id !== null) {
-            $where = 'site_id = '.$this->current_user->site_id;
+        if ($this->site !== null) {
+            $where = 'site_id = '.$this->site->id;
         } else {
             $where = '';
         }
+        
         $menus = Menu::findAll($where);
 
         $positionOptions = Menu::getPositionOptions();
