@@ -19,6 +19,8 @@ class PagesController extends FrontController
             $this->layout = $page->layout;
         }
 
+        $this->meta_description = $page->meta_description;
+
         $this->render(
             'cms::pages::show',
             array(
