@@ -3,6 +3,7 @@
 namespace Cms\models;
 
 use Core\Model;
+use Core\Session;
 use Cms\models\MenuItem;
 
 class Menu extends Model
@@ -65,8 +66,13 @@ class Menu extends Model
     public function getHtml()
     {
         $html = '<ul id="menu_'.$this->id.'" class="menu menu-'.$this->position.' navbar-nav">';
+        $where = 'menu_id = '.$this->id.' AND parent is null AND active = 1';
+        if (Session::get('current_user') == null) {
+            $where .= '  AND (notconnected = 1 OR connected = 0)';
+        } else {
+            $where .= '  AND (connected = 1 OR notconnected = 0)';
+        }
 
-        $where = 'menu_id = '.$this->id.' and parent is null and active = 1';
         $order = 'position';
         $items = MenuItem::findAll($where, $order);
 

@@ -18,7 +18,9 @@ class MenuItem extends Model
         'show_label',
         'show_icon',
         'groups',
-        'active'
+        'active',
+        'connected',
+        'notconnected'
     );
 
     public function setDefaultProperties() {
@@ -75,7 +77,21 @@ class MenuItem extends Model
         $groups = $this->groups != '' ? explode(';', $this->groups) : array();
         $current_user = Session::get('current_user');
 
-        if (empty($groups) || ($current_user !== null && in_array($current_user->group_id, $groups))) {
+        if (Session::get('current_user') == null) {
+            if ($this->connected == 0 || $this->notconnected == 1) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+        } else {
+            if ($this->connected == 1 || $this->notconnected == 0) {
+                $show = true;
+            } else {
+                $show = false;
+            }
+        }
+
+        if (empty($groups) || ($current_user !== null && in_array($current_user->group_id, $groups) || $show)) {
             $icon = '';
             if ($this->show_icon == 1) {
                 $url = $this->media !== null ? $this->media->getUrl() : '';
@@ -107,12 +123,12 @@ class MenuItem extends Model
                     '</li>';
             } else {
                 if ($level == 0) {
-                    $html .= 
+                    $html .=
                         '<li class="nav-item menu-item">'.
                             '<a class="nav-link" href="'.$this->link.'"'.$target.'>'.$icon.$label.'</a>'.
                         '</li>';
                 } else {
-                    $html .= 
+                    $html .=
                         '<a class="dropdown-item menu-item" href="'.$this->link.'"'.$target.'>'.$icon.$label.'</a>';
                 }
             }
