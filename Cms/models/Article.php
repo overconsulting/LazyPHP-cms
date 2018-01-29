@@ -75,7 +75,7 @@ class Article extends Model
 
     public static function getAll($where = '')
     {
-        if ($where != '') {
+        if ($where != '' and $status='published' ) {
             $where .= ' and ';
         }
         $where .= 'article_id is null';

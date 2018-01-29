@@ -33,7 +33,8 @@ class ArticlesController extends FrontController
         $article = $articleClass::getLastRevision($id, 'published');
 
         if ($article === null) {
-            $this->redirect("/");
+            $this->redirect("/articles");
+            $this->addFlash('L\'article n\'est pas accessible.', 'danger');
         }
         
         $this->render(
