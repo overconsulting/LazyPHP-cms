@@ -15,6 +15,7 @@ class Article extends Model
         'media_id',
         'articlecategory_id',
         'status',
+        'hooked',
         'active'
     );
 
