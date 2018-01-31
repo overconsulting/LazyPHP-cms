@@ -3,11 +3,14 @@
 namespace Cms\controllers;
 
 use app\controllers\FrontController;
+use Core\Mail;
 
 class PagesController extends FrontController
 {
     public function showAction($id)
     {
+        // Mail::send('contact@fitnss.fr', 'Contact', 'ldandoy@gmail.com', 'Loïc DANDOY', 'Sujet test', 'Message de Test');
+
         $pageClass = $this->loadModel('Page');
         $page = $pageClass::getLastRevision($id, 'published');
 
