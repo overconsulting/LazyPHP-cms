@@ -94,7 +94,8 @@ class PagesController extends CockpitController
     public function editAction($id)
     {
         $pageClass = $this->loadModel('Page');
-        $this->page = $pageClass::findById($id);
+        // $this->page = $pageClass::findById($id);
+        $this->page = $pageClass::getLastRevision($id, 'published');
 
         $contentJson =
             $this->page->content != '' ?
