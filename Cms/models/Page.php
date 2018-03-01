@@ -74,9 +74,14 @@ class Page extends Model
         }
     }
 
-    public function getPageOptions($site_id)
+    public function getPageOptions($site_id = null)
     {
-        $where = 'site_id = '.$site_id;
+        if ($site_id != null) {
+            $where = 'site_id = '.$site_id;
+        } else {
+            $where = '';
+        }
+        
         $pages = self::getAll($where);
 
         $themeOptions = array();
