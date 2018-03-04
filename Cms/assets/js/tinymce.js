@@ -18,7 +18,7 @@ function tinymceInit(id = null)
         forced_root_block: "p",
         height: 400,
         /*language: 'fr_FR',*/
-        plugins: "code textcolor link lists visualblocks image",
+        plugins: "code textcolor link lists visualblocks image paste",
         menubar: "edit format insert tools",
         toolbar: [
             "code | undo redo | styleselect | removeformat | visualblocks | " +
@@ -28,7 +28,14 @@ function tinymceInit(id = null)
         ],
         file_browser_callback: tinymceMediaCallback,
         file_browser_callback_types: "image",
-        valid_children: "+h1[hr]"
+        valid_children: "+h1[hr]",
+        paste_as_text: true,
+        paste_text_sticky : true,
+        formats: {
+            removeformat: [
+              {selector: '*', attributes : ['style', 'class'], split : false, expand : false, deep : true}
+            ]
+          }
     });
 }
 
