@@ -172,7 +172,7 @@ class PagesController extends CockpitController
             if ($post['submit'] == 'save_published' || $post['submit'] == 'save_pending') {
                 $this->redirect('cockpit_cms_pages_index');
             } else {
-                $this->redirect('cockpit_cms_pages_edit_'.$this->page->$id);
+                $this->redirect('cockpit_cms_pages_edit_'.$this->page->id);
             }
         } else {
             $this->addFlash('Erreur(s) dans le formulaire', 'danger');
