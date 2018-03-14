@@ -39,20 +39,23 @@ if ($article->media_id !== null) {
 <section >
     <div class="container">
         <div class="row">
-            <div class="row">
-                <div class="col-lg-12 article-content">
-                    <?php echo $article->content; ?>
+            <div class="col-lg-12 article-content">
+                <?php echo $article->content; ?>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-lg-12">
+                <div class="article-author">
+                    Auteur : <span><?php echo $article->user->getFullName(); ?></span>
                 </div>
             </div>
-            <div class="row">
-                 <div class="col-lg-12">
-                    <div class="article-author">
-                        Auteur : <span><?php echo $article->user->getFullName(); ?></span>
-                    </div>
-                </div>
+        </div>
+        <div class="row">
+                <div class="col-lg-12">
+                    <p class="text-right">
+                        <a href="/articles" class="btn btn-primary">Retour aux articles</a>
+                    </p>
             </div>
-
-           
-        </div>  
+        </div>
     </div>
 </section>

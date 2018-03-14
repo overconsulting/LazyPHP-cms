@@ -71,6 +71,10 @@ class MenusitemsController extends CockpitController
             $this->request->post['notconnected'] = 0;
         }
 
+        if (!isset($this->request->post['important'])) {
+            $this->request->post['important'] = 0;
+        }
+
         if (!isset($this->request->post['show_label'])) {
             $this->request->post['show_label'] = 0;
         }
@@ -150,6 +154,10 @@ class MenusitemsController extends CockpitController
 
         if (!isset($this->request->post['notconnected'])) {
             $this->request->post['notconnected'] = 0;
+        }
+
+        if (!isset($this->request->post['important'])) {
+            $this->request->post['important'] = 0;
         }
 
         if (!isset($this->request->post['show_icon'])) {

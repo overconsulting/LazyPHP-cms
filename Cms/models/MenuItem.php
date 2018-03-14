@@ -20,7 +20,8 @@ class MenuItem extends Model
         'groups',
         'active',
         'connected',
-        'notconnected'
+        'notconnected',
+        'important'
     );
 
     public function setDefaultProperties() {
@@ -100,6 +101,12 @@ class MenuItem extends Model
                 }
             }
 
+            if ($this->important) {
+                $important = " important";
+            } else {
+                $important = "";
+            }
+
             $label = $this->show_label == 1 ? '<div class="menu-item-label">'.$this->label.'</div>' : '';
 
             $target  = $this->new_window == 1 ? ' target="_blank"' : '';
@@ -125,7 +132,7 @@ class MenuItem extends Model
                 if ($level == 0) {
                     $html .=
                         '<li class="nav-item menu-item">'.
-                            '<a class="nav-link" href="'.$this->link.'"'.$target.'>'.$icon.$label.'</a>'.
+                            '<a class="nav-link'.$important.'" href="'.$this->link.'"'.$target.'>'.$icon.$label.'</a>'.
                         '</li>';
                 } else {
                     $html .=
