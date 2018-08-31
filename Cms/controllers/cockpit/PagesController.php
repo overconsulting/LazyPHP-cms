@@ -62,14 +62,11 @@ class PagesController extends CockpitController
             $this->page->status = 'draft';
         }
 
-
-
         $contentJson = json_encode(array(
             'title' => $this->page->pageTitle,
             'active' => $this->page->active,
             'sections' => array()
         ));
-
 
         $selectStatus = $this->checkPermission('cms_page_publish');
         $statusOptions = $pageClass::getCmsStatusOptions();
@@ -95,7 +92,7 @@ class PagesController extends CockpitController
     {
         $pageClass = $this->loadModel('Page');
         // $this->page = $pageClass::findById($id);
-        $this->page = $pageClass::getLastRevision($id, 'published');
+        $this->page = $pageClass::getLastRevision($id, '');
 
         $contentJson =
             $this->page->content != '' ?
