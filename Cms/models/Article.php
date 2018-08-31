@@ -88,7 +88,7 @@ class Article extends Model
         $whereStatus = $status != '' ? ' and status = \''.$status.'\'' : '';
         $articleClass = self::loadModel('Article');
         $articles = $articleClass::findAll(
-            '(article_id = '.$article_id.')'.$whereStatus.' and active = 1',
+            '(article_id = '.$article_id.')'.$whereStatus.'',
             'created_at desc, updated_at desc'
         );
 

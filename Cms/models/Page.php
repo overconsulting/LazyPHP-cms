@@ -62,8 +62,12 @@ class Page extends Model
     {
         $whereStatus = $status != '' ? ' and status = \''.$status.'\'' : '';
         $pageClass = self::loadModel('Page');
-        $pages = $pageClass::findAll(
+        /*$pages = $pageClass::findAll(
             '(page_id = '.$page_id.')'.$whereStatus.' and active = 1',
+            'created_at desc, updated_at desc'
+        );*/
+        $pages = $pageClass::findAll(
+            '(page_id = '.$page_id.')'.$whereStatus.'',
             'created_at desc, updated_at desc'
         );
 

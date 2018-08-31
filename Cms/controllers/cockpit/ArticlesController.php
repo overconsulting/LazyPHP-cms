@@ -243,8 +243,11 @@ class ArticlesController extends CockpitController
             if ($createRevision) {
                 $revision = new $articleClass();
                 $revision->article_id = $this->article->id;
+                echo "passer 1";
             } else {
+                echo $this->article->id;
                 $revision = $articleClass::getLastRevision($this->article->id);
+                echo "passer 2";
             }
             $revision->save($post);
 

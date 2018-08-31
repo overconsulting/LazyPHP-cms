@@ -12,7 +12,7 @@ class PagesController extends FrontController
         $pageClass = $this->loadModel('Page');
         $page = $pageClass::getLastRevision($id, 'published');
 
-        if ($page === null) {
+        if ($page === null || $page->active == 0) {
             // $this->redirect('/');
             $this->error("Erreur de page", "La page que vous cherchez n'existe pas.");
         }
