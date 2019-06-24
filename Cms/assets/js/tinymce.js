@@ -12,6 +12,9 @@ function tinymceInit(id = null)
         selector = "#" + id;
     }
 
+    var url = window.location.href;
+    var arr = url.split("/");
+
     tinymce.init({
         selector: selector,
         branding: false,
@@ -29,7 +32,7 @@ function tinymceInit(id = null)
         file_browser_callback: tinymceMediaCallback,
         file_browser_callback_types: "image",
         relative_urls : false,
-        // document_base_url : "http://rct-www.ce-groupeadsn.fr",
+        document_base_url : arr[0] + "//",
         valid_children: "+h1[hr]",
         paste_as_text: true,
         paste_text_sticky : true,
