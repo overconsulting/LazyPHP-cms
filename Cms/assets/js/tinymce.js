@@ -14,6 +14,7 @@ function tinymceInit(id = null)
 
     var url = window.location.href;
     var arr = url.split("/");
+    alert(arr[0]);
 
     tinymce.init({
         selector: selector,
