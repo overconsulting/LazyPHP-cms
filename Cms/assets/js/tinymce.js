@@ -14,7 +14,7 @@ function tinymceInit(id = null)
 
     var url = window.location.href;
     var arr = url.split("/");
-    alert(arr[0]);
+    alert(arr[0] + "//" + arr[2]);
 
     tinymce.init({
         selector: selector,
@@ -33,7 +33,7 @@ function tinymceInit(id = null)
         file_browser_callback: tinymceMediaCallback,
         file_browser_callback_types: "image",
         relative_urls : false,
-        document_base_url : arr[0] + "//",
+        document_base_url : arr[0] + "//" + arr[2],
         valid_children: "+h1[hr]",
         paste_as_text: true,
         paste_text_sticky : true,
