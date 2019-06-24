@@ -29,7 +29,7 @@ function tinymceInit(id = null)
         file_browser_callback: tinymceMediaCallback,
         file_browser_callback_types: "image",
         relative_urls : false,
-        document_base_url : "http://rct-www.ce-groupeadsn.fr",
+        // document_base_url : "http://rct-www.ce-groupeadsn.fr",
         valid_children: "+h1[hr]",
         paste_as_text: true,
         paste_text_sticky : true,
